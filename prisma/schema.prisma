@@ -1,0 +1,125 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  SUPERUSER
+  ADMIN     // Vigilante / Administrador de portería
+  STUDENT
+}
+
+enum ItemStatus {
+  EN_BODEGA
+  ENTREGADO
+  LISTO_PARA_DONACION
+}
+
+enum ClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ==========================================
+// MODELS
+// ==========================================
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified DateTime?
+  passwordHash  String?  // Nulo si usa OAuth
+  role          Role     @default(STUDENT)
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relaciones
+  registeredItems    Item[]         @relation("ItemRegistrar")
+  claimRequests      ClaimRequest[] @relation("StudentClaims")
+  deliveredLogs      DeliveryLog[]  @relation("OfficerDeliveries")
+  receivedDeliveries DeliveryLog[]  @relation("StudentDeliveries")
+
+  @@map("users")
+}
+
+model Item {
+  id               String     @id @default(cuid())
+  qrCode           String     @unique // Código de identificación único o payload QR
+  category         String     // Ej: Electrónica, Ropa, Documentos, Llaves
+  foundLocation    String     // Lugar exacto donde se halló
+  foundDate        DateTime   // Fecha y hora del hallazgo
+  custodyStation   String     // Portería/Bodega asignada (Ej: Portería Principal)
+  shelfLocation    String     // Ubicación física detallada (Ej: Estante 2 - Casillero B)
+  status           ItemStatus @default(EN_BODEGA)
+  
+  // Metadatos y privacidad
+  registeredById   String
+  registeredBy     User       @relation("ItemRegistrar", fields: [registeredById], references: [id])
+  
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Relaciones
+  images           ItemImage[]
+  claimRequests    ClaimRequest[]
+  deliveryLog      DeliveryLog?
+
+  @@map("items")
+}
+
+model ItemImage {
+  id           String   @id @default(cuid())
+  itemId       String
+  item         Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  cloudinaryId String   // Public ID en Cloudinary
+  secureUrl    String   // URL privada protegida de Cloudinary
+  createdAt    DateTime @default(now())
+
+  @@map("item_images")
+}
+
+model ClaimRequest {
+  id          String      @id @default(cuid())
+  itemId      String
+  item        Item        @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     User        @relation("StudentClaims", fields: [studentId], references: [id])
+  
+  // Descripción provista por el estudiante para la verificación de pertenencia
+  description String
+  status      ClaimStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("claim_requests")
+}
+
+model DeliveryLog {
+  id             String   @id @default(cuid())
+  itemId         String   @unique
+  item           Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  
+  officerId      String   // Celador/Vigilante que hace la entrega física
+  officer        User     @relation("OfficerDeliveries", fields: [officerId], references: [id])
+  
+  studentId      String   // Estudiante que recibe el objeto
+  student        User     @relation("StudentDeliveries", fields: [studentId], references: [id])
+  
+  signatureData  String   // Cadena Base64 de la firma capturada con react-signature-canvas
+  deliveredAt    DateTime @default(now())
+
+  @@map("delivery_logs")
+}

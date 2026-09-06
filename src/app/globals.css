@@ -2,11 +2,32 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  --color-brand: #c8102e;
+  --color-brand-hover: #a50d26;
+  --color-brand-soft: #f8e8eb;
+  --color-gold: #b89600;
+  --color-gold-ink: #6e5600;
+  --color-gold-soft: #f7f1d4;
+  --color-canvas: #f4f4f2;
+  --color-paper: #ffffff;
+  --color-bar: #f2f2f2;
+  --color-ink: #1a1a1a;
+  --color-ink-muted: #4a4a4a;
+  --color-ink-subtle: #6b6b6b;
+  --color-line: #e2e2e0;
+  --color-success: #1b6b3a;
+  --color-success-soft: #e6f4ea;
+  --color-warning: #8a6400;
+  --color-warning-soft: #f8f0d0;
+  --color-danger: #9b1c1c;
+  --color-danger-soft: #fdecec;
 }
 
 :root {
-  --background: #090d16;
-  --foreground: #f8fafc;
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
 }
 
 body {
@@ -15,6 +36,6 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-brand);
   outline-offset: 2px;
 }

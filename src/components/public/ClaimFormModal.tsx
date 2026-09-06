@@ -42,7 +42,7 @@ export default function ClaimFormModal({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="w-full rounded-xl bg-blue-600 px-4 py-2.5 font-medium text-white shadow-md shadow-blue-600/20 transition-all hover:bg-blue-500"
+        className="w-full rounded-md bg-brand px-4 py-2.5 font-semibold text-white transition-colors hover:bg-brand-hover"
       >
         {triggerLabel}
       </button>
@@ -52,30 +52,30 @@ export default function ClaimFormModal({
           <button
             type="button"
             aria-label="Cerrar"
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
             onClick={() => setIsOpen(false)}
           />
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl"
+            className="relative w-full max-w-lg rounded-lg border border-line bg-paper p-6 shadow-xl"
           >
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 text-lg text-slate-400 hover:text-white"
+              className="absolute right-4 top-4 text-lg text-ink-subtle hover:text-ink"
               aria-label="Cerrar formulario"
             >
               ✕
             </button>
 
-            <h3 id={titleId} className="mb-1 text-xl font-bold text-slate-100">
+            <h3 id={titleId} className="mb-1 font-serif text-xl font-semibold text-ink">
               Formulario de reclamo
             </h3>
-            <p className="mb-4 text-sm text-slate-400">
+            <p className="mb-4 text-sm text-ink-muted">
               Pertenencia:{" "}
-              <span className="font-semibold text-blue-400">{item.category}</span> hallada en{" "}
+              <span className="font-semibold text-brand">{item.category}</span> hallada en{" "}
               {item.foundLocation}. Custodia: {item.custodyStation}.
             </p>
 
@@ -84,7 +84,7 @@ export default function ClaimFormModal({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="mt-4 w-full rounded-xl bg-slate-800 px-4 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-slate-700"
+              className="mt-4 w-full rounded-md border border-line bg-bar px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-brand"
             >
               Cerrar
             </button>

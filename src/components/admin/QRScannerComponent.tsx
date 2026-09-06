@@ -34,15 +34,15 @@ export default function QRScannerComponent({ onScanSuccess }: Props) {
   }, [onScanSuccess]);
 
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-center shadow-2xl">
-      <h3 className="mb-4 flex items-center justify-center gap-2 text-xl font-bold text-slate-100">
+    <div className="rounded-lg border border-line bg-paper p-6 text-center shadow-sm">
+      <h3 className="mb-4 flex items-center justify-center gap-2 font-serif text-xl font-semibold text-ink">
         Escáner de código QR
       </h3>
 
-      <div id="qr-reader" className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" />
+      <div id="qr-reader" className="overflow-hidden rounded-lg border border-line bg-canvas" />
 
       {scannedResult && (
-        <div className="mt-4 rounded-xl border border-emerald-800 bg-emerald-950/80 p-3 font-mono text-sm text-emerald-300">
+        <div className="mt-4 rounded-md border border-success/20 bg-success-soft p-3 font-mono text-sm text-success">
           QR detectado: {scannedResult}
         </div>
       )}

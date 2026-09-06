@@ -32,7 +32,7 @@ export default function CategoryGlyph({
   return (
     <span
       className={cn(
-        "flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-800 bg-slate-950 text-blue-300",
+        "flex h-12 w-12 items-center justify-center rounded-md border border-line bg-brand-soft text-brand",
         className,
       )}
       aria-hidden

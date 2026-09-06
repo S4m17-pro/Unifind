@@ -31,16 +31,16 @@ export default function CatalogFilters({
     <form
       method="get"
       action={action}
-      className="grid gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end"
+      className="grid gap-3 rounded-lg border border-line bg-paper p-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end"
     >
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Categoría
         </span>
         <select
           name="categoria"
           defaultValue={current.category ?? ""}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
         >
           <option value="">Todas</option>
           {options.categories.map((category) => (
@@ -52,13 +52,13 @@ export default function CatalogFilters({
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Portería
         </span>
         <select
           name="porteria"
           defaultValue={current.custodyStation ?? ""}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
         >
           <option value="">Todas</option>
           {options.stations.map((station) => (
@@ -70,13 +70,13 @@ export default function CatalogFilters({
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
           Estado
         </span>
         <select
           name="estado"
           defaultValue={selectedStatus}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
         >
           {STATUS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -89,13 +89,13 @@ export default function CatalogFilters({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-500"
+          className="flex-1 rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
         >
           Filtrar
         </button>
         <Link
           href={action}
-          className="inline-flex items-center justify-center rounded-xl border border-slate-800 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800"
+          className="inline-flex items-center justify-center rounded-md border border-line px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
         >
           Limpiar
         </Link>

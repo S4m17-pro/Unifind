@@ -57,18 +57,18 @@ export default function DeliveryModule() {
         <QRScannerComponent onScanSuccess={(code) => setQrCode(code)} />
       </div>
 
-      <div className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
+      <div className="flex flex-col justify-between rounded-lg border border-line bg-paper p-6 shadow-sm sm:p-8">
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-100">
+          <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-semibold text-ink">
             Bitácora de entrega presencial
           </h2>
 
           {message && (
             <div
-              className={`mb-6 rounded-xl p-4 text-sm ${
+              className={`mb-6 rounded-md p-4 text-sm ${
                 message.type === "success"
-                  ? "border border-emerald-800 bg-emerald-950/80 text-emerald-300"
-                  : "border border-red-800 bg-red-950/80 text-red-300"
+                  ? "border border-success/20 bg-success-soft text-success"
+                  : "border border-danger/20 bg-danger-soft text-danger"
               }`}
             >
               {message.text}
@@ -77,7 +77,7 @@ export default function DeliveryModule() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
                 Código QR escaneado
               </label>
               <input
@@ -86,12 +86,12 @@ export default function DeliveryModule() {
                 onChange={(e) => setQrCode(e.target.value)}
                 required
                 placeholder="Escanea con la cámara o ingresa el código"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 font-mono text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 font-mono text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
                 Nombre del estudiante receptor
               </label>
               <input
@@ -99,12 +99,12 @@ export default function DeliveryModule() {
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
                 placeholder="Opcional si ya reclamó por correo"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
                 Correo institucional del receptor
               </label>
               <input
@@ -113,27 +113,27 @@ export default function DeliveryModule() {
                 onChange={(e) => setStudentEmail(e.target.value)}
                 required
                 placeholder="estudiante@unilibre.edu.co"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <label className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
                   Firma digital de conformidad
                 </label>
                 <button
                   type="button"
                   onClick={handleClearSignature}
-                  className="text-xs text-blue-400 underline hover:text-blue-300"
+                  className="text-xs font-semibold text-brand underline hover:text-brand-hover"
                 >
                   Limpiar firma
                 </button>
               </div>
-              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+              <div className="overflow-hidden rounded-md border border-line bg-canvas">
                 <SignatureCanvas
                   ref={sigCanvasRef}
-                  penColor="#38bdf8"
+                  penColor="#C8102E"
                   canvasProps={{
                     className: "w-full h-40 cursor-crosshair",
                   }}
@@ -144,7 +144,7 @@ export default function DeliveryModule() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-4 w-full rounded-xl bg-emerald-600 py-3 font-medium text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-500 disabled:opacity-50"
+              className="mt-4 w-full rounded-md bg-success py-3 font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"
             >
               {loading ? "Registrando entrega..." : "Confirmar y registrar entrega presencial"}
             </button>

@@ -5,7 +5,13 @@ import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
 import { ITEM_CATEGORIES } from "@/lib/constants";
 
-export default function NewItemForm() {
+export default function NewItemForm({
+  photoNotice,
+  cloudinaryReady = false,
+}: {
+  photoNotice?: string;
+  cloudinaryReady?: boolean;
+}) {
   const [loading, setLoading] = useState(false);
   const [createdItem, setCreatedItem] = useState<{ qrCode: string; category: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -152,9 +158,15 @@ export default function NewItemForm() {
             <input
               type="file"
               name="image"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-400 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-950 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-400 hover:file:bg-blue-900 focus:border-blue-500 focus:outline-none"
             />
+            <p className={`mt-2 text-xs ${cloudinaryReady ? "text-slate-500" : "text-amber-400"}`}>
+              {photoNotice ??
+                (cloudinaryReady
+                  ? "Opcional. Se guarda como authenticated en unifind_private_items y solo se firma en este panel."
+                  : "Opcional. Sin Cloudinary la foto se omite y el objeto igual se registra.")}
+            </p>
           </div>
 
           <button

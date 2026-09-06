@@ -1,7 +1,12 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { getSignedPrivateImageUrl, isCloudinaryConfigured } from "@/lib/images";
+import {
+  describeCloudinarySetup,
+  getCloudinaryStatus,
+  getSignedPrivateImageUrl,
+  isCloudinaryConfigured,
+} from "@/lib/images";
 import ClaimsReview from "@/components/admin/ClaimsReview";
 import DeliveryModule from "@/components/admin/DeliveryModule";
 import NewItemForm from "@/components/admin/NewItemForm";
@@ -36,13 +41,25 @@ export default async function AdminDashboardPage() {
     }),
     prisma.item.findMany({
       where: { status: { in: ["EN_BODEGA", "LISTO_PARA_DONACION"] } },
-      include: { images: true },
+      select: {
+        id: true,
+        category: true,
+        qrCode: true,
+        custodyStation: true,
+        shelfLocation: true,
+        images: {
+          select: { cloudinaryId: true },
+          take: 1,
+        },
+      },
       orderBy: { createdAt: "desc" },
       take: 6,
     }),
   ]);
 
+  const cloudinaryStatus = getCloudinaryStatus();
   const canSignImages = isCloudinaryConfigured();
+  const cloudinarySetupMessage = describeCloudinarySetup();
 
   return (
     <main className="min-h-screen bg-slate-950 p-6 text-slate-100 sm:p-10">
@@ -76,8 +93,17 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
+        {cloudinaryStatus.status !== "ready" ? (
+          <div className="rounded-2xl border border-amber-800 bg-amber-950/50 px-4 py-3 text-sm text-amber-200">
+            {cloudinarySetupMessage}
+          </div>
+        ) : null}
+
         <section>
-          <NewItemForm />
+          <NewItemForm
+            photoNotice={canSignImages ? undefined : cloudinarySetupMessage}
+            cloudinaryReady={canSignImages}
+          />
         </section>
 
         <ClaimsReview claims={pendingClaims} />
@@ -93,7 +119,12 @@ export default async function AdminDashboardPage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {recentItems.map((item) => {
                 const imageId = item.images[0]?.cloudinaryId;
-                const signedUrl = imageId && canSignImages ? getSignedPrivateImageUrl(imageId) : null;
+                const signedUrl = imageId ? getSignedPrivateImageUrl(imageId) : null;
+                const photoLabel = signedUrl
+                  ? null
+                  : imageId
+                    ? "Foto privada almacenada; no se pudo firmar. Revisa CLOUDINARY_*."
+                    : "Sin foto privada";
 
                 return (
                   <article key={item.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
@@ -104,8 +135,8 @@ export default async function AdminDashboardPage() {
                         className="mb-3 h-36 w-full rounded-xl object-cover"
                       />
                     ) : (
-                      <div className="mb-3 flex h-24 items-center justify-center rounded-xl bg-slate-900 text-xs text-slate-500">
-                        Sin foto privada
+                      <div className="mb-3 flex h-24 items-center justify-center rounded-xl bg-slate-900 px-3 text-center text-xs text-slate-500">
+                        {photoLabel}
                       </div>
                     )}
                     <p className="font-semibold text-slate-100">{item.category}</p>

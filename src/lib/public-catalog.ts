@@ -3,8 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { ITEM_CATEGORIES } from "@/lib/constants";
 
 /**
- * Campos públicos del catálogo. Nunca incluir fotos, QR, estante
- * interno ni descripciones de reclamo.
+ * Campos públicos del catálogo. Nunca incluir fotos, cloudinaryId,
+ * secureUrl, QR, estante interno ni descripciones de reclamo.
  */
 export const PUBLIC_ITEM_SELECT = {
   id: true,
@@ -79,20 +79,35 @@ function buildWhere(filters: PublicCatalogFilters): Prisma.ItemWhereInput {
   return where;
 }
 
+function toPublicItem(item: PublicItem): PublicItem {
+  return {
+    id: item.id,
+    category: item.category,
+    foundLocation: item.foundLocation,
+    foundDate: item.foundDate,
+    custodyStation: item.custodyStation,
+    status: item.status,
+  };
+}
+
 export async function getPublicItems(filters: PublicCatalogFilters = {}): Promise<PublicItem[]> {
-  return prisma.item.findMany({
+  const items = await prisma.item.findMany({
     where: buildWhere(filters),
     select: CATALOG_UI_SELECT,
     orderBy: { foundDate: "desc" },
     take: filters.limit,
   });
+
+  return items.map(toPublicItem);
 }
 
 export async function getPublicItem(id: string): Promise<PublicItem | null> {
-  return prisma.item.findUnique({
+  const item = await prisma.item.findUnique({
     where: { id },
     select: CATALOG_UI_SELECT,
   });
+
+  return item ? toPublicItem(item) : null;
 }
 
 export async function getCatalogFilterOptions(): Promise<CatalogFilterOptions> {

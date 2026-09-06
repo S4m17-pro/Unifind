@@ -97,6 +97,18 @@ Bloqueos solo por entorno:
 - Sin Resend, el reclamo se guarda y el correo se omite (queda en logs).
 - Sin `CRON_SECRET`, la ruta `/api/cron/check-expiration` responde 401.
 
+### Cloudinary (fotos privadas)
+
+Opcional. Si configuras las tres variables, vigilancia puede adjuntar una foto al registrar un objeto:
+
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+
+Las fotos se suben con tipo `authenticated` a la carpeta `unifind_private_items`. El catálogo público nunca selecciona ni renderiza esas URLs. En `/admin/dashboard` el servidor firma un enlace temporal (`getSignedPrivateImageUrl`) solo para el personal autenticado.
+
+Si las variables faltan, son placeholders de `.env.example` o están incompletas, el objeto se guarda igual y aparece un aviso. Credenciales inválidas no impiden el registro: la foto se omite con un error claro.
+
 ## Cron de retención
 
 `GET /api/cron/check-expiration` con `Authorization: Bearer $CRON_SECRET` pasa a `LISTO_PARA_DONACION` los objetos en bodega con más de 30 días.

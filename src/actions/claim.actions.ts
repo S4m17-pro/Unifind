@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { resend } from "@/lib/resend";
+import { getResendClient } from "@/lib/resend";
 import { requireStaffSession } from "@/lib/auth-guards";
 import { escapeHtml } from "@/lib/html";
 import { isValidEmail, normalizeEmail, truncate } from "@/lib/validation";
@@ -17,7 +17,8 @@ async function notifyClaimByEmail(params: {
   custodyStation: string;
   shelfLocation: string;
 }) {
-  if (!process.env.RESEND_API_KEY) {
+  const resend = getResendClient();
+  if (!resend) {
     console.warn("RESEND_API_KEY no configurada: se omite el correo de reclamo.");
     return;
   }

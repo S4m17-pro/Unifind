@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
-import { signOutAction } from "@/actions/auth.actions";
+import AccountMenu from "@/components/auth/AccountMenu";
 
 export default async function AppHeader() {
   const session = await auth();
@@ -14,14 +14,11 @@ export default async function AppHeader() {
             Seccional Barranquilla
           </p>
           {session ? (
-            <form action={signOutAction}>
-              <button
-                type="submit"
-                className="inline-flex items-center rounded-md bg-gold-ink px-3 py-1.5 text-xs font-semibold text-white hover:bg-ink"
-              >
-                Cerrar sesión
-              </button>
-            </form>
+            <AccountMenu
+              name={session.user.name}
+              email={session.user.email}
+              role={role}
+            />
           ) : (
             <Link
               href="/login"

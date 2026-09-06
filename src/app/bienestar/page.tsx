@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { IngresoFlash } from "@/components/auth/AuthFlash";
+import { roleDuty, roleLabel } from "@/lib/labels";
 import { getBienestarMetrics } from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
@@ -16,15 +18,21 @@ export default async function BienestarPage() {
   return (
     <main className="p-6 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
-        <header className="border-b border-line pb-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-            Bienestar Universitario
-          </p>
-          <h1 className="mt-2 font-serif text-3xl font-semibold text-ink">Métricas y donaciones</h1>
-          <p className="mt-1 text-sm text-ink-muted">
-            Lectura para SUPERUSER. Retención de custodia: {metrics.retentionDays} días antes de
-            LISTO_PARA_DONACION.
-          </p>
+        <header className="space-y-4 border-b border-line pb-6">
+          <IngresoFlash
+            name={session.user.name || session.user.email || "Bienestar"}
+            roleLabel={roleLabel(session.user.role)}
+          />
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+              Turno de {roleLabel(session.user.role)} · Barranquilla
+            </p>
+            <h1 className="mt-2 font-serif text-3xl font-semibold text-ink">Métricas y donaciones</h1>
+            <p className="mt-1 text-sm text-ink-muted">
+              {session.user.name || session.user.email}. {roleDuty(session.user.role)}.
+              Retención de custodia: {metrics.retentionDays} días antes de LISTO_PARA_DONACION.
+            </p>
+          </div>
         </header>
 
         <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

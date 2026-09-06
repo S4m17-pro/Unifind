@@ -10,7 +10,7 @@ export default async function AppHeader() {
   const role = session?.user?.role;
 
   return (
-    <header className="sticky top-0 z-40">
+    <header data-app-header className="sticky top-0 z-40 isolate bg-paper">
       <div className="border-b border-line bg-bar">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8">
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-muted">
@@ -52,7 +52,8 @@ export default async function AppHeader() {
               Catálogo
             </Link>
             <Link
-              href="/#como-funciona"
+              href="/#como-reclamar"
+              scroll={false}
               className="hidden rounded-md px-3 py-1.5 font-medium text-ink hover:bg-bar hover:text-brand sm:inline-flex"
             >
               Cómo reclamar

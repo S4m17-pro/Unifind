@@ -10,7 +10,7 @@ export default function UnauthorizedPage() {
           Los estudiantes consultan el catálogo público y reclaman por correo, sin ver fotos.
         </p>
         <Link
-          href="/"
+          href="/objetos"
           className="inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-500"
         >
           Volver al catálogo

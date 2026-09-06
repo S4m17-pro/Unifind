@@ -52,6 +52,7 @@ model User {
   deliveredLogs      DeliveryLog[]  @relation("OfficerDeliveries")
   receivedDeliveries DeliveryLog[]  @relation("StudentDeliveries")
 
+  @@index([role])
   @@map("users")
 }
 
@@ -77,6 +78,8 @@ model Item {
   claimRequests    ClaimRequest[]
   deliveryLog      DeliveryLog?
 
+  @@index([status])
+  @@index([foundDate])
   @@map("items")
 }
 
@@ -104,6 +107,8 @@ model ClaimRequest {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
+  @@index([status])
+  @@index([itemId])
   @@map("claim_requests")
 }
 

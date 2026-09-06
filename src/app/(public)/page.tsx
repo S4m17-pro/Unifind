@@ -10,7 +10,7 @@ const STEPS = [
   {
     icon: Search,
     title: "Busca en el catálogo",
-    body: "Filtra por categoría, portería y estado. No mostramos fotos ni detalles privados.",
+    body: "Filtra por categoría, portería y estado. Sin fotos, QR ni estante interno.",
   },
   {
     icon: ClipboardCheck,
@@ -26,7 +26,7 @@ const STEPS = [
 
 export default async function HomePage() {
   const { items, dbUnavailable } = await getCatalogPageData({
-    status: "EN_BODEGA",
+    status: "DISPONIBLES",
     limit: 6,
   });
 
@@ -42,8 +42,8 @@ export default async function HomePage() {
           </h1>
           <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-400 sm:text-base">
             UniFind es la consulta pública de objetos en custodia. Por privacidad no
-            publicamos fotos ni descripciones internas: revisa categoría, fecha y portería,
-            y reclama el que te corresponda.
+            publicamos fotos, QR ni el estante interno: revisa categoría, fecha/hora,
+            bloque/salón y portería, y reclama el que te corresponda.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -89,9 +89,9 @@ export default async function HomePage() {
         <section>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-100">Recién en bodega</h2>
+              <h2 className="text-2xl font-bold text-slate-100">Disponibles para reclamo</h2>
               <p className="mt-1 text-sm text-slate-400">
-                Últimos objetos listos para reclamo. Sin fotos.
+                Últimos objetos en custodia. Sin fotos ni datos internos.
               </p>
             </div>
             <Link href="/objetos" className="text-sm font-medium text-blue-400 hover:text-blue-300">

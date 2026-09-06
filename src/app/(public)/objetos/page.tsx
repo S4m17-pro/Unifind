@@ -42,8 +42,8 @@ export default async function CatalogPage({
             Catálogo de objetos en custodia
           </h1>
           <p className="max-w-2xl text-sm text-slate-400 sm:text-base">
-            No publicamos fotos ni descripciones privadas. Usa los filtros y, si reconoces
-            un objeto, envía el reclamo con tu correo institucional.
+            No publicamos fotos, QR ni el estante interno. Filtra por categoría, portería
+            y estado; si reconoces un objeto, envía el reclamo con tu correo institucional.
           </p>
         </header>
 

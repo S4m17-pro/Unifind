@@ -5,6 +5,7 @@ import { ArrowLeft, CalendarDays, MapPin, ShieldAlert } from "lucide-react";
 import ClaimFormModal from "@/components/public/ClaimFormModal";
 import CategoryGlyph from "@/components/public/CategoryGlyph";
 import StatusBadge from "@/components/public/StatusBadge";
+import { getClaimDefaults } from "@/lib/claim-defaults";
 import { formatFoundDate } from "@/lib/labels";
 import { getPublicItem, isClaimable } from "@/lib/public-catalog";
 
@@ -48,6 +49,7 @@ export default async function ItemDetailPage({
 
   const claimable = isClaimable(item.status);
   const autoOpen = query.reclamar === "1" && claimable;
+  const defaults = await getClaimDefaults(query);
 
   return (
     <main className="px-4 py-12 sm:px-6 lg:px-8">
@@ -80,7 +82,7 @@ export default async function ItemDetailPage({
             <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
               <dt className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
-                Lugar del hallazgo
+                Bloque / salón
               </dt>
               <dd className="text-sm text-slate-200">{item.foundLocation}</dd>
             </div>
@@ -103,8 +105,8 @@ export default async function ItemDetailPage({
           <div className="mb-8 flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-400">
             <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" aria-hidden />
             <p>
-              Por privacidad no mostramos fotos, estante interno ni descripción del
-              registro. Si es tuyo, descríbelo tú en el reclamo.
+              Por privacidad no mostramos fotos, QR, estante interno ni la descripción
+              del registro. Si es tuyo, descríbelo tú en el reclamo.
             </p>
           </div>
 
@@ -118,7 +120,7 @@ export default async function ItemDetailPage({
                   custodyStation: item.custodyStation,
                 }}
                 autoOpen={autoOpen}
-                defaults={{ email: query.email, name: query.nombre }}
+                defaults={defaults}
                 triggerLabel="Reclamar este objeto"
               />
               <p className="text-center text-xs text-slate-500">

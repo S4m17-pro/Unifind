@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import ClaimForm from "@/components/public/ClaimForm";
 import StatusBadge from "@/components/public/StatusBadge";
+import { getClaimDefaults } from "@/lib/claim-defaults";
 import { getPublicItem, isClaimable } from "@/lib/public-catalog";
 
 export const dynamic = "force-dynamic";
@@ -34,6 +35,7 @@ export default async function ClaimPage({
   if (!item) notFound();
 
   const claimable = isClaimable(item.status);
+  const defaults = await getClaimDefaults(query);
 
   return (
     <main className="px-4 py-12 sm:px-6 lg:px-8">
@@ -57,8 +59,8 @@ export default async function ClaimPage({
             {item.category} · {item.custodyStation}
           </h1>
           <p className="mb-6 text-sm text-slate-400">
-            Hallado en {item.foundLocation}. Escribe cómo lo reconoces; portería te
-            contactará para la entrega presencial.
+            Hallado en {item.foundLocation} (bloque/salón). Describe cómo lo reconoces;
+            portería valida y te lo entrega con tu carnet.
           </p>
 
           {claimable ? (
@@ -69,7 +71,7 @@ export default async function ClaimPage({
                 foundLocation: item.foundLocation,
                 custodyStation: item.custodyStation,
               }}
-              defaults={{ email: query.email, name: query.nombre }}
+              defaults={defaults}
               submitLabel="Enviar reclamo"
             />
           ) : (

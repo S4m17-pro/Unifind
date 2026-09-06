@@ -9,6 +9,7 @@ export type CatalogFilterValues = {
 };
 
 const STATUS_OPTIONS: Array<{ value: CatalogStatusFilter; label: string }> = [
+  { value: "DISPONIBLES", label: "Disponibles" },
   { value: "EN_BODEGA", label: STATUS_LABELS.EN_BODEGA },
   { value: "LISTO_PARA_DONACION", label: STATUS_LABELS.LISTO_PARA_DONACION },
   { value: "ENTREGADO", label: STATUS_LABELS.ENTREGADO },
@@ -24,7 +25,7 @@ export default function CatalogFilters({
   current: CatalogFilterValues;
   action?: string;
 }) {
-  const selectedStatus = current.status ?? "EN_BODEGA";
+  const selectedStatus = current.status ?? "DISPONIBLES";
 
   return (
     <form

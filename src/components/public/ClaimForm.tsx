@@ -17,15 +17,9 @@ type ClaimFormProps = {
 };
 
 /**
- * Formulario de reclamo cableado a `submitClaimAction`.
- *
- * Firma esperada (Back, ya existente):
- *   submitClaimAction(formData: FormData)
- *   campos: itemId, studentName, studentEmail, description
- *   retorno: { error?: string; success?: true; claimId?: string }
- *
- * TODO(Back): prellenar `defaults.email` / `defaults.name` desde la sesión Auth.js
- * (`session.user.email`, `session.user.name`) cuando el login estudiantil esté listo.
+ * Formulario de reclamo cableado a `submitClaimAction` (Back).
+ * Campos: itemId, studentName, studentEmail, description.
+ * Prefill: `defaults` desde query (?email, ?nombre) o sesión Auth.js.
  */
 export default function ClaimForm({
   item,

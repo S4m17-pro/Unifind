@@ -27,9 +27,9 @@ export default function ItemCard({ item }: { item: PublicItem }) {
           <div className="flex items-start gap-2">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" aria-hidden />
             <div>
-              <dt className="sr-only">Lugar del hallazgo</dt>
+              <dt className="sr-only">Bloque / salón</dt>
               <dd>
-                <span className="text-slate-300">Hallazgo:</span> {item.foundLocation}
+                <span className="text-slate-300">Bloque / salón:</span> {item.foundLocation}
               </dd>
             </div>
           </div>

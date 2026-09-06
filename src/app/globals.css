@@ -70,10 +70,6 @@
   --radius: 0.375rem;
 }
 
-html {
-  scroll-padding-top: var(--app-header-offset);
-}
-
 body {
   background-color: var(--color-canvas);
   color: var(--color-ink);

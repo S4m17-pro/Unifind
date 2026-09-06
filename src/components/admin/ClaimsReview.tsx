@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { reviewClaimAction } from "@/actions/claim.actions";
 
 export type PendingClaim = {
@@ -12,6 +13,7 @@ export type PendingClaim = {
     email: string;
   };
   item: {
+    id: string;
     category: string;
     qrCode: string;
     custodyStation: string;
@@ -68,7 +70,13 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
               <blockquote className="mt-3 rounded-xl border-l-4 border-blue-600 bg-slate-900 px-3 py-2 text-sm text-slate-300">
                 {claim.description}
               </blockquote>
-              <div className="mt-4 flex gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href={`/admin/objetos/${claim.item.id}`}
+                  className="rounded-xl border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 hover:bg-slate-800"
+                >
+                  Ver ficha privada
+                </Link>
                 <button
                   type="button"
                   disabled={busyId === claim.id}

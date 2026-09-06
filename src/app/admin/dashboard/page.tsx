@@ -1,12 +1,14 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import {
   describeCloudinarySetup,
   getCloudinaryStatus,
-  getSignedPrivateImageUrl,
   isCloudinaryConfigured,
 } from "@/lib/images";
+import { resolveAdminPrivatePhoto } from "@/lib/admin-photo";
+import AdminPrivatePhoto from "@/components/admin/AdminPrivatePhoto";
 import ClaimsReview from "@/components/admin/ClaimsReview";
 import DeliveryModule from "@/components/admin/DeliveryModule";
 import NewItemForm from "@/components/admin/NewItemForm";
@@ -30,6 +32,7 @@ export default async function AdminDashboardPage() {
         student: { select: { name: true, email: true } },
         item: {
           select: {
+            id: true,
             category: true,
             qrCode: true,
             custodyStation: true,
@@ -118,32 +121,26 @@ export default async function AdminDashboardPage() {
           ) : (
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {recentItems.map((item) => {
-                const imageId = item.images[0]?.cloudinaryId;
-                const signedUrl = imageId ? getSignedPrivateImageUrl(imageId) : null;
-                const photoLabel = signedUrl
-                  ? null
-                  : imageId
-                    ? "Foto privada almacenada; no se pudo firmar. Revisa CLOUDINARY_*."
-                    : "Sin foto privada";
+                const photo = resolveAdminPrivatePhoto(item.images[0]?.cloudinaryId);
 
                 return (
                   <article key={item.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                    {signedUrl ? (
-                      <img
-                        src={signedUrl}
-                        alt={`Foto privada de ${item.category}`}
-                        className="mb-3 h-36 w-full rounded-xl object-cover"
-                      />
-                    ) : (
-                      <div className="mb-3 flex h-24 items-center justify-center rounded-xl bg-slate-900 px-3 text-center text-xs text-slate-500">
-                        {photoLabel}
-                      </div>
-                    )}
+                    <AdminPrivatePhoto
+                      signedUrl={photo.signedUrl}
+                      emptyLabel={photo.emptyLabel}
+                      alt={`Foto privada de ${item.category}`}
+                    />
                     <p className="font-semibold text-slate-100">{item.category}</p>
                     <p className="font-mono text-xs text-blue-400">{item.qrCode}</p>
                     <p className="mt-1 text-sm text-slate-400">
                       {item.custodyStation} · {item.shelfLocation}
                     </p>
+                    <Link
+                      href={`/admin/objetos/${item.id}`}
+                      className="mt-3 inline-flex text-sm font-medium text-blue-400 hover:text-blue-300"
+                    >
+                      Ver ficha privada
+                    </Link>
                   </article>
                 );
               })}

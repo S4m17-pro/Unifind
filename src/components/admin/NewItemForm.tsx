@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
 import { ITEM_CATEGORIES } from "@/lib/constants";
+import PrivatePhotoField, { validateSelectedPhoto } from "./PrivatePhotoField";
 
 export default function NewItemForm({
   photoNotice,
@@ -13,7 +15,11 @@ export default function NewItemForm({
   cloudinaryReady?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
-  const [createdItem, setCreatedItem] = useState<{ qrCode: string; category: string } | null>(null);
+  const [createdItem, setCreatedItem] = useState<{
+    id: string;
+    qrCode: string;
+    category: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
 
@@ -24,13 +30,27 @@ export default function NewItemForm({
     setWarning(null);
 
     const formData = new FormData(e.currentTarget);
+    const imageFile = formData.get("image");
+    if (imageFile instanceof File && imageFile.size > 0) {
+      const photoError = validateSelectedPhoto(imageFile);
+      if (photoError) {
+        setLoading(false);
+        setError(photoError);
+        return;
+      }
+    }
+
     const res = await createItemAction(formData);
     setLoading(false);
 
     if (res.error) {
       setError(res.error);
     } else if (res.item) {
-      setCreatedItem({ qrCode: res.item.qrCode, category: res.item.category });
+      setCreatedItem({
+        id: res.item.id,
+        qrCode: res.item.qrCode,
+        category: res.item.category,
+      });
       setWarning(res.warning ?? null);
     }
   };
@@ -66,12 +86,24 @@ export default function NewItemForm({
             Código QR: <strong className="text-blue-400">{createdItem.qrCode}</strong>
           </p>
 
-          <button
-            onClick={() => setCreatedItem(null)}
-            className="rounded-xl bg-blue-600 px-6 py-2.5 font-medium text-white transition-all hover:bg-blue-500"
-          >
-            Registrar otro objeto
-          </button>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              href={`/admin/objetos/${createdItem.id}`}
+              className="rounded-xl bg-slate-800 px-6 py-2.5 font-medium text-slate-100 transition-colors hover:bg-slate-700"
+            >
+              Ver ficha privada
+            </Link>
+            <button
+              type="button"
+              onClick={() => {
+                setCreatedItem(null);
+                setWarning(null);
+              }}
+              className="rounded-xl bg-blue-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-blue-500"
+            >
+              Registrar otro objeto
+            </button>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -151,28 +183,16 @@ export default function NewItemForm({
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Foto privada (Cloudinary autenticado)
-            </label>
-            <input
-              type="file"
-              name="image"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-400 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-950 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-400 hover:file:bg-blue-900 focus:border-blue-500 focus:outline-none"
-            />
-            <p className={`mt-2 text-xs ${cloudinaryReady ? "text-slate-500" : "text-amber-400"}`}>
-              {photoNotice ??
-                (cloudinaryReady
-                  ? "Opcional. Se guarda como authenticated en unifind_private_items y solo se firma en este panel."
-                  : "Opcional. Sin Cloudinary la foto se omite y el objeto igual se registra.")}
-            </p>
-          </div>
+          <PrivatePhotoField
+            photoNotice={photoNotice}
+            cloudinaryReady={cloudinaryReady}
+            onError={setError}
+          />
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-medium text-white shadow-lg shadow-blue-600/25 transition-all hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50"
+            className="mt-4 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-medium text-white shadow-lg shadow-blue-600/25 transition-colors hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50"
           >
             {loading ? "Procesando y generando QR..." : "Guardar en bodega y generar QR"}
           </button>

@@ -113,7 +113,7 @@ export default async function LoginPage({
           <Link href="/objetos" className="font-semibold text-brand hover:text-brand-hover">
             Consulta el catálogo
           </Link>{" "}
-          : no necesitas cuenta ni contraseña.
+          . No necesitas cuenta ni contraseña.
         </p>
       </div>
     </main>

@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState, useId, useState, type ComponentProps, type FormEvent } from "react";
+import {
+  startTransition,
+  useActionState,
+  useId,
+  useState,
+  type ComponentProps,
+  type FormEvent,
+} from "react";
 import { CircleAlert, LoaderCircle } from "lucide-react";
 import { loginAction } from "@/actions/auth.actions";
 import { setAuthFlash } from "@/components/auth/auth-flash";
@@ -106,9 +113,10 @@ export default function LoginForm({
   const pendingId = useId();
 
   const serverError = state?.error ? friendlyAuthError(state.error) : initialError;
-  const canSubmit = Boolean(email.trim() && password) && !pending;
+  const canSubmit = !pending;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
     const nextErrors = validateLogin(
@@ -118,7 +126,6 @@ export default function LoginForm({
     setFieldErrors(nextErrors);
 
     if (nextErrors.email || nextErrors.password) {
-      event.preventDefault();
       const fieldName = nextErrors.email ? "email" : "password";
       const firstInvalid = form.elements.namedItem(fieldName);
       if (firstInvalid instanceof HTMLInputElement) firstInvalid.focus();
@@ -126,11 +133,13 @@ export default function LoginForm({
     }
 
     setAuthFlash("ingreso");
+    startTransition(() => {
+      formAction(data);
+    });
   };
 
   return (
     <form
-      action={formAction}
       onSubmit={handleSubmit}
       noValidate
       aria-busy={pending}

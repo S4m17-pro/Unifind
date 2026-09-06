@@ -1,57 +1,86 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import cloudinary from "@/lib/cloudinary";
-import { revalidatePath } from "next/cache";
+import { ITEM_CATEGORIES } from "@/lib/constants";
+import { requireStaffSession } from "@/lib/auth-guards";
+import { isCloudinaryConfigured } from "@/lib/images";
+import { truncate } from "@/lib/validation";
 
 export async function createItemAction(formData: FormData) {
-  const category = formData.get("category") as string;
-  const foundLocation = formData.get("foundLocation") as string;
-  const foundDateStr = formData.get("foundDate") as string;
-  const custodyStation = formData.get("custodyStation") as string;
-  const shelfLocation = formData.get("shelfLocation") as string;
-  const registeredById = formData.get("registeredById") as string;
+  let session;
+
+  try {
+    session = await requireStaffSession();
+  } catch {
+    return { error: "Debes iniciar sesión como vigilante o Bienestar." };
+  }
+
+  const category = truncate(String(formData.get("category") ?? ""), 80);
+  const foundLocation = truncate(String(formData.get("foundLocation") ?? ""), 160);
+  const foundDateStr = String(formData.get("foundDate") ?? "");
+  const custodyStation = truncate(String(formData.get("custodyStation") ?? ""), 160);
+  const shelfLocation = truncate(String(formData.get("shelfLocation") ?? ""), 160);
   const imageFile = formData.get("image") as File | null;
 
-  if (!category || !foundLocation || !custodyStation || !shelfLocation || !registeredById) {
+  if (!category || !foundLocation || !custodyStation || !shelfLocation) {
     return { error: "Faltan datos obligatorios para el registro." };
   }
 
+  if (!(ITEM_CATEGORIES as readonly string[]).includes(category)) {
+    return { error: "La categoría no es válida." };
+  }
+
   try {
-    // Generar código QR / identificador único único
-    const qrCode = `UNIFIND-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const qrCode = `UNIFIND-${crypto.randomUUID()}`;
+    const foundDate = foundDateStr ? new Date(foundDateStr) : new Date();
+
+    if (Number.isNaN(foundDate.getTime())) {
+      return { error: "La fecha y hora del hallazgo no es válida." };
+    }
 
     const newItem = await prisma.item.create({
       data: {
         qrCode,
         category,
         foundLocation,
-        foundDate: foundDateStr ? new Date(foundDateStr) : new Date(),
+        foundDate,
         custodyStation,
         shelfLocation,
-        registeredById,
+        registeredById: session.user.id,
         status: "EN_BODEGA",
       },
     });
 
-    // Carga de imagen a Cloudinary (si fue provista)
     if (imageFile && imageFile.size > 0) {
+      if (!isCloudinaryConfigured()) {
+        revalidatePath("/admin/dashboard");
+        return {
+          success: true,
+          item: newItem,
+          warning: "Objeto guardado, pero Cloudinary no está configurado. La foto no se cargó.",
+        };
+      }
+
       const bytes = await imageFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      const uploadResult = await new Promise<{ public_id: string; secure_url: string }>((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          {
-            folder: "unifind_private_items",
-            type: "authenticated", // Imagen privada accesible sólo vía SDK/firmada
-          },
-          (error, result) => {
-            if (error || !result) reject(error);
-            else resolve({ public_id: result.public_id, secure_url: result.secure_url });
-          }
-        );
-        stream.end(buffer);
-      });
+      const uploadResult = await new Promise<{ public_id: string; secure_url: string }>(
+        (resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: "unifind_private_items",
+              type: "authenticated",
+            },
+            (error, result) => {
+              if (error || !result) reject(error);
+              else resolve({ public_id: result.public_id, secure_url: result.secure_url });
+            }
+          );
+          stream.end(buffer);
+        }
+      );
 
       await prisma.itemImage.create({
         data: {
@@ -63,6 +92,7 @@ export async function createItemAction(formData: FormData) {
     }
 
     revalidatePath("/admin/dashboard");
+    revalidatePath("/");
     return { success: true, item: newItem };
   } catch (error) {
     console.error("Error al registrar item:", error);

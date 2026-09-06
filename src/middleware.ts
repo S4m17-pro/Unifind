@@ -1,37 +1,38 @@
-import { getToken } from "next-auth/jwt";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { authConfig } from "@/auth.config";
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+const { auth } = NextAuth(authConfig);
+
+export default auth((req) => {
   const { pathname } = req.nextUrl;
+  const role = req.auth?.user?.role;
 
-  // Rutas administrativas protegidas
   const isAdminRoute = pathname.startsWith("/admin");
   const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isBienestarRoute = pathname.startsWith("/bienestar");
 
-  if (isAdminRoute || isDashboardRoute) {
-    if (!token) {
-      const url = new URL("/login", req.url);
-      url.searchParams.set("callbackUrl", encodeURI(pathname));
-      return NextResponse.redirect(url);
-    }
+  if (!isAdminRoute && !isDashboardRoute && !isBienestarRoute) {
+    return NextResponse.next();
+  }
 
-    const userRole = token.role as string;
-    const isAuthorized = userRole === "ADMIN" || userRole === "SUPERUSER";
+  if (!req.auth) {
+    const url = new URL("/login", req.nextUrl.origin);
+    url.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(url);
+  }
 
-    if (!isAuthorized) {
-      // Redirigir a estudiantes intencionados a acceder al panel administrativo
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
+  if (isBienestarRoute && role !== "SUPERUSER") {
+    return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
+  }
+
+  if ((isAdminRoute || isDashboardRoute) && role !== "ADMIN" && role !== "SUPERUSER") {
+    return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: [
-    "/admin/:path*",
-    "/dashboard/:path*",
-  ],
+  matcher: ["/admin/:path*", "/dashboard/:path*", "/bienestar/:path*"],
 };

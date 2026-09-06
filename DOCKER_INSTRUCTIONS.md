@@ -6,8 +6,9 @@ docker compose up -d
 # 2. Verificar el estado del contenedor
 docker compose ps
 
-# 3. Aplicar migraciones y schema de Prisma a la BD en Docker
-npx prisma db push
+# 3. Aplicar migraciones y seed de Prisma a la BD en Docker
+npx prisma migrate deploy
+npm run db:seed
 
 # 4. (Opcional) Abrir Prisma Studio para ver los datos visualmente
 npx prisma studio

@@ -1,6 +1,39 @@
 {
+  "name": "unifind",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de objetos perdidos de Universidad Libre Barranquilla",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S4m17-pro/Unifind.git"
+  },
+  "keywords": [
+    "unifind",
+    "lost-and-found",
+    "universidad-libre"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/S4m17-pro/Unifind/issues"
+  },
+  "homepage": "https://github.com/S4m17-pro/Unifind#readme",
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "bcryptjs": "^3.0.2",
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
     "html5-qrcode": "^2.3.8",
@@ -16,6 +49,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
@@ -24,28 +58,7 @@
     "postcss": "^8.5.26",
     "prisma": "^5.22.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.21.0",
     "typescript": "^5.7.3"
-  },
-  "name": "unifind",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/S4m17-pro/Unifind.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/S4m17-pro/Unifind/issues"
-  },
-  "homepage": "https://github.com/S4m17-pro/Unifind#readme"
+  }
 }

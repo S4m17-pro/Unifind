@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
 interface Props {
@@ -14,7 +14,7 @@ export default function QRScannerComponent({ onScanSuccess }: Props) {
     const scanner = new Html5QrcodeScanner(
       "qr-reader",
       { fps: 10, qrbox: { width: 250, height: 250 } },
-      /* verbose= */ false
+      false
     );
 
     scanner.render(
@@ -23,7 +23,7 @@ export default function QRScannerComponent({ onScanSuccess }: Props) {
         onScanSuccess(decodedText);
         scanner.clear();
       },
-      (error) => {
+      () => {
         // Ignorar escaneos parciales en curso
       }
     );
@@ -34,16 +34,16 @@ export default function QRScannerComponent({ onScanSuccess }: Props) {
   }, [onScanSuccess]);
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl text-center">
-      <h3 className="text-xl font-bold text-slate-100 mb-4 flex items-center justify-center gap-2">
-        📷 Escáner de Código QR
+    <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 text-center shadow-2xl">
+      <h3 className="mb-4 flex items-center justify-center gap-2 text-xl font-bold text-slate-100">
+        Escáner de código QR
       </h3>
 
-      <div id="qr-reader" className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950"></div>
+      <div id="qr-reader" className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950" />
 
       {scannedResult && (
-        <div className="mt-4 p-3 bg-emerald-950/80 border border-emerald-800 text-emerald-300 rounded-xl text-sm font-mono">
-          QR Detectado: {scannedResult}
+        <div className="mt-4 rounded-xl border border-emerald-800 bg-emerald-950/80 p-3 font-mono text-sm text-emerald-300">
+          QR detectado: {scannedResult}
         </div>
       )}
     </div>

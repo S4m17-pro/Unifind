@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Info } from "lucide-react";
 import { auth } from "@/auth";
 import LoginForm from "@/components/auth/LoginForm";
 import SignOutControl from "@/components/auth/SignOutControl";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 
 export const metadata: Metadata = {
@@ -70,15 +73,10 @@ export default async function LoginPage({
             donación son de portería y Bienestar.
           </p>
           <div className="flex flex-col gap-2">
-            <Link
-              href="/objetos"
-              className="inline-flex items-center justify-center rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-hover"
-            >
-              Ir al catálogo
-            </Link>
-            <SignOutControl className="inline-flex items-center justify-center rounded-md border border-line bg-bar px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand">
-              Cerrar esta sesión
-            </SignOutControl>
+            <Button asChild>
+              <Link href="/objetos">Ir al catálogo</Link>
+            </Button>
+            <SignOutControl>Cerrar esta sesión</SignOutControl>
           </div>
         </div>
       </main>
@@ -99,9 +97,10 @@ export default async function LoginPage({
           Esta puerta es para vigilancia de portería y para Bienestar Universitario.
         </p>
         {hint ? (
-          <p className="mt-3 rounded-md border border-gold/40 bg-gold-soft px-3 py-2 text-sm text-gold-ink">
-            {hint}
-          </p>
+          <Alert variant="gold" className="mt-4">
+            <Info />
+            <AlertDescription>{hint}</AlertDescription>
+          </Alert>
         ) : null}
         <div className="mt-6">
           <LoginForm
@@ -114,7 +113,7 @@ export default async function LoginPage({
           <Link href="/objetos" className="font-semibold text-brand hover:text-brand-hover">
             Consulta el catálogo
           </Link>{" "}
-          — no necesitas cuenta ni contraseña.
+          : no necesitas cuenta ni contraseña.
         </p>
       </div>
     </main>

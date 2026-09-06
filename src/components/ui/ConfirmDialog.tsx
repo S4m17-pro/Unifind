@@ -1,8 +1,16 @@
 "use client";
 
-import { useEffect, useId, useRef, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { useFormStatus } from "react-dom";
-import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 function ConfirmSubmit({
   label,
@@ -16,18 +24,14 @@ function ConfirmSubmit({
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
       type="submit"
       disabled={pending}
-      className={cn(
-        "inline-flex min-w-[9rem] items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold text-white transition-colors disabled:opacity-60",
-        tone === "danger"
-          ? "bg-danger hover:bg-[#7f1616]"
-          : "bg-brand hover:bg-brand-hover",
-      )}
+      variant={tone === "danger" ? "destructive" : "default"}
+      className="min-w-[9rem]"
     >
       {pending ? pendingLabel : label}
-    </button>
+    </Button>
   );
 }
 
@@ -51,86 +55,59 @@ export default function ConfirmDialog({
   description,
   cancelLabel = "Cancelar",
   confirmLabel,
-  confirmPendingLabel = "Un momento...",
+  confirmPendingLabel = "Un momento…",
   confirmTone = "brand",
   confirmAction,
   onCancel,
   onConfirmSubmit,
   restoreFocusRef,
 }: ConfirmDialogProps) {
-  const titleId = useId();
-  const descriptionId = useId();
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const cancelRef = useRef<HTMLButtonElement>(null);
   const onCancelRef = useRef(onCancel);
 
   useEffect(() => {
     onCancelRef.current = onCancel;
   }, [onCancel]);
 
-  useEffect(() => {
-    const node = dialogRef.current;
-    if (!node) return;
-
-    if (open) {
-      if (!node.open) {
-        node.showModal();
-      }
-      cancelRef.current?.focus();
-      return;
-    }
-
-    if (node.open) {
-      node.close();
-    }
-    restoreFocusRef?.current?.focus?.();
-  }, [open, restoreFocusRef]);
-
   return (
-    <dialog
-      ref={dialogRef}
-      aria-labelledby={titleId}
-      aria-describedby={description ? descriptionId : undefined}
-      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg border border-line bg-paper p-6 text-ink shadow-xl backdrop:bg-ink/50 backdrop:backdrop-blur-sm"
-      onCancel={(event) => {
-        event.preventDefault();
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (nextOpen) return;
         onCancelRef.current();
-      }}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) {
-          onCancelRef.current();
-        }
+        restoreFocusRef?.current?.focus?.();
       }}
     >
-      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-        UniFind · Sesión
-      </p>
-      <h2 id={titleId} className="font-serif text-xl font-semibold text-ink">
-        {title}
-      </h2>
-      {description ? (
-        <p id={descriptionId} className="mt-2 text-sm text-ink-muted">
-          {description}
-        </p>
-      ) : null}
+      <DialogContent
+        showCloseButton={false}
+        className="border-line bg-paper text-ink sm:max-w-md"
+      >
+        <DialogHeader>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+            UniFind · Sesión
+          </p>
+          <DialogTitle className="font-serif text-xl font-semibold text-ink">
+            {title}
+          </DialogTitle>
+          {description ? (
+            <DialogDescription className="text-ink-muted">
+              {description}
+            </DialogDescription>
+          ) : null}
+        </DialogHeader>
 
-      <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-        <button
-          ref={cancelRef}
-          type="button"
-          onClick={() => onCancelRef.current()}
-          className="inline-flex items-center justify-center rounded-md border border-line bg-bar px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
-        >
-          {cancelLabel}
-        </button>
-        <form action={confirmAction} onSubmit={onConfirmSubmit}>
-          <ConfirmSubmit
-            label={confirmLabel}
-            pendingLabel={confirmPendingLabel}
-            tone={confirmTone}
-          />
-        </form>
-      </div>
-    </dialog>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onCancelRef.current()}>
+            {cancelLabel}
+          </Button>
+          <form action={confirmAction} onSubmit={onConfirmSubmit}>
+            <ConfirmSubmit
+              label={confirmLabel}
+              pendingLabel={confirmPendingLabel}
+              tone={confirmTone}
+            />
+          </form>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import type { Role } from "@prisma/client";
 import SignOutDialog from "@/components/auth/SignOutDialog";
+import { Button } from "@/components/ui/button";
 import { accountInitials, roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 import { cn } from "@/lib/cn";
 
@@ -52,30 +53,32 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
 
   return (
     <div ref={rootRef} className="relative">
-      <button
+      <Button
         ref={triggerRef}
         type="button"
+        variant="gold"
+        size="sm"
         aria-expanded={menuOpen}
         aria-haspopup="true"
         aria-controls={panelId}
         onClick={() => setMenuOpen((open) => !open)}
-        className="inline-flex max-w-[16rem] items-center gap-2 rounded-md bg-gold-ink px-2.5 py-1.5 text-white hover:bg-ink"
+        className="h-auto max-w-[16rem] gap-2 px-2.5 py-1.5"
       >
         <span
           aria-hidden
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm bg-white/15 font-serif text-[10px] font-semibold"
+          className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-white/15 font-serif text-xs font-semibold"
         >
           {initials}
         </span>
         <span className="min-w-0 text-left leading-tight">
           <span className="block truncate text-xs font-semibold">{displayName}</span>
-          <span className="block truncate text-[10px] text-white/75">{label}</span>
+          <span className="block truncate text-xs text-white/75">{label}</span>
         </span>
         <ChevronDown
           className={cn("h-3.5 w-3.5 shrink-0 transition-transform", menuOpen && "rotate-180")}
           aria-hidden
         />
-      </button>
+      </Button>
 
       {menuOpen ? (
         <div
@@ -89,35 +92,32 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
           </p>
 
           {role === "ADMIN" || role === "SUPERUSER" ? (
-            <Link
-              href={homePath}
-              onClick={() => setMenuOpen(false)}
-              className="mt-3 inline-flex w-full items-center justify-center rounded-md border border-line bg-bar px-3 py-2 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
-            >
-              {role === "SUPERUSER" ? "Ir a Bienestar" : "Ir a vigilancia"}
-            </Link>
+            <Button asChild variant="outline" className="mt-3 w-full">
+              <Link href={homePath} onClick={() => setMenuOpen(false)}>
+                {role === "SUPERUSER" ? "Ir a Bienestar" : "Ir a vigilancia"}
+              </Link>
+            </Button>
           ) : null}
 
           {role === "SUPERUSER" ? (
-            <Link
-              href="/admin/dashboard"
-              onClick={() => setMenuOpen(false)}
-              className="mt-2 inline-flex w-full items-center justify-center rounded-md px-3 py-2 text-sm font-medium text-ink-muted hover:bg-bar hover:text-brand"
-            >
-              Panel de portería
-            </Link>
+            <Button asChild variant="ghost" className="mt-2 w-full text-ink-muted">
+              <Link href="/admin/dashboard" onClick={() => setMenuOpen(false)}>
+                Panel de portería
+              </Link>
+            </Button>
           ) : null}
 
-          <button
+          <Button
             type="button"
+            variant="gold"
+            className="mt-2 w-full"
             onClick={() => {
               setMenuOpen(false);
               setSignOutOpen(true);
             }}
-            className="mt-2 inline-flex w-full items-center justify-center rounded-md bg-gold-ink px-3 py-2 text-sm font-semibold text-white hover:bg-ink"
           >
             Cerrar sesión
-          </button>
+          </Button>
         </div>
       ) : null}
 

@@ -1,8 +1,13 @@
 "use client";
 
-import { useActionState, useId, useState, type FormEvent } from "react";
+import { useActionState, useId, useState, type ComponentProps, type FormEvent } from "react";
+import { CircleAlert, LoaderCircle } from "lucide-react";
 import { loginAction } from "@/actions/auth.actions";
 import { setAuthFlash } from "@/components/auth/auth-flash";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { isValidEmail } from "@/lib/validation";
 
 type FieldErrors = {
@@ -36,6 +41,50 @@ function friendlyAuthError(error: string) {
   return error;
 }
 
+function LoginField({
+  id,
+  label,
+  error,
+  hint,
+  errorId,
+  hintId,
+  ...inputProps
+}: {
+  id: string;
+  label: string;
+  error?: string;
+  hint?: string;
+  errorId: string;
+  hintId?: string;
+} & ComponentProps<typeof Input>) {
+  return (
+    <div className="space-y-2">
+      <Label
+        htmlFor={id}
+        className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
+      >
+        {label}
+      </Label>
+      <Input
+        id={id}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : hintId}
+        className="h-11 bg-paper text-ink"
+        {...inputProps}
+      />
+      {error ? (
+        <p id={errorId} role="alert" className="text-xs text-danger">
+          {error}
+        </p>
+      ) : hint ? (
+        <p id={hintId} className="text-xs text-ink-subtle">
+          {hint}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 export default function LoginForm({
   callbackUrl,
   initialError,
@@ -52,28 +101,27 @@ export default function LoginForm({
   const emailErrorId = useId();
   const emailHintId = useId();
   const passwordErrorId = useId();
+  const passwordHintId = useId();
   const formErrorId = useId();
   const pendingId = useId();
 
-  const serverError = state?.error
-    ? friendlyAuthError(state.error)
-    : initialError;
+  const serverError = state?.error ? friendlyAuthError(state.error) : initialError;
+  const canSubmit = Boolean(email.trim() && password) && !pending;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     const form = event.currentTarget;
     const data = new FormData(form);
-    const email = String(data.get("email") ?? "");
-    const password = String(data.get("password") ?? "");
-    const nextErrors = validateLogin(email, password);
+    const nextErrors = validateLogin(
+      String(data.get("email") ?? ""),
+      String(data.get("password") ?? ""),
+    );
     setFieldErrors(nextErrors);
 
     if (nextErrors.email || nextErrors.password) {
       event.preventDefault();
       const fieldName = nextErrors.email ? "email" : "password";
       const firstInvalid = form.elements.namedItem(fieldName);
-      if (firstInvalid instanceof HTMLInputElement) {
-        firstInvalid.focus();
-      }
+      if (firstInvalid instanceof HTMLInputElement) firstInvalid.focus();
       return;
     }
 
@@ -86,99 +134,78 @@ export default function LoginForm({
       onSubmit={handleSubmit}
       noValidate
       aria-busy={pending}
-      className="space-y-4"
+      className="space-y-5"
     >
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
 
       {serverError && !fieldErrors.email && !fieldErrors.password ? (
-        <div
-          id={formErrorId}
-          role="alert"
-          className="rounded-md border border-danger/20 bg-danger-soft p-4 text-sm text-danger"
-        >
-          {serverError}
-        </div>
+        <Alert id={formErrorId} variant="destructive">
+          <CircleAlert />
+          <AlertTitle>No pudimos abrir el panel</AlertTitle>
+          <AlertDescription>{serverError}</AlertDescription>
+        </Alert>
       ) : null}
 
-      <div>
-        <label
-          htmlFor={emailId}
-          className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
-        >
-          Correo institucional
-        </label>
-        <input
-          id={emailId}
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          inputMode="email"
-          placeholder="vigilancia@unilibre.edu.co"
-          value={email}
-          aria-invalid={fieldErrors.email ? true : undefined}
-          aria-describedby={fieldErrors.email ? emailErrorId : emailHintId}
-          disabled={pending}
-          onChange={(event) => {
-            setEmail(event.target.value);
-            if (fieldErrors.email) setFieldErrors((current) => ({ ...current, email: undefined }));
-          }}
-          className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none disabled:opacity-60"
-        />
-        {fieldErrors.email ? (
-          <p id={emailErrorId} role="alert" className="mt-1.5 text-xs text-danger">
-            {fieldErrors.email}
-          </p>
-        ) : (
-          <p id={emailHintId} className="mt-1.5 text-xs text-ink-subtle">
-            El de Unilibre que usa portería o Bienestar, no el personal de un estudiante.
-          </p>
-        )}
-      </div>
+      <LoginField
+        id={emailId}
+        label="Correo institucional"
+        type="email"
+        name="email"
+        required
+        autoComplete="email"
+        inputMode="email"
+        placeholder="vigilancia@unilibre.edu.co"
+        value={email}
+        disabled={pending}
+        error={fieldErrors.email}
+        errorId={emailErrorId}
+        hintId={emailHintId}
+        hint="El de Unilibre que usa portería o Bienestar, no el personal de un estudiante."
+        onChange={(event) => {
+          setEmail(event.target.value);
+          if (fieldErrors.email) setFieldErrors((current) => ({ ...current, email: undefined }));
+        }}
+      />
 
-      <div>
-        <label
-          htmlFor={passwordId}
-          className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
-        >
-          Contraseña
-        </label>
-        <input
-          id={passwordId}
-          type="password"
-          name="password"
-          required
-          autoComplete="current-password"
-          value={password}
-          aria-invalid={fieldErrors.password ? true : undefined}
-          aria-describedby={fieldErrors.password ? passwordErrorId : undefined}
-          disabled={pending}
-          onChange={(event) => {
-            setPassword(event.target.value);
-            if (fieldErrors.password) {
-              setFieldErrors((current) => ({ ...current, password: undefined }));
-            }
-          }}
-          className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none disabled:opacity-60"
-        />
-        {fieldErrors.password ? (
-          <p id={passwordErrorId} role="alert" className="mt-1.5 text-xs text-danger">
-            {fieldErrors.password}
-          </p>
-        ) : null}
-      </div>
+      <LoginField
+        id={passwordId}
+        label="Contraseña"
+        type="password"
+        name="password"
+        required
+        autoComplete="current-password"
+        value={password}
+        disabled={pending}
+        error={fieldErrors.password}
+        errorId={passwordErrorId}
+        hintId={passwordHintId}
+        hint="La misma clave de tu turno en portería o Bienestar."
+        onChange={(event) => {
+          setPassword(event.target.value);
+          if (fieldErrors.password) {
+            setFieldErrors((current) => ({ ...current, password: undefined }));
+          }
+        }}
+      />
 
       <p id={pendingId} className="sr-only" aria-live="polite">
-        {pending ? "Comprobando tu acceso..." : ""}
+        {pending ? "Comprobando tu acceso…" : ""}
       </p>
-      <button
+      <Button
         type="submit"
-        disabled={pending}
+        disabled={!canSubmit}
         aria-describedby={pending ? pendingId : undefined}
-        className="w-full rounded-md bg-brand py-3 font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
+        className="h-11 w-full text-sm font-semibold"
       >
-        {pending ? "Comprobando tu acceso..." : "Entrar al panel"}
-      </button>
+        {pending ? (
+          <>
+            <LoaderCircle className="animate-spin" aria-hidden />
+            Comprobando tu acceso…
+          </>
+        ) : (
+          "Entrar al panel"
+        )}
+      </Button>
     </form>
   );
 }

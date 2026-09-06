@@ -23,7 +23,7 @@ export default function SignOutDialog({
       description="Vas a salir del panel de UniFind. El catálogo público sigue abierto para consultar objetos en custodia."
       cancelLabel="Cancelar"
       confirmLabel="Cerrar sesión"
-      confirmPendingLabel="Cerrando sesión..."
+      confirmPendingLabel="Cerrando sesión…"
       confirmTone="danger"
       confirmAction={signOutAction}
       onCancel={onCancel}

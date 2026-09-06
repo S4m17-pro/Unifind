@@ -2,27 +2,34 @@
 
 import { useRef, useState, type ReactNode } from "react";
 import SignOutDialog from "@/components/auth/SignOutDialog";
-import { cn } from "@/lib/cn";
+import type { VariantProps } from "class-variance-authority";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 type SignOutControlProps = {
   className?: string;
   children?: ReactNode;
+  variant?: VariantProps<typeof buttonVariants>["variant"];
 };
 
-export default function SignOutControl({ className, children }: SignOutControlProps) {
+export default function SignOutControl({
+  className,
+  children,
+  variant = "outline",
+}: SignOutControlProps) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <button
+      <Button
         ref={triggerRef}
         type="button"
-        className={cn(className)}
+        variant={variant}
+        className={className}
         onClick={() => setOpen(true)}
       >
         {children ?? "Cerrar sesión"}
-      </button>
+      </Button>
       <SignOutDialog
         open={open}
         onCancel={() => setOpen(false)}

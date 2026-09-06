@@ -1,7 +1,10 @@
 "use client";
 
 import { useCallback, useState, useSyncExternalStore, type ReactNode } from "react";
+import { CircleCheck, LogOut } from "lucide-react";
 import { AUTH_FLASH, type AuthFlashKey } from "@/components/auth/auth-flash";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 function subscribeNoop() {
@@ -21,6 +24,8 @@ type AuthFlashProps = {
   children: ReactNode;
   className?: string;
   dismissLabel?: string;
+  variant?: "success" | "gold";
+  icon?: ReactNode;
 };
 
 export default function AuthFlash({
@@ -28,6 +33,8 @@ export default function AuthFlash({
   children,
   className,
   dismissLabel = "Entendido",
+  variant = "gold",
+  icon,
 }: AuthFlashProps) {
   const stored = useSyncExternalStore(
     subscribeNoop,
@@ -47,22 +54,21 @@ export default function AuthFlash({
   if (!stored || dismissed) return null;
 
   return (
-    <div
-      role="status"
-      className={cn(
-        "flex flex-col gap-3 rounded-md border px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between",
-        className,
-      )}
-    >
-      <p>{children}</p>
-      <button
-        type="button"
-        onClick={dismiss}
-        className="shrink-0 self-start text-xs font-semibold uppercase tracking-[0.14em] underline-offset-2 hover:underline sm:self-auto"
-      >
-        {dismissLabel}
-      </button>
-    </div>
+    <Alert variant={variant} className={cn(className)}>
+      {icon}
+      <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p>{children}</p>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={dismiss}
+          className="h-auto self-start px-0 text-xs font-semibold uppercase tracking-[0.14em] underline-offset-2 hover:bg-transparent hover:underline sm:self-auto"
+        >
+          {dismissLabel}
+        </Button>
+      </AlertDescription>
+    </Alert>
   );
 }
 
@@ -70,10 +76,7 @@ export function IngresoFlash({ name, roleLabel }: { name: string; roleLabel: str
   const firstName = name.split(/\s+/)[0] || name;
 
   return (
-    <AuthFlash
-      storageKey={AUTH_FLASH.ingreso}
-      className="border-success/25 bg-success-soft text-success"
-    >
+    <AuthFlash storageKey={AUTH_FLASH.ingreso} variant="success" icon={<CircleCheck />}>
       Entraste bien, {firstName}. Esta es tu sesión de {roleLabel} en UniFind ·
       Barranquilla. Queda abierta en este navegador hasta que la cierres.
     </AuthFlash>
@@ -84,7 +87,9 @@ export function SesionCerradaFlash() {
   return (
     <AuthFlash
       storageKey={AUTH_FLASH.sesionCerrada}
-      className="mx-4 my-4 max-w-7xl border-gold/40 bg-gold-soft text-gold-ink sm:mx-6 lg:mx-auto lg:w-full"
+      variant="gold"
+      icon={<LogOut />}
+      className="mx-4 my-4 max-w-7xl sm:mx-6 lg:mx-auto lg:w-full"
     >
       Cerraste la sesión del panel. El catálogo sigue abierto: no necesitas
       cuenta para buscar un objeto en custodia.

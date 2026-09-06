@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import AccountMenu from "@/components/auth/AccountMenu";
+import { Button } from "@/components/ui/button";
 
 export default async function AppHeader() {
   const session = await auth();
@@ -10,7 +11,7 @@ export default async function AppHeader() {
     <header className="sticky top-0 z-40">
       <div className="border-b border-line bg-bar">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8">
-          <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-muted">
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-muted">
             Seccional Barranquilla
           </p>
           {session ? (
@@ -20,12 +21,9 @@ export default async function AppHeader() {
               role={role}
             />
           ) : (
-            <Link
-              href="/login"
-              className="inline-flex items-center rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-hover"
-            >
-              Iniciar sesión
-            </Link>
+            <Button asChild size="sm" className="text-xs font-semibold">
+              <Link href="/login">Iniciar sesión</Link>
+            </Button>
           )}
         </div>
       </div>
@@ -43,7 +41,7 @@ export default async function AppHeader() {
               <span className="block font-serif text-lg font-semibold text-ink group-hover:text-brand sm:text-xl">
                 UniFind
               </span>
-              <span className="block text-[11px] text-ink-muted">
+              <span className="block text-xs text-ink-muted">
                 Universidad Libre
               </span>
             </span>

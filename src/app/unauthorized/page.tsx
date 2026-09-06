@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { auth } from "@/auth";
 import SignOutControl from "@/components/auth/SignOutControl";
+import { Button } from "@/components/ui/button";
 import { roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 
 export const metadata: Metadata = {
@@ -29,21 +30,15 @@ export default async function UnauthorizedPage() {
             El panel de custodia lo usa vigilancia de portería y Bienestar
             Universitario. Si llegaste por un enlace interno, entra con tu cuenta
             de personal. Si buscas algo que perdiste, el catálogo público es el
-            camino — sin fotos ni sesión.
+            camino, sin fotos ni sesión.
           </p>
           <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
-            <Link
-              href="/objetos"
-              className="inline-flex rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-hover"
-            >
-              Ir al catálogo
-            </Link>
-            <Link
-              href="/login"
-              className="inline-flex rounded-md border border-line bg-bar px-5 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
-            >
-              Soy personal de campus
-            </Link>
+            <Button asChild>
+              <Link href="/objetos">Ir al catálogo</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/login">Soy personal de campus</Link>
+            </Button>
           </div>
         </div>
       </main>
@@ -107,15 +102,10 @@ function UnauthorizedCard({
         <h1 className="mb-3 font-serif text-2xl font-semibold text-ink">{title}</h1>
         <p className="mb-6 text-sm text-ink-muted">{body}</p>
         <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
-          <Link
-            href={primaryHref}
-            className="inline-flex rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-hover"
-          >
-            {primaryLabel}
-          </Link>
-          <SignOutControl className="inline-flex rounded-md border border-line bg-bar px-5 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand">
-            Cerrar sesión
-          </SignOutControl>
+          <Button asChild>
+            <Link href={primaryHref}>{primaryLabel}</Link>
+          </Button>
+          <SignOutControl>Cerrar sesión</SignOutControl>
         </div>
       </div>
     </main>

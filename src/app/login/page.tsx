@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Info } from "lucide-react";
 import { auth } from "@/auth";
+import BrandImageSlot from "@/components/brand/BrandImageSlot";
 import LoginForm from "@/components/auth/LoginForm";
 import SignOutControl from "@/components/auth/SignOutControl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { brand } from "@/lib/brand";
 import { roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 
 export const metadata: Metadata = {
@@ -59,62 +62,89 @@ export default async function LoginPage({
 
   if (session?.user) {
     return (
-      <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md rounded-lg border border-line bg-paper p-8 shadow-sm">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-            Sesión ya abierta
-          </p>
-          <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">
-            Esta cuenta no abre el panel
-          </h1>
-          <p className="mb-6 text-sm text-ink-muted">
-            Hay una sesión de {roleLabel(session.user.role)} ({session.user.email}).{" "}
-            {roleDuty(session.user.role)}. El registro de bodega y las métricas de
-            donación son de portería y Bienestar.
-          </p>
-          <div className="flex flex-col gap-2">
-            <Button asChild>
-              <Link href="/objetos">Ir al catálogo</Link>
-            </Button>
-            <SignOutControl>Cerrar esta sesión</SignOutControl>
-          </div>
+      <LoginShell>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+          Sesión ya abierta
+        </p>
+        <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">
+          Esta cuenta no abre el panel
+        </h1>
+        <p className="mb-6 text-sm text-ink-muted">
+          Hay una sesión de {roleLabel(session.user.role)} ({session.user.email}).{" "}
+          {roleDuty(session.user.role)}. El registro de bodega y las métricas de
+          donación son de portería y Bienestar.
+        </p>
+        <div className="flex flex-col gap-2">
+          <Button asChild>
+            <Link href="/objetos">Ir al catálogo</Link>
+          </Button>
+          <SignOutControl>Cerrar esta sesión</SignOutControl>
         </div>
-      </main>
+      </LoginShell>
     );
   }
 
   const hint = requestedCallback ? destinationHint(requestedCallback) : null;
 
   return (
-    <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md rounded-lg border border-line bg-paper p-8 shadow-sm">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-          Portería y Bienestar
-        </p>
-        <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">Entrar a UniFind</h1>
-        <p className="text-sm text-ink-muted">
-          UniFind custodia los objetos perdidos de Universidad Libre Barranquilla.
-          Esta puerta es para vigilancia de portería y para Bienestar Universitario.
-        </p>
-        {hint ? (
-          <Alert variant="gold" className="mt-4">
-            <Info />
-            <AlertDescription>{hint}</AlertDescription>
-          </Alert>
-        ) : null}
-        <div className="mt-6">
-          <LoginForm
-            callbackUrl={callbackUrl}
-            initialError={errorFromAuthParam(params.error)}
-          />
+    <LoginShell>
+      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+        Portería y Bienestar
+      </p>
+      <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">
+        Entrar a {brand.product}
+      </h1>
+      <p className="text-sm text-ink-muted">
+        {brand.product} custodia los objetos perdidos de {brand.institution}{" "}
+        {brand.seccional}. Esta puerta es para vigilancia de portería y para
+        Bienestar Universitario.
+      </p>
+      {hint ? (
+        <Alert variant="gold" className="mt-4">
+          <Info />
+          <AlertDescription>{hint}</AlertDescription>
+        </Alert>
+      ) : null}
+      <div className="mt-6">
+        <LoginForm
+          callbackUrl={callbackUrl}
+          initialError={errorFromAuthParam(params.error)}
+        />
+      </div>
+      <p className="mt-6 border-t border-line pt-4 text-sm text-ink-muted">
+        ¿Perdiste algo en el campus?{" "}
+        <Link href="/objetos" className="font-semibold text-brand hover:text-brand-hover">
+          Consulta el catálogo
+        </Link>{" "}
+        : no necesitas cuenta ni contraseña.
+      </p>
+    </LoginShell>
+  );
+}
+
+function LoginShell({ children }: { children: ReactNode }) {
+  return (
+    <main className="px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto grid min-h-[calc(100vh-12rem)] max-w-5xl items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
+        <aside className="flex flex-col gap-4">
+          <BrandImageSlot slot="hero" variant="panel" className="lg:min-h-[280px]" />
+          <div className="hidden rounded-lg border border-line bg-paper p-5 lg:block">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+              {brand.seccional}
+            </p>
+            <p className="mt-2 font-serif text-lg font-semibold text-ink">
+              Acceso de personal de campus
+            </p>
+            <p className="mt-2 text-sm text-ink-muted">
+              El catálogo público no pide sesión. Esta pantalla es solo para
+              portería y Bienestar. La foto de campus es institucional: nunca
+              una foto de objeto en custodia.
+            </p>
+          </div>
+        </aside>
+        <div className="rounded-lg border border-line bg-paper p-8 shadow-sm">
+          {children}
         </div>
-        <p className="mt-6 border-t border-line pt-4 text-sm text-ink-muted">
-          ¿Perdiste algo en el campus?{" "}
-          <Link href="/objetos" className="font-semibold text-brand hover:text-brand-hover">
-            Consulta el catálogo
-          </Link>{" "}
-          : no necesitas cuenta ni contraseña.
-        </p>
       </div>
     </main>
   );

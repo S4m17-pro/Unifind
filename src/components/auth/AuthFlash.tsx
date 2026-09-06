@@ -1,8 +1,20 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useState, useSyncExternalStore, type ReactNode } from "react";
 import { AUTH_FLASH, type AuthFlashKey } from "@/components/auth/auth-flash";
 import { cn } from "@/lib/cn";
+
+function subscribeNoop() {
+  return () => {};
+}
+
+function readFlash(storageKey: AuthFlashKey) {
+  try {
+    return sessionStorage.getItem(storageKey) === "1";
+  } catch {
+    return false;
+  }
+}
 
 type AuthFlashProps = {
   storageKey: AuthFlashKey;
@@ -17,20 +29,22 @@ export default function AuthFlash({
   className,
   dismissLabel = "Entendido",
 }: AuthFlashProps) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
+  const stored = useSyncExternalStore(
+    subscribeNoop,
+    () => readFlash(storageKey),
+    () => false,
+  );
+  const [dismissed, setDismissed] = useState(false);
+  const dismiss = useCallback(() => {
     try {
-      if (sessionStorage.getItem(storageKey) === "1") {
-        sessionStorage.removeItem(storageKey);
-        setVisible(true);
-      }
+      sessionStorage.removeItem(storageKey);
     } catch {
-      setVisible(false);
+      // Ignore blocked storage.
     }
+    setDismissed(true);
   }, [storageKey]);
 
-  if (!visible) return null;
+  if (!stored || dismissed) return null;
 
   return (
     <div
@@ -43,7 +57,7 @@ export default function AuthFlash({
       <p>{children}</p>
       <button
         type="button"
-        onClick={() => setVisible(false)}
+        onClick={dismiss}
         className="shrink-0 self-start text-xs font-semibold uppercase tracking-[0.14em] underline-offset-2 hover:underline sm:self-auto"
       >
         {dismissLabel}

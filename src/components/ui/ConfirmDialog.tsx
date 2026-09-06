@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type RefObject } from "react";
-import { createPortal } from "react-dom";
+import { useEffect, useId, useRef, type RefObject } from "react";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/cn";
-
-function getFocusable(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
-    ),
-  ).filter((element) => !element.hasAttribute("disabled") && element.tabIndex !== -1);
-}
 
 function ConfirmSubmit({
   label,
@@ -69,116 +60,77 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
   const titleId = useId();
   const descriptionId = useId();
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const cancelRef = useRef<HTMLButtonElement>(null);
   const onCancelRef = useRef(onCancel);
-  const [mounted, setMounted] = useState(false);
-  onCancelRef.current = onCancel;
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    onCancelRef.current = onCancel;
+  }, [onCancel]);
 
   useEffect(() => {
-    if (!open || !mounted) return;
+    const node = dialogRef.current;
+    if (!node) return;
 
-    const root = dialogRef.current;
-    const previouslyFocused = document.activeElement as HTMLElement | null;
+    if (open) {
+      if (!node.open) {
+        node.showModal();
+      }
+      cancelRef.current?.focus();
+      return;
+    }
 
-    const focusCancel = () => {
-      const cancel = root?.querySelector<HTMLElement>("[data-dialog-cancel]");
-      cancel?.focus();
-    };
+    if (node.open) {
+      node.close();
+    }
+    restoreFocusRef?.current?.focus?.();
+  }, [open, restoreFocusRef]);
 
-    const frame = window.requestAnimationFrame(focusCancel);
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={titleId}
+      aria-describedby={description ? descriptionId : undefined}
+      className="m-auto w-[calc(100%-2rem)] max-w-md rounded-lg border border-line bg-paper p-6 text-ink shadow-xl backdrop:bg-ink/50 backdrop:backdrop-blur-sm"
+      onCancel={(event) => {
         event.preventDefault();
         onCancelRef.current();
-        return;
-      }
-
-      if (event.key !== "Tab" || !root) return;
-
-      const items = getFocusable(root);
-      if (items.length === 0) {
-        event.preventDefault();
-        return;
-      }
-
-      const first = items[0];
-      const last = items[items.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-      const restoreTo = restoreFocusRef?.current ?? previouslyFocused;
-      restoreTo?.focus?.();
-    };
-  }, [open, mounted, restoreFocusRef]);
-
-  if (!mounted || !open) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
-        onClick={onCancel}
-      />
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-describedby={description ? descriptionId : undefined}
-        className="relative w-full max-w-md rounded-lg border border-line bg-paper p-6 shadow-xl"
-      >
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-          UniFind · Sesión
+      }}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          onCancelRef.current();
+        }
+      }}
+    >
+      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+        UniFind · Sesión
+      </p>
+      <h2 id={titleId} className="font-serif text-xl font-semibold text-ink">
+        {title}
+      </h2>
+      {description ? (
+        <p id={descriptionId} className="mt-2 text-sm text-ink-muted">
+          {description}
         </p>
-        <h2 id={titleId} className="font-serif text-xl font-semibold text-ink">
-          {title}
-        </h2>
-        {description ? (
-          <p id={descriptionId} className="mt-2 text-sm text-ink-muted">
-            {description}
-          </p>
-        ) : null}
+      ) : null}
 
-        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <button
-            type="button"
-            data-dialog-cancel
-            onClick={onCancel}
-            className="inline-flex items-center justify-center rounded-md border border-line bg-bar px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
-          >
-            {cancelLabel}
-          </button>
-          <form action={confirmAction} onSubmit={onConfirmSubmit}>
-            <ConfirmSubmit
-              label={confirmLabel}
-              pendingLabel={confirmPendingLabel}
-              tone={confirmTone}
-            />
-          </form>
-        </div>
+      <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button
+          ref={cancelRef}
+          type="button"
+          onClick={() => onCancelRef.current()}
+          className="inline-flex items-center justify-center rounded-md border border-line bg-bar px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
+        >
+          {cancelLabel}
+        </button>
+        <form action={confirmAction} onSubmit={onConfirmSubmit}>
+          <ConfirmSubmit
+            label={confirmLabel}
+            pendingLabel={confirmPendingLabel}
+            tone={confirmTone}
+          />
+        </form>
       </div>
-    </div>,
-    document.body,
+    </dialog>
   );
 }

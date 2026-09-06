@@ -45,6 +45,8 @@ export default function LoginForm({
 }) {
   const [state, formAction, pending] = useActionState(loginAction, undefined);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const emailId = useId();
   const passwordId = useId();
   const emailErrorId = useId();
@@ -113,10 +115,12 @@ export default function LoginForm({
           autoComplete="email"
           inputMode="email"
           placeholder="vigilancia@unilibre.edu.co"
+          value={email}
           aria-invalid={fieldErrors.email ? true : undefined}
           aria-describedby={fieldErrors.email ? emailErrorId : emailHintId}
           disabled={pending}
-          onChange={() => {
+          onChange={(event) => {
+            setEmail(event.target.value);
             if (fieldErrors.email) setFieldErrors((current) => ({ ...current, email: undefined }));
           }}
           className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none disabled:opacity-60"
@@ -145,10 +149,12 @@ export default function LoginForm({
           name="password"
           required
           autoComplete="current-password"
+          value={password}
           aria-invalid={fieldErrors.password ? true : undefined}
           aria-describedby={fieldErrors.password ? passwordErrorId : undefined}
           disabled={pending}
-          onChange={() => {
+          onChange={(event) => {
+            setPassword(event.target.value);
             if (fieldErrors.password) {
               setFieldErrors((current) => ({ ...current, password: undefined }));
             }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ClipboardCheck, Search, Shield } from "lucide-react";
 import { getCatalogPageData } from "@/lib/public-catalog";
+import { SesionCerradaFlash } from "@/components/auth/AuthFlash";
 import DbUnavailableNotice from "@/components/public/DbUnavailableNotice";
 import ItemGrid from "@/components/public/ItemGrid";
 
@@ -32,6 +33,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <SesionCerradaFlash />
       <section className="border-b border-line bg-paper">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 sm:py-16 lg:px-8">
           <p className="mb-4 inline-block rounded-md border border-gold/40 bg-gold-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">

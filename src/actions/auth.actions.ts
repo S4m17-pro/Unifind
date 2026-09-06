@@ -11,6 +11,10 @@ export async function loginAction(
   const password = String(formData.get("password") ?? "");
   const callbackUrl = String(formData.get("callbackUrl") ?? "/dashboard");
 
+  if (!email.trim() || !password) {
+    return { error: "Falta el correo o la contraseña." };
+  }
+
   try {
     await signIn("credentials", {
       email,

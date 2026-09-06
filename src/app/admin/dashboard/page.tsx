@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { IngresoFlash } from "@/components/auth/AuthFlash";
+import { roleDuty, roleLabel } from "@/lib/labels";
 import { prisma } from "@/lib/prisma";
 import {
   describeCloudinarySetup,
@@ -68,14 +70,23 @@ export default async function AdminDashboardPage() {
     <main className="p-6 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
         <div className="flex flex-col justify-between gap-4 border-b border-line pb-6 md:flex-row md:items-center">
-          <div>
-            <h1 className="font-serif text-3xl font-semibold text-ink">
-              Panel de control (Vigilancia y bodega)
-            </h1>
-            <p className="mt-1 text-sm text-ink-muted">
-              Sesión: {session.user.name || session.user.email}. Registro privado, QR, revisión de
-              reclamos y entrega con firma.
-            </p>
+          <div className="space-y-4">
+            <IngresoFlash
+              name={session.user.name || session.user.email || "vigilancia"}
+              roleLabel={roleLabel(session.user.role)}
+            />
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
+                Turno de {roleLabel(session.user.role)} · Barranquilla
+              </p>
+              <h1 className="mt-2 font-serif text-3xl font-semibold text-ink">
+                Panel de control (Vigilancia y bodega)
+              </h1>
+              <p className="mt-1 text-sm text-ink-muted">
+                {session.user.name || session.user.email}. {roleDuty(session.user.role)}.
+                Registro privado, QR y entrega con firma.
+              </p>
+            </div>
           </div>
         </div>
 

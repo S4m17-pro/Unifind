@@ -1,23 +1,31 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { CUSTODY_RETENTION_DAYS } from "@/lib/constants";
 
-// Ruta Cron ejecutada periódicamente (ej. vía Vercel Cron o GitHub Actions)
-export async function GET(request: Request) {
+function isAuthorizedCron(request: Request): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) {
+    return false;
+  }
+
   const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  return authHeader === `Bearer ${secret}`;
+}
+
+export async function GET(request: Request) {
+  if (!isAuthorizedCron(request)) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
   try {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - CUSTODY_RETENTION_DAYS);
 
-    // Actualizar items en bodega con más de 30 días
     const updateResult = await prisma.item.updateMany({
       where: {
         status: "EN_BODEGA",
         createdAt: {
-          lte: thirtyDaysAgo,
+          lte: cutoff,
         },
       },
       data: {
@@ -27,6 +35,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
+      retentionDays: CUSTODY_RETENTION_DAYS,
       message: `${updateResult.count} objeto(s) actualizados a LISTO_PARA_DONACION.`,
     });
   } catch (error) {

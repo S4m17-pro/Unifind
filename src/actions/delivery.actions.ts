@@ -1,64 +1,94 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { prisma } from "@/lib/prisma";
+import { requireStaffSession } from "@/lib/auth-guards";
+import { isDataUrlImage, isValidEmail, normalizeEmail, truncate } from "@/lib/validation";
 
 export async function processDeliveryAction({
   qrCode,
   studentEmail,
-  officerId,
+  studentName,
   signatureData,
 }: {
   qrCode: string;
   studentEmail: string;
-  officerId: string;
+  studentName?: string;
   signatureData: string;
 }) {
-  if (!qrCode || !studentEmail || !officerId || !signatureData) {
+  let session;
+
+  try {
+    session = await requireStaffSession();
+  } catch {
+    return { error: "Debes iniciar sesión como vigilante o Bienestar." };
+  }
+
+  const normalizedQr = qrCode.trim();
+  const email = normalizeEmail(studentEmail);
+  const name = truncate(studentName ?? "", 120);
+
+  if (!normalizedQr || !email || !signatureData) {
     return { error: "Todos los datos de verificación y firma son requeridos." };
   }
 
+  if (!isValidEmail(email)) {
+    return { error: "El correo del estudiante no es válido." };
+  }
+
+  if (!isDataUrlImage(signatureData)) {
+    return { error: "La firma digital no tiene un formato válido." };
+  }
+
   try {
-    // Buscar el objeto por código QR
-    const item = await prisma.item.findUnique({
-      where: { qrCode },
+    const result = await prisma.$transaction(async (tx) => {
+      const item = await tx.item.findUnique({
+        where: { qrCode: normalizedQr },
+      });
+
+      if (!item) {
+        return { error: "Objeto no encontrado con el código QR escaneado." };
+      }
+
+      if (item.status === "ENTREGADO") {
+        return { error: "Este objeto ya ha sido entregado anteriormente." };
+      }
+
+      const student = await tx.user.upsert({
+        where: { email },
+        update: name ? { name } : {},
+        create: {
+          email,
+          name: name || "Estudiante",
+          role: "STUDENT",
+        },
+      });
+
+      const deliveryLog = await tx.deliveryLog.create({
+        data: {
+          itemId: item.id,
+          officerId: session.user.id,
+          studentId: student.id,
+          signatureData,
+        },
+      });
+
+      await tx.item.update({
+        where: { id: item.id },
+        data: { status: "ENTREGADO" },
+      });
+
+      return { success: true as const, deliveryLogId: deliveryLog.id };
     });
 
-    if (!item) {
-      return { error: "Objeto no encontrado con el código QR escaneado." };
+    if ("error" in result && result.error) {
+      return { error: result.error };
     }
-
-    if (item.status === "ENTREGADO") {
-      return { error: "Este objeto ya ha sido entregado anteriormente." };
-    }
-
-    // Buscar o verificar estudiante
-    const student = await prisma.user.findUnique({
-      where: { email: studentEmail },
-    });
-
-    if (!student) {
-      return { error: "El estudiante especificado no se encuentra registrado." };
-    }
-
-    // Registrar bitácora de entrega con firma digital
-    const deliveryLog = await prisma.deliveryLog.create({
-      data: {
-        itemId: item.id,
-        officerId,
-        studentId: student.id,
-        signatureData,
-      },
-    });
-
-    // Actualizar estado del objeto
-    await prisma.item.update({
-      where: { id: item.id },
-      data: { status: "ENTREGADO" },
-    });
 
     revalidatePath("/admin/dashboard");
-    return { success: true, deliveryLogId: deliveryLog.id };
+    revalidatePath("/bienestar");
+    revalidatePath("/");
+    return result;
   } catch (error) {
     console.error("Error al procesar la entrega presencial:", error);
     return { error: "No se pudo registrar la entrega presencial." };

@@ -5,10 +5,11 @@ import SignatureCanvas from "react-signature-canvas";
 import { processDeliveryAction } from "@/actions/delivery.actions";
 import QRScannerComponent from "./QRScannerComponent";
 
-export default function DeliveryModule({ officerId }: { officerId: string }) {
+export default function DeliveryModule() {
   const sigCanvasRef = useRef<SignatureCanvas | null>(null);
   const [qrCode, setQrCode] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
+  const [studentName, setStudentName] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -21,7 +22,10 @@ export default function DeliveryModule({ officerId }: { officerId: string }) {
     setMessage(null);
 
     if (!sigCanvasRef.current || sigCanvasRef.current.isEmpty()) {
-      setMessage({ type: "error", text: "Por favor captura la firma digital del estudiante antes de completar la entrega." });
+      setMessage({
+        type: "error",
+        text: "Por favor captura la firma digital del estudiante antes de completar la entrega.",
+      });
       return;
     }
 
@@ -31,7 +35,7 @@ export default function DeliveryModule({ officerId }: { officerId: string }) {
     const result = await processDeliveryAction({
       qrCode,
       studentEmail,
-      officerId,
+      studentName,
       signatureData,
     });
     setLoading(false);
@@ -42,30 +46,29 @@ export default function DeliveryModule({ officerId }: { officerId: string }) {
       setMessage({ type: "success", text: "¡Entrega presencial registrada exitosamente!" });
       setQrCode("");
       setStudentEmail("");
+      setStudentName("");
       handleClearSignature();
     }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-      {/* Escáner Cámara QR */}
+    <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-2">
       <div>
         <QRScannerComponent onScanSuccess={(code) => setQrCode(code)} />
       </div>
 
-      {/* Formulario de Verificación y Firma */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col justify-between">
+      <div className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
         <div>
-          <h2 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-2">
-            ✍️ Bitácora de Entrega Presencial
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-100">
+            Bitácora de entrega presencial
           </h2>
 
           {message && (
             <div
-              className={`p-4 rounded-xl mb-6 text-sm ${
+              className={`mb-6 rounded-xl p-4 text-sm ${
                 message.type === "success"
-                  ? "bg-emerald-950/80 border border-emerald-800 text-emerald-300"
-                  : "bg-red-950/80 border border-red-800 text-red-300"
+                  ? "border border-emerald-800 bg-emerald-950/80 text-emerald-300"
+                  : "border border-red-800 bg-red-950/80 text-red-300"
               }`}
             >
               {message.text}
@@ -74,48 +77,60 @@ export default function DeliveryModule({ officerId }: { officerId: string }) {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                Código QR Escaneado del Paquete / Objeto
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Código QR escaneado
               </label>
               <input
                 type="text"
                 value={qrCode}
                 onChange={(e) => setQrCode(e.target.value)}
                 required
-                placeholder="Escanea con la cámara o ingresa código manualmente"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 text-sm focus:outline-none focus:border-blue-500 font-mono"
+                placeholder="Escanea con la cámara o ingresa el código"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 font-mono text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
-                Correo Institucional del Estudiante Receptor
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Nombre del estudiante receptor
+              </label>
+              <input
+                type="text"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                placeholder="Opcional si ya reclamó por correo"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Correo institucional del receptor
               </label>
               <input
                 type="email"
                 value={studentEmail}
                 onChange={(e) => setStudentEmail(e.target.value)}
                 required
-                placeholder="estudiante@universidad.edu.co"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 text-sm focus:outline-none focus:border-blue-500"
+                placeholder="estudiante@unilibre.edu.co"
+                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
-            {/* Firma Digital Canvas */}
             <div>
-              <div className="flex items-center justify-between mb-1">
+              <div className="mb-1 flex items-center justify-between">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Firma Digital de Conformidad (Firma en pantalla)
+                  Firma digital de conformidad
                 </label>
                 <button
                   type="button"
                   onClick={handleClearSignature}
-                  className="text-xs text-blue-400 hover:text-blue-300 underline"
+                  className="text-xs text-blue-400 underline hover:text-blue-300"
                 >
-                  Limpiar Firma
+                  Limpiar firma
                 </button>
               </div>
-              <div className="border border-slate-800 bg-slate-950 rounded-xl overflow-hidden">
+              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
                 <SignatureCanvas
                   ref={sigCanvasRef}
                   penColor="#38bdf8"
@@ -129,9 +144,9 @@ export default function DeliveryModule({ officerId }: { officerId: string }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-3 rounded-xl transition-all shadow-lg shadow-emerald-600/20 disabled:opacity-50"
+              className="mt-4 w-full rounded-xl bg-emerald-600 py-3 font-medium text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-500 disabled:opacity-50"
             >
-              {loading ? "Registrando Entrega..." : "Confirmar y Registrar Entrega Presencial"}
+              {loading ? "Registrando entrega..." : "Confirmar y registrar entrega presencial"}
             </button>
           </form>
         </div>

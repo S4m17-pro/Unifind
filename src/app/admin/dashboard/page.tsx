@@ -1,57 +1,127 @@
-import NewItemForm from "@/components/admin/NewItemForm";
-import DeliveryModule from "@/components/admin/DeliveryModule";
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { getSignedPrivateImageUrl, isCloudinaryConfigured } from "@/lib/images";
+import ClaimsReview from "@/components/admin/ClaimsReview";
+import DeliveryModule from "@/components/admin/DeliveryModule";
+import NewItemForm from "@/components/admin/NewItemForm";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  // En un entorno de producción, obtenemos la sesión activa de NextAuth
-  // const session = await getServerSession(authOptions);
-  const sampleOfficerId = "admin_officer_demo_id";
+  const session = await auth();
 
-  const totalBodega = await prisma.item.count({ where: { status: "EN_BODEGA" } });
-  const totalEntregados = await prisma.item.count({ where: { status: "ENTREGADO" } });
-  const totalDonacion = await prisma.item.count({ where: { status: "LISTO_PARA_DONACION" } });
+  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "SUPERUSER")) {
+    redirect("/login?callbackUrl=/admin/dashboard");
+  }
+
+  const [totalBodega, totalEntregados, totalDonacion, pendingClaims, recentItems] = await Promise.all([
+    prisma.item.count({ where: { status: "EN_BODEGA" } }),
+    prisma.item.count({ where: { status: "ENTREGADO" } }),
+    prisma.item.count({ where: { status: "LISTO_PARA_DONACION" } }),
+    prisma.claimRequest.findMany({
+      where: { status: "PENDING" },
+      include: {
+        student: { select: { name: true, email: true } },
+        item: {
+          select: {
+            category: true,
+            qrCode: true,
+            custodyStation: true,
+            shelfLocation: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.item.findMany({
+      where: { status: { in: ["EN_BODEGA", "LISTO_PARA_DONACION"] } },
+      include: { images: true },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    }),
+  ]);
+
+  const canSignImages = isCloudinaryConfigured();
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 p-6 sm:p-10">
-      <div className="max-w-7xl mx-auto space-y-10">
-        {/* Header Dashboard */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+    <main className="min-h-screen bg-slate-950 p-6 text-slate-100 sm:p-10">
+      <div className="mx-auto max-w-7xl space-y-10">
+        <div className="flex flex-col justify-between gap-4 border-b border-slate-800 pb-6 md:flex-row md:items-center">
           <div>
             <h1 className="text-3xl font-extrabold text-slate-100">
-              Panel de Control (Vigilancia & Bodega)
+              Panel de control (Vigilancia y bodega)
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
-              Gestión centralizada de recepción, custodia, escaneo QR y entregas presenciales UniFind.
+            <p className="mt-1 text-sm text-slate-400">
+              Sesión: {session.user.name || session.user.email}. Registro privado, QR, revisión de
+              reclamos y entrega con firma.
             </p>
           </div>
         </div>
 
-        {/* Tarjetas Estadísticas */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">En Bodega</p>
-            <p className="text-3xl font-bold text-blue-400 mt-2">{totalBodega}</p>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">En bodega</p>
+            <p className="mt-2 text-3xl font-bold text-blue-400">{totalBodega}</p>
           </div>
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Entregados</p>
-            <p className="text-3xl font-bold text-emerald-400 mt-2">{totalEntregados}</p>
+            <p className="mt-2 text-3xl font-bold text-emerald-400">{totalEntregados}</p>
           </div>
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Listos para Donación (&gt;30 Días)</p>
-            <p className="text-3xl font-bold text-amber-400 mt-2">{totalDonacion}</p>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Listos para donación (&gt;30 días)
+            </p>
+            <p className="mt-2 text-3xl font-bold text-amber-400">{totalDonacion}</p>
           </div>
         </div>
 
-        {/* Sección: Registro Privado de Objetos */}
         <section>
-          <NewItemForm officerId={sampleOfficerId} />
+          <NewItemForm />
         </section>
 
-        {/* Sección: Escaneo QR y Entrega Presencial con Firma */}
+        <ClaimsReview claims={pendingClaims} />
+
+        <section className="rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
+          <h2 className="mb-4 text-2xl font-bold text-slate-100">Inventario reciente (privado)</h2>
+          <p className="mb-6 text-sm text-slate-400">
+            Las fotos autenticadas de Cloudinary solo se firman aquí. El catálogo público no las recibe.
+          </p>
+          {recentItems.length === 0 ? (
+            <p className="text-sm text-slate-500">Aún no hay objetos en custodia.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {recentItems.map((item) => {
+                const imageId = item.images[0]?.cloudinaryId;
+                const signedUrl = imageId && canSignImages ? getSignedPrivateImageUrl(imageId) : null;
+
+                return (
+                  <article key={item.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                    {signedUrl ? (
+                      <img
+                        src={signedUrl}
+                        alt={`Foto privada de ${item.category}`}
+                        className="mb-3 h-36 w-full rounded-xl object-cover"
+                      />
+                    ) : (
+                      <div className="mb-3 flex h-24 items-center justify-center rounded-xl bg-slate-900 text-xs text-slate-500">
+                        Sin foto privada
+                      </div>
+                    )}
+                    <p className="font-semibold text-slate-100">{item.category}</p>
+                    <p className="font-mono text-xs text-blue-400">{item.qrCode}</p>
+                    <p className="mt-1 text-sm text-slate-400">
+                      {item.custodyStation} · {item.shelfLocation}
+                    </p>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
         <section className="pt-6">
-          <DeliveryModule officerId={sampleOfficerId} />
+          <DeliveryModule />
         </section>
       </div>
     </main>

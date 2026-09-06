@@ -99,7 +99,7 @@ export default function ClaimFormModal({ item }: Props) {
                     type="email"
                     name="studentEmail"
                     required
-                    placeholder="estudiante@universidad.edu.co"
+                    placeholder="estudiante@unilibre.edu.co"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-blue-500 text-sm"
                   />
                 </div>

@@ -19,7 +19,7 @@ export default function AdminPrivatePhoto({
     return (
       <div
         className={cn(
-          "overflow-hidden border border-slate-800 bg-slate-950",
+          "overflow-hidden border border-line bg-canvas",
           isDetail ? "rounded-2xl" : "mb-3 rounded-xl",
         )}
       >
@@ -36,7 +36,7 @@ export default function AdminPrivatePhoto({
   return (
     <div
       className={cn(
-        "flex items-center justify-center border border-slate-800 bg-slate-900 px-3 text-center text-xs text-slate-500",
+        "flex items-center justify-center border border-line bg-bar px-3 text-center text-xs text-ink-subtle",
         isDetail ? "min-h-64 rounded-2xl" : "mb-3 h-24 rounded-xl",
       )}
     >

@@ -35,13 +35,13 @@ export default async function CatalogPage({
     <main className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <p className="mb-3 inline-block rounded-full border border-blue-800 bg-blue-950/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-400">
+          <p className="mb-3 inline-block rounded-md border border-gold/40 bg-gold-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
             Consulta pública
           </p>
-          <h1 className="mb-3 text-3xl font-extrabold text-slate-100 sm:text-4xl">
+          <h1 className="mb-3 font-serif text-3xl font-semibold text-ink sm:text-4xl">
             Catálogo de objetos en custodia
           </h1>
-          <p className="max-w-2xl text-sm text-slate-400 sm:text-base">
+          <p className="max-w-2xl text-sm text-ink-muted sm:text-base">
             No publicamos fotos, QR ni el estante interno. Filtra por categoría, portería
             y estado; si reconoces un objeto, envía el reclamo con tu correo institucional.
           </p>
@@ -57,7 +57,7 @@ export default async function CatalogPage({
           </div>
         )}
 
-        <p className="mb-4 text-sm text-slate-500">
+        <p className="mb-4 text-sm text-ink-subtle">
           {items.length === 1 ? "1 objeto" : `${items.length} objetos`}
         </p>
 

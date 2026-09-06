@@ -73,7 +73,7 @@ export default function PrivatePhotoField({
     <div>
       <label
         htmlFor="item-image"
-        className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400"
+        className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
       >
         Foto privada (Cloudinary autenticado)
       </label>
@@ -83,10 +83,10 @@ export default function PrivatePhotoField({
         name="image"
         accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
         onChange={handlePhotoChange}
-        className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-400 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-950 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-400 hover:file:bg-blue-900 focus:border-blue-500 focus:outline-none"
+        className="w-full rounded-md border border-line bg-paper px-4 py-2 text-sm text-ink-muted file:mr-4 file:rounded-md file:border-0 file:bg-brand-soft file:px-3 file:py-1 file:text-xs file:font-semibold file:text-brand hover:file:bg-gold-soft focus:border-brand focus:outline-none"
       />
       {preview ? (
-        <div className="mt-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+        <div className="mt-3 overflow-hidden rounded-md border border-line bg-canvas">
           <img
             src={preview}
             alt={photoName ? `Vista previa de ${photoName}` : "Vista previa de la foto privada"}
@@ -94,7 +94,7 @@ export default function PrivatePhotoField({
           />
         </div>
       ) : null}
-      <p className={`mt-2 text-xs ${cloudinaryReady ? "text-slate-500" : "text-amber-400"}`}>
+      <p className={`mt-2 text-xs ${cloudinaryReady ? "text-ink-subtle" : "text-gold-ink"}`}>
         {photoNotice ??
           (cloudinaryReady
             ? "Opcional. Campo image, máx. 5 MB (JPG, PNG, WEBP o GIF). Se sube authenticated y solo se firma en la ficha privada."

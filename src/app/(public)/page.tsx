@@ -31,16 +31,16 @@ export default async function HomePage() {
   });
 
   return (
-    <main className="px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <section className="mb-16 text-center">
-          <p className="mb-4 inline-block rounded-full border border-blue-800 bg-blue-950/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-400">
+    <main>
+      <section className="border-b border-line bg-paper">
+        <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 sm:py-16 lg:px-8">
+          <p className="mb-4 inline-block rounded-md border border-gold/40 bg-gold-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
             Universidad Libre · Barranquilla
           </p>
-          <h1 className="mb-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-4xl font-extrabold text-transparent sm:text-5xl">
+          <h1 className="mb-4 font-serif text-4xl font-semibold text-ink sm:text-5xl">
             ¿Perdiste algo en el campus?
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-400 sm:text-base">
+          <p className="mx-auto mb-8 max-w-2xl text-sm text-ink-muted sm:text-base">
             UniFind es la consulta pública de objetos en custodia. Por privacidad no
             publicamos fotos, QR ni el estante interno: revisa categoría, fecha/hora,
             bloque/salón y portería, y reclama el que te corresponda.
@@ -48,39 +48,41 @@ export default async function HomePage() {
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/objetos"
-              className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 hover:bg-blue-500"
+              className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-hover"
             >
               Ver catálogo
             </Link>
             <Link
               href="#como-funciona"
-              className="inline-flex items-center justify-center rounded-xl border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800"
+              className="inline-flex items-center justify-center rounded-md border border-line bg-paper px-5 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
             >
               Cómo reclamar
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="como-funciona" className="mb-16 scroll-mt-24">
-          <h2 className="mb-6 text-center text-2xl font-bold text-slate-100">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <section id="como-funciona" className="mb-16 scroll-mt-28">
+          <h2 className="mb-6 text-center font-serif text-2xl font-semibold text-ink">
             Cómo funciona
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {STEPS.map((step, index) => (
               <div
                 key={step.title}
-                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
+                className="rounded-lg border border-line bg-paper p-6"
               >
                 <div className="mb-4 flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950 text-blue-300">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-md bg-brand-soft text-brand">
                     <step.icon className="h-5 w-5" aria-hidden />
                   </span>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-subtle">
                     Paso {index + 1}
                   </span>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-slate-100">{step.title}</h3>
-                <p className="text-sm text-slate-400">{step.body}</p>
+                <h3 className="mb-2 font-serif text-lg font-semibold text-ink">{step.title}</h3>
+                <p className="text-sm text-ink-muted">{step.body}</p>
               </div>
             ))}
           </div>
@@ -89,12 +91,12 @@ export default async function HomePage() {
         <section>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-100">Disponibles para reclamo</h2>
-              <p className="mt-1 text-sm text-slate-400">
+              <h2 className="font-serif text-2xl font-semibold text-ink">Disponibles para reclamo</h2>
+              <p className="mt-1 text-sm text-ink-muted">
                 Últimos objetos en custodia. Sin fotos ni datos internos.
               </p>
             </div>
-            <Link href="/objetos" className="text-sm font-medium text-blue-400 hover:text-blue-300">
+            <Link href="/objetos" className="text-sm font-semibold text-brand hover:text-brand-hover">
               Ver todos
             </Link>
           </div>

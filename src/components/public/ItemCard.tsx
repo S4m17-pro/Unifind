@@ -9,36 +9,36 @@ export default function ItemCard({ item }: { item: PublicItem }) {
   const claimable = isClaimable(item.status);
 
   return (
-    <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl transition-all duration-200 hover:border-blue-500/50">
+    <article className="flex h-full flex-col justify-between rounded-lg border border-line bg-paper p-6 shadow-sm transition-colors hover:border-brand/40">
       <div>
         <div className="mb-4 flex items-start justify-between gap-3">
           <CategoryGlyph category={item.category} />
           <StatusBadge status={item.status} />
         </div>
 
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-400">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand">
           {item.category}
         </p>
-        <h3 className="mb-3 text-lg font-bold text-slate-100">
+        <h3 className="mb-3 font-serif text-lg font-semibold text-ink">
           Objeto en {item.custodyStation}
         </h3>
 
-        <dl className="space-y-2 text-sm text-slate-400">
+        <dl className="space-y-2 text-sm text-ink-muted">
           <div className="flex items-start gap-2">
-            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" aria-hidden />
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle" aria-hidden />
             <div>
               <dt className="sr-only">Bloque / salón</dt>
               <dd>
-                <span className="text-slate-300">Bloque / salón:</span> {item.foundLocation}
+                <span className="text-ink">Bloque / salón:</span> {item.foundLocation}
               </dd>
             </div>
           </div>
           <div className="flex items-start gap-2">
-            <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" aria-hidden />
+            <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-ink-subtle" aria-hidden />
             <div>
               <dt className="sr-only">Fecha</dt>
               <dd>
-                <span className="text-slate-300">Fecha:</span> {formatFoundDate(item.foundDate)}
+                <span className="text-ink">Fecha:</span> {formatFoundDate(item.foundDate)}
               </dd>
             </div>
           </div>
@@ -48,19 +48,19 @@ export default function ItemCard({ item }: { item: PublicItem }) {
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
         <Link
           href={`/objetos/${item.id}`}
-          className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800"
+          className="inline-flex flex-1 items-center justify-center rounded-md border border-line px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
         >
           Ver detalle
         </Link>
         {claimable ? (
           <Link
             href={`/objetos/${item.id}/reclamar`}
-            className="inline-flex flex-1 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-500"
+            className="inline-flex flex-1 items-center justify-center rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
           >
             Reclamar
           </Link>
         ) : (
-          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-800 px-4 py-2.5 text-center text-sm text-slate-500">
+          <span className="inline-flex flex-1 items-center justify-center rounded-md border border-line px-4 py-2.5 text-center text-sm text-ink-subtle">
             No disponible
           </span>
         )}

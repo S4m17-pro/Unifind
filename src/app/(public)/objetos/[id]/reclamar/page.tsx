@@ -42,23 +42,23 @@ export default async function ClaimPage({
       <div className="mx-auto max-w-xl">
         <Link
           href={`/objetos/${item.id}`}
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-brand"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Volver al detalle
         </Link>
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl sm:p-8">
+        <div className="rounded-lg border border-line bg-paper p-6 shadow-sm sm:p-8">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand">
               Reclamo
             </p>
             <StatusBadge status={item.status} />
           </div>
-          <h1 className="mb-2 text-2xl font-extrabold text-slate-100">
+          <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">
             {item.category} · {item.custodyStation}
           </h1>
-          <p className="mb-6 text-sm text-slate-400">
+          <p className="mb-6 text-sm text-ink-muted">
             Hallado en {item.foundLocation} (bloque/salón). Describe cómo lo reconoces;
             portería valida y te lo entrega con tu carnet.
           </p>
@@ -75,7 +75,7 @@ export default async function ClaimPage({
               submitLabel="Enviar reclamo"
             />
           ) : (
-            <p className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-400">
+            <p className="rounded-lg border border-line bg-canvas p-4 text-sm text-ink-muted">
               Este objeto ya no admite reclamos públicos.
             </p>
           )}

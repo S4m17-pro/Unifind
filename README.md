@@ -110,6 +110,28 @@ Cambia estas claves antes de cualquier despliegue real.
 
 `postinstall` ejecuta `prisma generate`.
 
+## Identidad visual (hero, logo, ilustraciones)
+
+El tema Libre (rojo `#C8102E`, oro `#B89600`) ya está en tokens. Encima hay **slots de imagen** para que Samuel suelte fotos institucionales del campus sin rediseñar.
+
+1. Coloca el archivo en `public/brand/` (la carpeta ya existe), **o** usa una URL https pública (CDN / Cloudinary **pública** de marca).
+2. Apunta la variable `NEXT_PUBLIC_*` correspondiente. Reinicia `next dev` / redespliega.
+
+| Variable | Dónde se ve | Ejemplo |
+| --- | --- | --- |
+| `NEXT_PUBLIC_BRAND_HERO_URL` | Hero de inicio y panel de `/login` | `/brand/hero.jpg` |
+| `NEXT_PUBLIC_BRAND_LOGO_URL` | Marca del header y footer (si falta, queda el monograma `UF`) | `/brand/logo.png` |
+| `NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL` | Bloque “Cómo funciona” | `/brand/porteria.jpg` |
+| `NEXT_PUBLIC_BRAND_CATALOG_URL` | Banner del catálogo `/objetos` | `/brand/catalogo.jpg` |
+| `NEXT_PUBLIC_BRAND_EMPTY_URL` | Vacío del listado | `/brand/vacio.svg` |
+| `NEXT_PUBLIC_BRAND_HERO_ALT` / `NEXT_PUBLIC_BRAND_LOGO_ALT` | Texto alternativo | `Campus Unilibre Barranquilla` |
+
+Si la variable está vacía, el slot muestra un degradé papel/rojo/oro, un croquis del campus y el texto **«Aquí va la foto del campus»** (no un ícono de imagen rota).
+
+**No uses fotos privadas de objetos** ni URLs firmadas de Cloudinary (`unifind_private_items`). Esos archivos son de vigilancia. El catálogo público sigue sin fotos de objetos.
+
+La config vive en `src/lib/brand.ts`.
+
 ## Variables de entorno
 
 Copia `.env.example`. Las únicas obligatorias para correr autenticación y el catálogo son:

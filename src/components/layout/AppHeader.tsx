@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import AccountMenu from "@/components/auth/AccountMenu";
+import BrandMark from "@/components/brand/BrandMark";
 import { Button } from "@/components/ui/button";
+import { brand } from "@/lib/brand";
 
 export default async function AppHeader() {
   const session = await auth();
@@ -12,7 +14,7 @@ export default async function AppHeader() {
       <div className="border-b border-line bg-bar">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-8">
           <p className="text-xs font-medium uppercase tracking-[0.14em] text-ink-muted">
-            Seccional Barranquilla
+            {brand.seccional}
           </p>
           {session ? (
             <AccountMenu
@@ -31,18 +33,13 @@ export default async function AppHeader() {
       <div className="border-b-[3px] border-brand bg-paper">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" className="group flex min-w-0 items-center gap-3">
-            <span
-              aria-hidden
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-brand font-serif text-sm font-bold tracking-wide text-white"
-            >
-              UF
-            </span>
+            <BrandMark />
             <span className="leading-tight">
               <span className="block font-serif text-lg font-semibold text-ink group-hover:text-brand sm:text-xl">
-                UniFind
+                {brand.product}
               </span>
               <span className="block text-xs text-ink-muted">
-                Universidad Libre
+                {brand.institution}
               </span>
             </span>
           </Link>

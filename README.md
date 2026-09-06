@@ -31,13 +31,33 @@ No se envían fotos, URLs de Cloudinary, código QR ni ubicación de estante. La
 
 Next.js 15 (App Router), React 19, TypeScript, Prisma, PostgreSQL, Auth.js v5, Tailwind CSS 4, Cloudinary, Resend.
 
+## Rama de trabajo
+
+El clon por defecto cae en `main`, que está **desactualizado**: no trae `README.md`, ni `prisma/migrations`, ni el script `db:seed`. Arrancar desde ahí deja Postgres vacío y termina en errores tipo Prisma `P2021` (tabla `items` inexistente).
+
+**Desarrolla y arranca siempre desde `Develop`:**
+
+```bash
+git checkout Develop && git pull
+```
+
+Política de ramas: las features aterrizan en `Develop`; se promueven a `main` solo después de revisión.
+
 ## Requisitos
 
 - Node.js 20+
 - Docker (PostgreSQL local) o una URL de Postgres
-- Cuentas opcionales de Cloudinary y Resend para fotos y correo
+- Cuentas opcionales de Cloudinary y Resend para fotos y correo (la app corre sin ellas)
 
 ## Arranque local
+
+1. Checkout de `Develop` (si acabas de clonar, GitHub te deja en `main`):
+
+```bash
+git checkout Develop && git pull
+```
+
+2. Copia `.env.example` → `.env`. Genera un secreto y usa **el mismo valor** en `AUTH_SECRET` y `NEXTAUTH_SECRET`:
 
 ```bash
 cp .env.example .env
@@ -45,13 +65,13 @@ cp .env.example .env
 # Usa el mismo valor en AUTH_SECRET y NEXTAUTH_SECRET
 ```
 
-Levanta Postgres:
+3. Levanta Postgres:
 
 ```bash
 docker compose up -d
 ```
 
-Instala, migra y siembra usuarios de demo:
+4. Instala dependencias, **crea las tablas** y siembra usuarios/ítem de demo:
 
 ```bash
 npm install
@@ -60,7 +80,13 @@ npm run db:seed
 npm run dev
 ```
 
+- `npx prisma migrate deploy` debe crear las tablas (`User`, `Item`, etc.). Si ves `No migration found` o no existe la carpeta `prisma/migrations`, estás en una rama vieja: `git checkout Develop && git pull`.
+- `npm run db:seed` es obligatorio en el primer arranque. Sin seed, Postgres queda vacío (sin cuentas de vigilancia/Bienestar ni ítem de ejemplo).
+- Un `P2021` (tabla `items` no existe) significa que no corriste `migrate deploy` o que tu checkout no trae migraciones.
+
 La app queda en [http://localhost:3000](http://localhost:3000).
+
+**No ejecutes `npm audit fix --force` por costumbre.** Los avisos de `npm audit` no bloquean el arranque; `--force` puede romper Next.js, Auth.js u otras dependencias.
 
 ### Usuarios de desarrollo (solo seed)
 

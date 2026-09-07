@@ -1,47 +1,69 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/prisma";
+import type { Provider } from "next-auth/providers";
 import { authConfig } from "@/auth.config";
-import { normalizeEmail } from "@/lib/validation";
+import { authorizeCredentials } from "@/lib/auth/credentials";
+import {
+  createMicrosoftEntraProvider,
+  isAllowedMicrosoftEmail,
+  MICROSOFT_ENTRA_PROVIDER_ID,
+  resolveMicrosoftEmail,
+  resolveMicrosoftOid,
+} from "@/lib/auth/microsoft";
+import { linkMicrosoftUser } from "@/lib/domain/users";
+
+const providers: Provider[] = [
+  Credentials({
+    name: "credentials",
+    credentials: {
+      email: { label: "Correo institucional", type: "email" },
+      password: { label: "Contraseña", type: "password" },
+    },
+    authorize: authorizeCredentials,
+  }),
+];
+
+const microsoftProvider = createMicrosoftEntraProvider();
+if (microsoftProvider) {
+  providers.push(microsoftProvider);
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  providers: [
-    Credentials({
-      name: "credentials",
-      credentials: {
-        email: { label: "Correo institucional", type: "email" },
-        password: { label: "Contraseña", type: "password" },
-      },
-      async authorize(credentials) {
-        const email = normalizeEmail(String(credentials?.email ?? ""));
-        const password = String(credentials?.password ?? "");
+  providers,
+  callbacks: {
+    ...authConfig.callbacks,
+    async signIn({ user, account, profile }) {
+      if (!account) return false;
+      if (account.provider === "credentials") return true;
+      if (account.provider !== MICROSOFT_ENTRA_PROVIDER_ID) return false;
 
-        if (!email || !password) {
-          return null;
+      const email = resolveMicrosoftEmail(user.email, profile);
+      const oid = resolveMicrosoftOid(account, profile);
+      if (!email || !oid) return false;
+      if (!isAllowedMicrosoftEmail(email)) return false;
+
+      const dbUser = await linkMicrosoftUser({
+        email,
+        name: user.name ?? (typeof profile?.name === "string" ? profile.name : null),
+        image: user.image,
+        oid,
+      });
+
+      user.id = dbUser.id;
+      user.email = dbUser.email;
+      user.name = dbUser.name;
+      user.role = dbUser.role;
+      return true;
+    },
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        if (user.role) {
+          token.role = user.role;
         }
-
-        const user = await prisma.user.findUnique({
-          where: { email },
-        });
-
-        if (!user?.passwordHash) {
-          return null;
-        }
-
-        const matches = await bcrypt.compare(password, user.passwordHash);
-        if (!matches) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
-      },
-    }),
-  ],
+      }
+      return token;
+    },
+  },
 });

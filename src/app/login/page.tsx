@@ -9,6 +9,7 @@ import LoginForm from "@/components/auth/LoginForm";
 import SignOutControl from "@/components/auth/SignOutControl";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { isMicrosoftEntraConfigured } from "@/lib/auth/microsoft";
 import { brand } from "@/lib/brand";
 import { roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 
@@ -23,7 +24,11 @@ function errorFromAuthParam(error?: string) {
     case "CredentialsSignin":
       return "Ese correo o la contraseña no coinciden. Esta puerta es solo para vigilancia y Bienestar.";
     case "AccessDenied":
-      return "Esa cuenta no abre esta pantalla. Si eres de la comunidad Unilibre, usa el catálogo.";
+      return "Esa cuenta de Microsoft no está permitida. Usa el correo institucional de Unilibre o entra con correo y contraseña de personal.";
+    case "OAuthSignin":
+    case "OAuthCallback":
+    case "OAuthCreateAccount":
+      return "No pudimos conectar con Microsoft. Intenta de nuevo o entra con correo y contraseña.";
     case "SessionRequired":
       return "La sesión se venció. Entra de nuevo para seguir en el panel.";
     case "Configuration":
@@ -85,6 +90,7 @@ export default async function LoginPage({
   }
 
   const hint = requestedCallback ? destinationHint(requestedCallback) : null;
+  const microsoftEnabled = isMicrosoftEntraConfigured();
 
   return (
     <LoginShell>
@@ -98,6 +104,9 @@ export default async function LoginPage({
         {brand.product} custodia los objetos perdidos de {brand.institution}{" "}
         {brand.seccional}. Esta puerta es para vigilancia de portería y para
         Bienestar Universitario.
+        {microsoftEnabled
+          ? " Estudiantes y personal con Microsoft 365 Educación pueden continuar con su cuenta institucional."
+          : null}
       </p>
       {hint ? (
         <Alert variant="gold" className="mt-4">
@@ -109,6 +118,7 @@ export default async function LoginPage({
         <LoginForm
           callbackUrl={callbackUrl}
           initialError={errorFromAuthParam(params.error)}
+          microsoftEnabled={microsoftEnabled}
         />
       </div>
       <p className="mt-6 border-t border-line pt-4 text-sm text-ink-muted">

@@ -16,5 +16,5 @@ export default async function DashboardGatePage() {
     redirect("/admin/dashboard");
   }
 
-  redirect("/unauthorized");
+  redirect("/objetos");
 }

@@ -22,11 +22,15 @@ export default auth((req) => {
     return NextResponse.redirect(url);
   }
 
+  if (isDashboardRoute) {
+    return NextResponse.next();
+  }
+
   if (isBienestarRoute && role !== "SUPERUSER") {
     return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
   }
 
-  if ((isAdminRoute || isDashboardRoute) && role !== "ADMIN" && role !== "SUPERUSER") {
+  if (isAdminRoute && role !== "ADMIN" && role !== "SUPERUSER") {
     return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
   }
 

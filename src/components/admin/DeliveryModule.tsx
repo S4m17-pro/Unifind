@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import { processDeliveryAction } from "@/actions/delivery.actions";
+import { isActionFailure } from "@/lib/action-result";
 import QRScannerComponent from "./QRScannerComponent";
 
 export default function DeliveryModule() {
@@ -40,7 +41,7 @@ export default function DeliveryModule() {
     });
     setLoading(false);
 
-    if (result.error) {
+    if (isActionFailure(result)) {
       setMessage({ type: "error", text: result.error });
     } else {
       setMessage({ type: "success", text: "¡Entrega presencial registrada exitosamente!" });

@@ -3,6 +3,7 @@
 import { useActionState, useId, useState, type ComponentProps, type FormEvent } from "react";
 import { CircleAlert, LoaderCircle } from "lucide-react";
 import { loginAction } from "@/actions/auth.actions";
+import MicrosoftSignInButton from "@/components/auth/MicrosoftSignInButton";
 import { setAuthFlash } from "@/components/auth/auth-flash";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -88,9 +89,11 @@ function LoginField({
 export default function LoginForm({
   callbackUrl,
   initialError,
+  microsoftEnabled = false,
 }: {
   callbackUrl: string;
   initialError?: string;
+  microsoftEnabled?: boolean;
 }) {
   const [state, formAction, pending] = useActionState(loginAction, undefined);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
@@ -129,14 +132,15 @@ export default function LoginForm({
   };
 
   return (
-    <form
-      action={formAction}
-      onSubmit={handleSubmit}
-      noValidate
-      aria-busy={pending}
-      className="space-y-5"
-    >
-      <input type="hidden" name="callbackUrl" value={callbackUrl} />
+    <div className="space-y-5">
+      <form
+        action={formAction}
+        onSubmit={handleSubmit}
+        noValidate
+        aria-busy={pending}
+        className="space-y-5"
+      >
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
 
       {serverError && !fieldErrors.email && !fieldErrors.password ? (
         <Alert id={formErrorId} variant="destructive">
@@ -205,7 +209,19 @@ export default function LoginForm({
         ) : (
           "Entrar al panel"
         )}
-      </Button>
-    </form>
+        </Button>
+      </form>
+
+      {microsoftEnabled ? (
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.14em] text-ink-subtle">
+            <span className="h-px flex-1 bg-line" />
+            o
+            <span className="h-px flex-1 bg-line" />
+          </div>
+          <MicrosoftSignInButton callbackUrl={callbackUrl} disabled={pending} />
+        </div>
+      ) : null}
+    </div>
   );
 }

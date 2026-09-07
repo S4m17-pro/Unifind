@@ -31,6 +31,21 @@ No se envían fotos, URLs de Cloudinary, código QR ni ubicación de estante. La
 
 Next.js 15 (App Router), React 19, TypeScript, Prisma, PostgreSQL, Auth.js v5, Tailwind CSS 4, Cloudinary, Resend.
 
+## Organización del backend
+
+| Área | Dónde |
+| --- | --- |
+| Auth.js (Node: Credentials + Entra opcional) | `src/auth.ts` |
+| Auth edge-safe (middleware, sin Prisma) | `src/auth.config.ts` |
+| Server actions (entrada UI) | `src/actions/*.actions.ts` |
+| Resultado uniforme `{ error }` / `{ success: true }` | `src/lib/action-result.ts` |
+| Authz (`requireSession`, `requireRole`, `requireStaffSession`) | `src/lib/auth/guards.ts` |
+| Microsoft Entra (env, issuer, allowlist, provider) | `src/lib/auth/microsoft.ts` |
+| Usuarios (upsert comunidad / vínculo Microsoft) | `src/lib/domain/users.ts` |
+| Catálogo público (sin fotos ni QR) | `src/lib/public-catalog.ts` |
+
+Las sesiones siguen en JWT. No hay adapter Prisma de Account/Session: el vínculo OAuth se guarda en `User.microsoftOid`.
+
 ## Rama de trabajo
 
 El clon por defecto cae en `main`, que está **desactualizado**: no trae `README.md`, ni `prisma/migrations`, ni el script `db:seed`. Arrancar desde ahí deja Postgres vacío y termina en errores tipo Prisma `P2021` (tabla `items` inexistente).
@@ -144,6 +159,36 @@ Bloqueos solo por entorno:
 - Sin Cloudinary, el registro de objetos funciona y la foto se omite.
 - Sin Resend, el reclamo se guarda y el correo se omite (queda en logs).
 - Sin `CRON_SECRET`, la ruta `/api/cron/check-expiration` responde 401.
+- Sin Microsoft Entra, el login por correo/contraseña sigue igual y no se muestra «Continuar con Microsoft».
+
+### Microsoft Entra ID (estudiantes y personal, opt-in)
+
+Opcional. Credentials (cuentas sembradas de vigilancia/Bienestar) no cambia. Si configuras Entra, el primer login Microsoft hace upsert por correo: rol `STUDENT` salvo que el correo ya exista (se conserva ADMIN/SUPERUSER).
+
+| Variable | Uso |
+| --- | --- |
+| `AUTH_MICROSOFT_ENTRA_ID_ID` | Application (client) ID |
+| `AUTH_MICROSOFT_ENTRA_ID_SECRET` | Client secret |
+| `AUTH_MICROSOFT_ENTRA_ID_ISSUER` | `https://login.microsoftonline.com/<tenant-id>/v2.0` **o** solo el tenant (`guid`, `common`, `organizations`) |
+| `AUTH_MICROSOFT_ENTRA_ID_TENANT_ID` | Alternativa al issuer: Directory (tenant) ID |
+| `AUTH_MICROSOFT_ALLOWED_DOMAIN` | Opcional. Ej. `unilibre.edu.co` (varios, separados por coma) |
+
+Registro de la app en Entra (M365 Educación):
+
+1. Entra admin center → Identity → Applications → App registrations → New registration.
+2. Account type: single tenant de la universidad (issuer con el Directory ID).
+3. Plataforma **Web**, Redirect URI: `{AUTH_URL}/api/auth/callback/microsoft-entra-id` (local: `http://localhost:3000/api/auth/callback/microsoft-entra-id`).
+4. Certificates & secrets → client secret. API permissions: `openid`, `profile`, `email`, `User.Read`.
+5. Copia client ID, secret e issuer. No subas secretos al repo.
+
+**Hook para Front**
+
+- Provider id: `microsoft-entra-id` (`MICROSOFT_ENTRA_PROVIDER_ID` en `src/lib/auth/constants.ts`)
+- Server action: `microsoftSignInAction` en `@/actions/auth.actions` (campo `callbackUrl`)
+- Flag server-only: `isMicrosoftEntraConfigured()` — no usar en Client Components (las env no son `NEXT_PUBLIC_`)
+- Componente mínimo: `MicrosoftSignInButton` (`callbackUrl`). Front puede restylearlo.
+
+Tras Microsoft, `/dashboard` envía ADMIN → vigilancia, SUPERUSER → Bienestar y STUDENT → catálogo.
 
 ### Cloudinary (fotos privadas)
 

@@ -40,7 +40,8 @@ model User {
   name          String?
   email         String   @unique
   emailVerified DateTime?
-  passwordHash  String?  // Nulo si usa OAuth
+  passwordHash  String?  // Nulo si usa OAuth / Microsoft
+  microsoftOid  String?  @unique // Object ID de Microsoft Entra (opcional)
   role          Role     @default(STUDENT)
   avatarUrl     String?
   createdAt     DateTime @default(now())

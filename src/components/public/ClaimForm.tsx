@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { submitClaimAction } from "@/actions/claim.actions";
+import { isActionFailure } from "@/lib/action-result";
 import type { PublicItem } from "@/lib/public-catalog";
 
 export type ClaimFormDefaults = {
@@ -43,7 +44,7 @@ export default function ClaimForm({
     const result = await submitClaimAction(formData);
     setLoading(false);
 
-    if (result.error) {
+    if (isActionFailure(result)) {
       setMessage({ type: "error", text: result.error });
       return;
     }

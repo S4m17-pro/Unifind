@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { actionError, actionOk, type ActionResult } from "@/lib/action-result";
+import { withStaffSession } from "@/lib/auth/guards";
 import { ITEM_CATEGORIES } from "@/lib/constants";
-import { requireStaffSession } from "@/lib/auth-guards";
 import {
   describeCloudinaryUploadError,
   uploadAuthenticatedItemImage,
@@ -21,90 +22,97 @@ function revalidateStaffAndCatalog() {
   revalidatePath("/objetos");
 }
 
-export async function createItemAction(formData: FormData) {
-  let session;
+type CreatedItem = {
+  id: string;
+  qrCode: string;
+  category: string;
+};
 
-  try {
-    session = await requireStaffSession();
-  } catch {
-    return { error: "Debes iniciar sesión como vigilante o Bienestar." };
-  }
+export async function createItemAction(
+  formData: FormData,
+): Promise<ActionResult<{ item: CreatedItem; warning?: string }>> {
+  return withStaffSession(async (session) => {
+    const category = truncate(String(formData.get("category") ?? ""), 80);
+    const foundLocation = truncate(String(formData.get("foundLocation") ?? ""), 160);
+    const foundDateStr = String(formData.get("foundDate") ?? "");
+    const custodyStation = truncate(String(formData.get("custodyStation") ?? ""), 160);
+    const shelfLocation = truncate(String(formData.get("shelfLocation") ?? ""), 160);
+    const imageFile = formData.get("image") as File | null;
+    const hasImage = Boolean(imageFile && imageFile.size > 0);
 
-  const category = truncate(String(formData.get("category") ?? ""), 80);
-  const foundLocation = truncate(String(formData.get("foundLocation") ?? ""), 160);
-  const foundDateStr = String(formData.get("foundDate") ?? "");
-  const custodyStation = truncate(String(formData.get("custodyStation") ?? ""), 160);
-  const shelfLocation = truncate(String(formData.get("shelfLocation") ?? ""), 160);
-  const imageFile = formData.get("image") as File | null;
-  const hasImage = Boolean(imageFile && imageFile.size > 0);
-
-  if (!category || !foundLocation || !custodyStation || !shelfLocation) {
-    return { error: "Faltan datos obligatorios para el registro." };
-  }
-
-  if (!(ITEM_CATEGORIES as readonly string[]).includes(category)) {
-    return { error: "La categoría no es válida." };
-  }
-
-  if (hasImage && imageFile) {
-    const imageError = validatePrivateImageFile(imageFile);
-    if (imageError) {
-      return { error: imageError };
-    }
-  }
-
-  try {
-    const qrCode = `UNIFIND-${crypto.randomUUID()}`;
-    const foundDate = foundDateStr ? new Date(foundDateStr) : new Date();
-
-    if (Number.isNaN(foundDate.getTime())) {
-      return { error: "La fecha y hora del hallazgo no es válida." };
+    if (!category || !foundLocation || !custodyStation || !shelfLocation) {
+      return actionError("Faltan datos obligatorios para el registro.");
     }
 
-    let photoWarning: string | undefined;
-    let uploadedImage: { public_id: string; secure_url: string } | null = null;
+    if (!(ITEM_CATEGORIES as readonly string[]).includes(category)) {
+      return actionError("La categoría no es válida.");
+    }
 
     if (hasImage && imageFile) {
-      if (!isCloudinaryConfigured()) {
-        photoWarning = describeCloudinarySetup();
-      } else {
-        try {
-          const bytes = await imageFile.arrayBuffer();
-          uploadedImage = await uploadAuthenticatedItemImage(Buffer.from(bytes));
-        } catch (uploadError) {
-          console.error("Error al subir foto privada a Cloudinary:", uploadError);
-          photoWarning = describeCloudinaryUploadError(uploadError);
-        }
+      const imageError = validatePrivateImageFile(imageFile);
+      if (imageError) {
+        return actionError(imageError);
       }
     }
 
-    const newItem = await prisma.item.create({
-      data: {
-        qrCode,
-        category,
-        foundLocation,
-        foundDate,
-        custodyStation,
-        shelfLocation,
-        registeredById: session.user.id,
-        status: "EN_BODEGA",
-        ...(uploadedImage
-          ? {
-              images: {
-                create: {
-                  cloudinaryId: uploadedImage.public_id,
-                  secureUrl: uploadedImage.secure_url,
-                },
-              },
-            }
-          : {}),
-      },
-    });
+    try {
+      const qrCode = `UNIFIND-${crypto.randomUUID()}`;
+      const foundDate = foundDateStr ? new Date(foundDateStr) : new Date();
 
-    revalidateStaffAndCatalog();
-    return { success: true, item: newItem, warning: photoWarning };
-  } catch (error) {
-    console.error("Error al registrar item:", error);
-    return { error: "Ocurrió un error al guardar el objeto en bodega." };
-  }
+      if (Number.isNaN(foundDate.getTime())) {
+        return actionError("La fecha y hora del hallazgo no es válida.");
+      }
+
+      let photoWarning: string | undefined;
+      let uploadedImage: { public_id: string; secure_url: string } | null = null;
+
+      if (hasImage && imageFile) {
+        if (!isCloudinaryConfigured()) {
+          photoWarning = describeCloudinarySetup();
+        } else {
+          try {
+            const bytes = await imageFile.arrayBuffer();
+            uploadedImage = await uploadAuthenticatedItemImage(Buffer.from(bytes));
+          } catch (uploadError) {
+            console.error("Error al subir foto privada a Cloudinary:", uploadError);
+            photoWarning = describeCloudinaryUploadError(uploadError);
+          }
+        }
+      }
+
+      const newItem = await prisma.item.create({
+        data: {
+          qrCode,
+          category,
+          foundLocation,
+          foundDate,
+          custodyStation,
+          shelfLocation,
+          registeredById: session.user.id,
+          status: "EN_BODEGA",
+          ...(uploadedImage
+            ? {
+                images: {
+                  create: {
+                    cloudinaryId: uploadedImage.public_id,
+                    secureUrl: uploadedImage.secure_url,
+                  },
+                },
+              }
+            : {}),
+        },
+        select: {
+          id: true,
+          qrCode: true,
+          category: true,
+        },
+      });
+
+      revalidateStaffAndCatalog();
+      return actionOk({ item: newItem, warning: photoWarning });
+    } catch (error) {
+      console.error("Error al registrar item:", error);
+      return actionError("Ocurrió un error al guardar el objeto en bodega.");
+    }
+  });
 }

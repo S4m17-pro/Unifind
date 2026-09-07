@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { CUSTODY_RETENTION_DAYS } from "@/lib/constants";
-import { requireSuperuserSession } from "@/lib/auth-guards";
+import { requireSuperuserSession } from "@/lib/auth/guards";
 
 export async function getBienestarMetrics() {
   await requireSuperuserSession();

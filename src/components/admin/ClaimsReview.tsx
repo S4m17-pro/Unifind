@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { reviewClaimAction } from "@/actions/claim.actions";
+import { isActionFailure } from "@/lib/action-result";
 
 export type PendingClaim = {
   id: string;
@@ -30,7 +31,7 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
     setMessage(null);
     const result = await reviewClaimAction(claimId, status);
     setBusyId(null);
-    setMessage(result.error ?? "Reclamo actualizado.");
+    setMessage(isActionFailure(result) ? result.error : "Reclamo actualizado.");
   };
 
   return (

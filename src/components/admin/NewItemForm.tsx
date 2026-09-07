@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
+import { isActionFailure } from "@/lib/action-result";
 import { ITEM_CATEGORIES } from "@/lib/constants";
 import PrivatePhotoField, { validateSelectedPhoto } from "./PrivatePhotoField";
 
@@ -43,9 +44,9 @@ export default function NewItemForm({
     const res = await createItemAction(formData);
     setLoading(false);
 
-    if (res.error) {
+    if (isActionFailure(res)) {
       setError(res.error);
-    } else if (res.item) {
+    } else {
       setCreatedItem({
         id: res.item.id,
         qrCode: res.item.qrCode,

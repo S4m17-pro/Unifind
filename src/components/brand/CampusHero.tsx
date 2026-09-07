@@ -5,7 +5,7 @@ import { brand } from "@/lib/brand";
 
 export default function CampusHero() {
   return (
-    <section className="border-b border-line bg-paper">
+    <section className="relative z-0 isolate overflow-hidden border-b border-line bg-paper">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 sm:py-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:px-8 lg:py-20">
         <div>
           <div className="mb-5 flex gap-1" aria-hidden>
@@ -29,7 +29,9 @@ export default function CampusHero() {
               <Link href="/objetos">Ver catálogo</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href="#como-funciona">Cómo reclamar</Link>
+              <Link href="#como-reclamar" scroll={false}>
+                Cómo reclamar
+              </Link>
             </Button>
           </div>
           <p className="mt-6 text-xs text-ink-subtle">

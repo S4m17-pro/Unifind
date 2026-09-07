@@ -22,7 +22,11 @@ export default function AppFooter() {
           <Link href="/objetos" className="text-white/80 hover:text-white">
             Catálogo
           </Link>
-          <Link href="/#como-funciona" className="text-white/80 hover:text-white">
+          <Link
+            href="/#como-reclamar"
+            scroll={false}
+            className="text-white/80 hover:text-white"
+          >
             Cómo reclamar
           </Link>
           <Link href="/login" className="text-gold hover:text-white">

@@ -133,6 +133,21 @@ export default function LoginForm({
 
   return (
     <div className="space-y-5">
+      {microsoftEnabled ? (
+        <>
+          <MicrosoftSignInButton callbackUrl={callbackUrl} disabled={pending} />
+          <div
+            className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink"
+            role="separator"
+            aria-label="O entra como personal de campus"
+          >
+            <span className="h-px flex-1 bg-gold/40" />
+            Personal de campus
+            <span className="h-px flex-1 bg-gold/40" />
+          </div>
+        </>
+      ) : null}
+
       <form
         action={formAction}
         onSubmit={handleSubmit}
@@ -142,86 +157,75 @@ export default function LoginForm({
       >
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
 
-      {serverError && !fieldErrors.email && !fieldErrors.password ? (
-        <Alert id={formErrorId} variant="destructive">
-          <CircleAlert />
-          <AlertTitle>No pudimos abrir el panel</AlertTitle>
-          <AlertDescription>{serverError}</AlertDescription>
-        </Alert>
-      ) : null}
+        {serverError && !fieldErrors.email && !fieldErrors.password ? (
+          <Alert id={formErrorId} variant="destructive">
+            <CircleAlert />
+            <AlertTitle>No pudimos abrir el panel</AlertTitle>
+            <AlertDescription>{serverError}</AlertDescription>
+          </Alert>
+        ) : null}
 
-      <LoginField
-        id={emailId}
-        label="Correo institucional"
-        type="email"
-        name="email"
-        required
-        autoComplete="email"
-        inputMode="email"
-        placeholder="vigilancia@unilibre.edu.co"
-        value={email}
-        disabled={pending}
-        error={fieldErrors.email}
-        errorId={emailErrorId}
-        hintId={emailHintId}
-        hint="El de Unilibre que usa portería o Bienestar, no el personal de un estudiante."
-        onChange={(event) => {
-          setEmail(event.target.value);
-          if (fieldErrors.email) setFieldErrors((current) => ({ ...current, email: undefined }));
-        }}
-      />
+        <LoginField
+          id={emailId}
+          label="Correo institucional"
+          type="email"
+          name="email"
+          required
+          autoComplete="email"
+          inputMode="email"
+          placeholder="vigilancia@unilibre.edu.co"
+          value={email}
+          disabled={pending}
+          error={fieldErrors.email}
+          errorId={emailErrorId}
+          hintId={emailHintId}
+          hint="El de Unilibre que usa portería o Bienestar, no el personal de un estudiante."
+          onChange={(event) => {
+            setEmail(event.target.value);
+            if (fieldErrors.email) setFieldErrors((current) => ({ ...current, email: undefined }));
+          }}
+        />
 
-      <LoginField
-        id={passwordId}
-        label="Contraseña"
-        type="password"
-        name="password"
-        required
-        autoComplete="current-password"
-        value={password}
-        disabled={pending}
-        error={fieldErrors.password}
-        errorId={passwordErrorId}
-        hintId={passwordHintId}
-        hint="La misma clave de tu turno en portería o Bienestar."
-        onChange={(event) => {
-          setPassword(event.target.value);
-          if (fieldErrors.password) {
-            setFieldErrors((current) => ({ ...current, password: undefined }));
-          }
-        }}
-      />
+        <LoginField
+          id={passwordId}
+          label="Contraseña"
+          type="password"
+          name="password"
+          required
+          autoComplete="current-password"
+          value={password}
+          disabled={pending}
+          error={fieldErrors.password}
+          errorId={passwordErrorId}
+          hintId={passwordHintId}
+          hint="La misma clave de tu turno en portería o Bienestar."
+          onChange={(event) => {
+            setPassword(event.target.value);
+            if (fieldErrors.password) {
+              setFieldErrors((current) => ({ ...current, password: undefined }));
+            }
+          }}
+        />
 
-      <p id={pendingId} className="sr-only" aria-live="polite">
-        {pending ? "Comprobando tu acceso…" : ""}
-      </p>
-      <Button
-        type="submit"
-        disabled={!canSubmit}
-        aria-describedby={pending ? pendingId : undefined}
-        className="h-11 w-full text-sm font-semibold"
-      >
-        {pending ? (
-          <>
-            <LoaderCircle className="animate-spin" aria-hidden />
-            Comprobando tu acceso…
-          </>
-        ) : (
-          "Entrar al panel"
-        )}
+        <p id={pendingId} className="sr-only" aria-live="polite">
+          {pending ? "Comprobando tu acceso…" : ""}
+        </p>
+        <Button
+          type="submit"
+          disabled={!canSubmit}
+          aria-describedby={pending ? pendingId : undefined}
+          className="h-11 w-full text-sm font-semibold"
+        >
+          {pending ? (
+            <>
+              <LoaderCircle className="animate-spin" aria-hidden />
+              Comprobando tu acceso…
+            </>
+          ) : (
+            "Entrar al panel"
+          )}
         </Button>
       </form>
-
-      {microsoftEnabled ? (
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 text-xs uppercase tracking-[0.14em] text-ink-subtle">
-            <span className="h-px flex-1 bg-line" />
-            o
-            <span className="h-px flex-1 bg-line" />
-          </div>
-          <MicrosoftSignInButton callbackUrl={callbackUrl} disabled={pending} />
-        </div>
-      ) : null}
     </div>
   );
 }

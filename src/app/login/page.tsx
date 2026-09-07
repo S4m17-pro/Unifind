@@ -14,9 +14,9 @@ import { brand } from "@/lib/brand";
 import { roleDuty, roleLabel, staffHomePath } from "@/lib/labels";
 
 export const metadata: Metadata = {
-  title: "Entrar al panel",
+  title: "Entrar",
   description:
-    "Acceso de vigilancia y Bienestar Universitario a UniFind, Universidad Libre Barranquilla.",
+    "Acceso institucional a UniFind: cuenta Microsoft de Unilibre o correo de portería y Bienestar.",
 };
 
 function errorFromAuthParam(error?: string) {
@@ -93,20 +93,19 @@ export default async function LoginPage({
   const microsoftEnabled = isMicrosoftEntraConfigured();
 
   return (
-    <LoginShell>
+    <LoginShell microsoftEnabled={microsoftEnabled}>
       <p className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-gold-ink">
-        Portería y Bienestar
+        {microsoftEnabled ? "Comunidad Unilibre" : "Portería y Bienestar"}
       </p>
       <h1 className="mb-2 font-serif text-2xl font-semibold text-ink">
         Entrar a {brand.product}
       </h1>
       <p className="text-sm text-ink-muted">
         {brand.product} custodia los objetos perdidos de {brand.institution}{" "}
-        {brand.seccional}. Esta puerta es para vigilancia de portería y para
-        Bienestar Universitario.
+        {brand.seccional}.{" "}
         {microsoftEnabled
-          ? " Estudiantes y personal con Microsoft 365 Educación pueden continuar con su cuenta institucional."
-          : null}
+          ? "Estudiantes entran con su cuenta Microsoft institucional. Portería y Bienestar pueden usar también su correo de turno."
+          : "Esta puerta es para vigilancia de portería y para Bienestar Universitario."}
       </p>
       {hint ? (
         <Alert variant="gold" className="mt-4">
@@ -132,7 +131,13 @@ export default async function LoginPage({
   );
 }
 
-function LoginShell({ children }: { children: ReactNode }) {
+function LoginShell({
+  children,
+  microsoftEnabled = false,
+}: {
+  children: ReactNode;
+  microsoftEnabled?: boolean;
+}) {
   return (
     <main className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto grid min-h-[calc(100vh-12rem)] max-w-5xl items-center gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]">
@@ -143,12 +148,12 @@ function LoginShell({ children }: { children: ReactNode }) {
               {brand.seccional}
             </p>
             <p className="mt-2 font-serif text-lg font-semibold text-ink">
-              Acceso de personal de campus
+              {microsoftEnabled ? "Acceso institucional" : "Acceso de personal de campus"}
             </p>
             <p className="mt-2 text-sm text-ink-muted">
-              El catálogo público no pide sesión. Esta pantalla es solo para
-              portería y Bienestar. La foto de campus es institucional: nunca
-              una foto de objeto en custodia.
+              {microsoftEnabled
+                ? "El catálogo público no pide sesión. Estudiantes entran con Microsoft 365 de Unilibre; portería y Bienestar pueden usar su correo de turno. La foto de campus es institucional: nunca una foto de objeto en custodia."
+                : "El catálogo público no pide sesión. Esta pantalla es solo para portería y Bienestar. La foto de campus es institucional: nunca una foto de objeto en custodia."}
             </p>
           </div>
         </aside>

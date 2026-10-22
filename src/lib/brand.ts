@@ -46,7 +46,7 @@ export const brand = {
   institution: "Universidad Libre",
   seccional: "Seccional Barranquilla",
   kicker: "Universidad Libre · Barranquilla",
-  logoUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_LOGO_URL),
+  logoUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_LOGO_URL) || "/brand/logo.svg",
   heroUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HERO_URL),
   howItWorksUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL),
   catalogUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_CATALOG_URL),

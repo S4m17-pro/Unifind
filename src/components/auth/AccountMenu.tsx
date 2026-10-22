@@ -56,26 +56,31 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
       <Button
         ref={triggerRef}
         type="button"
-        variant="gold"
+        variant="ghost"
         size="sm"
         aria-expanded={menuOpen}
         aria-haspopup="true"
         aria-controls={panelId}
         onClick={() => setMenuOpen((open) => !open)}
-        className="h-auto max-w-[16rem] gap-2 px-2.5 py-1.5"
+        className="h-auto w-full max-w-full justify-start gap-2 px-2 py-1.5 text-ink-muted hover:bg-bar hover:text-ink group-hover/sidebar:max-w-[16rem] group-hover/sidebar:justify-between"
       >
         <span
           aria-hidden
-          className="flex size-6 shrink-0 items-center justify-center rounded-sm bg-white/15 font-serif text-xs font-semibold"
+          className="flex size-7 shrink-0 items-center justify-center rounded-md bg-bar font-serif text-xs font-semibold text-ink"
         >
           {initials}
         </span>
-        <span className="min-w-0 text-left leading-tight">
-          <span className="block truncate text-xs font-semibold">{displayName}</span>
-          <span className="block truncate text-xs text-white/75">{label}</span>
+        <span className="min-w-0 flex-1 text-left leading-tight">
+          <span className="block truncate text-xs font-medium text-ink">{displayName}</span>
+          <span className="block truncate text-[9px] uppercase tracking-[0.18em] text-ink-subtle">
+            {label}
+          </span>
         </span>
         <ChevronDown
-          className={cn("h-3.5 w-3.5 shrink-0 transition-transform", menuOpen && "rotate-180")}
+          className={cn(
+            "h-3.5 w-3.5 shrink-0 opacity-0 transition-all group-hover/sidebar:opacity-100",
+            menuOpen && "rotate-180",
+          )}
           aria-hidden
         />
       </Button>

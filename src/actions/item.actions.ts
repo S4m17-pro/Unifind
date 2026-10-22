@@ -26,6 +26,11 @@ type CreatedItem = {
   id: string;
   qrCode: string;
   category: string;
+  foundLocation: string;
+  foundDate: Date;
+  custodyStation: string;
+  shelfLocation: string;
+  createdAt: Date;
 };
 
 export async function createItemAction(
@@ -105,6 +110,11 @@ export async function createItemAction(
           id: true,
           qrCode: true,
           category: true,
+          foundLocation: true,
+          foundDate: true,
+          custodyStation: true,
+          shelfLocation: true,
+          createdAt: true,
         },
       });
 

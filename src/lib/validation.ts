@@ -6,6 +6,10 @@ export function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+export function isInstitutionalEmail(value: string): boolean {
+  return /^[^\s@]+@unilibre\.edu\.co$/i.test(value.trim());
+}
+
 export function truncate(value: string, max: number): string {
   return value.trim().slice(0, max);
 }

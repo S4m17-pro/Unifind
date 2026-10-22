@@ -6,13 +6,16 @@ export async function getBienestarMetrics() {
   await requireSuperuserSession();
 
   const [
+    totalItems,
     byStatus,
     byCategory,
     byStation,
     claimsByStatus,
-    deliveries,
+    deliveryLogs,
     donationItems,
+    intakeDates,
   ] = await Promise.all([
+    prisma.item.count(),
     prisma.item.groupBy({
       by: ["status"],
       _count: { _all: true },
@@ -31,7 +34,12 @@ export async function getBienestarMetrics() {
       by: ["status"],
       _count: { _all: true },
     }),
-    prisma.deliveryLog.count(),
+    prisma.deliveryLog.findMany({
+      select: {
+        deliveredAt: true,
+        item: { select: { createdAt: true } },
+      },
+    }),
     prisma.item.findMany({
       where: { status: "LISTO_PARA_DONACION" },
       select: {
@@ -44,6 +52,9 @@ export async function getBienestarMetrics() {
         qrCode: true,
       },
       orderBy: { createdAt: "asc" },
+    }),
+    prisma.item.findMany({
+      select: { createdAt: true },
     }),
   ]);
 
@@ -68,12 +79,26 @@ export async function getBienestarMetrics() {
   }
 
   const now = Date.now();
+  const delivered = statusCounts.ENTREGADO;
+  const returnRate = totalItems > 0 ? Math.round((delivered / totalItems) * 100) : 0;
+  const totalCustodyMs = deliveryLogs.reduce(
+    (sum, log) => sum + Math.max(0, log.deliveredAt.getTime() - log.item.createdAt.getTime()),
+    0,
+  );
+  const averageCustodyDays =
+    deliveryLogs.length > 0
+      ? Math.round((totalCustodyMs / deliveryLogs.length / 86_400_000) * 10) / 10
+      : 0;
 
   return {
     retentionDays: CUSTODY_RETENTION_DAYS,
+    totalItems,
+    returnRate,
+    averageCustodyDays,
     statusCounts,
     claimCounts,
-    deliveries,
+    deliveries: deliveryLogs.length,
+    monthlyIntake: buildMonthlyIntake(intakeDates.map((item) => item.createdAt)),
     byCategory: byCategory.map((row) => ({
       category: row.category,
       count: row._count._all,
@@ -87,4 +112,26 @@ export async function getBienestarMetrics() {
       daysInCustody: Math.floor((now - item.createdAt.getTime()) / 86_400_000),
     })),
   };
+}
+
+function buildMonthlyIntake(dates: Date[], months = 6) {
+  const now = new Date();
+  const buckets = Array.from({ length: months }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (months - 1 - index), 1);
+    return {
+      key: `${date.getFullYear()}-${date.getMonth()}`,
+      label: date.toLocaleDateString("es-CO", { month: "short" }).replace(".", ""),
+      fullLabel: date.toLocaleDateString("es-CO", { month: "long", year: "numeric" }),
+      count: 0,
+    };
+  });
+
+  const byKey = new Map(buckets.map((bucket) => [bucket.key, bucket]));
+
+  for (const date of dates) {
+    const bucket = byKey.get(`${date.getFullYear()}-${date.getMonth()}`);
+    if (bucket) bucket.count += 1;
+  }
+
+  return buckets;
 }

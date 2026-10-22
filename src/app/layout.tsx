@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Source_Serif_4 } from "next/font/google";
-import AppFooter from "@/components/layout/AppFooter";
-import AppHeader from "@/components/layout/AppHeader";
-import InPageNav from "@/components/layout/InPageNav";
+import AppShell from "@/components/layout/AppShell";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,10 +32,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} ${sourceSerif.variable}`}>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
-        <AppHeader />
-        <InPageNav />
-        {children}
-        <AppFooter />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

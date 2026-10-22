@@ -3,34 +3,23 @@ import { brand, isLocalBrandAsset } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 
 export default function BrandMark({ className }: { className?: string }) {
-  if (!brand.logoUrl) {
-    return (
-      <span
-        aria-hidden
-        className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-md bg-brand font-serif text-sm font-bold tracking-wide text-white",
-          className,
-        )}
-      >
-        UF
-      </span>
-    );
-  }
+  const logoSrc = brand.logoUrl || "/brand/logo.svg";
 
-  if (isLocalBrandAsset(brand.logoUrl)) {
+  if (isLocalBrandAsset(logoSrc)) {
     return (
       <span
         className={cn(
-          "relative flex size-10 shrink-0 overflow-hidden rounded-md bg-paper",
+          "relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md",
           className,
         )}
       >
         <Image
-          src={brand.logoUrl}
+          src={logoSrc}
           alt={brand.logoAlt}
-          width={40}
-          height={40}
-          className="size-10 object-contain"
+          width={48}
+          height={48}
+          priority
+          className="size-full object-contain"
         />
       </span>
     );
@@ -39,17 +28,17 @@ export default function BrandMark({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "relative flex size-10 shrink-0 overflow-hidden rounded-md bg-paper",
+        "relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-md",
         className,
       )}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={brand.logoUrl}
+        src={logoSrc}
         alt={brand.logoAlt}
-        width={40}
-        height={40}
-        className="size-10 object-contain"
+        width={48}
+        height={48}
+        className="size-full object-contain"
       />
     </span>
   );

@@ -40,6 +40,8 @@ export type PublicCatalogFilters = {
   category?: string;
   custodyStation?: string;
   status?: CatalogStatusFilter;
+  dateFrom?: string;
+  dateTo?: string;
   limit?: number;
 };
 
@@ -74,6 +76,19 @@ function buildWhere(filters: PublicCatalogFilters): Prisma.ItemWhereInput {
     where.status = { in: [ItemStatus.EN_BODEGA, ItemStatus.LISTO_PARA_DONACION] };
   } else {
     where.status = filters.status;
+  }
+
+  const dateRange: Prisma.DateTimeFilter = {};
+  if (filters.dateFrom) {
+    const from = new Date(`${filters.dateFrom}T00:00:00`);
+    if (!Number.isNaN(from.getTime())) dateRange.gte = from;
+  }
+  if (filters.dateTo) {
+    const to = new Date(`${filters.dateTo}T23:59:59.999`);
+    if (!Number.isNaN(to.getTime())) dateRange.lte = to;
+  }
+  if (dateRange.gte || dateRange.lte) {
+    where.foundDate = dateRange;
   }
 
   return where;

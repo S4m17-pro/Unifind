@@ -1,10 +1,29 @@
-import type { ItemStatus, Role } from "@prisma/client";
+import type { ClaimStatus, ItemStatus, Role } from "@prisma/client";
 
 export const STATUS_LABELS: Record<ItemStatus, string> = {
   EN_BODEGA: "En bodega",
   ENTREGADO: "Entregado",
   LISTO_PARA_DONACION: "Listo para donación",
 };
+
+export const STATUS_DESCRIPTIONS: Record<ItemStatus, string> = {
+  EN_BODEGA: "En custodia en portería, disponible para reclamo.",
+  ENTREGADO: "Entregado al propietario con firma de conformidad.",
+  LISTO_PARA_DONACION: "Superó el periodo de retención y espera gestión de Bienestar.",
+};
+
+export const CLAIM_STATUS_LABELS: Record<ClaimStatus, string> = {
+  PENDING: "Pendiente de revisión",
+  APPROVED: "Aprobado para retiro",
+  REJECTED: "Rechazado",
+};
+
+export function claimStatusLabel(status: ClaimStatus | string): string {
+  if (status in CLAIM_STATUS_LABELS) {
+    return CLAIM_STATUS_LABELS[status as ClaimStatus];
+  }
+  return String(status);
+}
 
 export const ROLE_LABELS: Record<Role, string> = {
   ADMIN: "Vigilancia",
@@ -52,4 +71,27 @@ export function formatFoundDate(date: Date | string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+export function formatDay(date: Date | string): string {
+  return new Date(date).toLocaleDateString("es-CO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export function formatRelativeDate(date: Date | string): string {
+  const value = new Date(date);
+  const diffMs = Date.now() - value.getTime();
+  const minutes = Math.round(diffMs / 60_000);
+
+  if (minutes < 1) return "Ahora";
+  if (minutes < 60) return `Hace ${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `Hace ${hours} h`;
+  const days = Math.round(hours / 24);
+  if (days === 1) return "Ayer";
+  if (days < 30) return `Hace ${days} días`;
+  return formatDay(value);
 }

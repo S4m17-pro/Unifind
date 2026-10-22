@@ -1,12 +1,18 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import type { ClaimStatus } from "@prisma/client";
 import { actionError, actionOk, type ActionResult } from "@/lib/action-result";
 import { withStaffSession } from "@/lib/auth/guards";
 import { upsertCommunityUser } from "@/lib/domain/users";
 import { notifyClaimByEmail } from "@/lib/notifications/claim-email";
 import { prisma } from "@/lib/prisma";
-import { isValidEmail, normalizeEmail, truncate } from "@/lib/validation";
+import {
+  isInstitutionalEmail,
+  isValidEmail,
+  normalizeEmail,
+  truncate,
+} from "@/lib/validation";
 
 export async function submitClaimAction(
   formData: FormData,
@@ -14,7 +20,10 @@ export async function submitClaimAction(
   const itemId = String(formData.get("itemId") ?? "");
   const studentEmail = normalizeEmail(String(formData.get("studentEmail") ?? ""));
   const studentName = truncate(String(formData.get("studentName") ?? "Estudiante"), 120);
-  const description = truncate(String(formData.get("description") ?? ""), 2000);
+  const description = truncate(String(formData.get("description") ?? ""), 1600);
+  const distinctiveMarks = truncate(String(formData.get("distinctiveMarks") ?? ""), 500);
+  const serialNumber = truncate(String(formData.get("serialNumber") ?? ""), 120);
+  const unlockCode = truncate(String(formData.get("unlockCode") ?? ""), 120);
 
   if (!itemId || !studentEmail || !description) {
     return actionError("Todos los campos obligatorios deben ser diligenciados.");
@@ -23,6 +32,25 @@ export async function submitClaimAction(
   if (!isValidEmail(studentEmail)) {
     return actionError("El correo institucional no es válido.");
   }
+
+  if (!isInstitutionalEmail(studentEmail)) {
+    return actionError(
+      "El reclamo debe hacerse con tu correo institucional @unilibre.edu.co.",
+    );
+  }
+
+  const evidence = [
+    serialNumber ? `Serie / IMEI / placa: ${serialNumber}` : null,
+    distinctiveMarks ? `Marcas distintivas: ${distinctiveMarks}` : null,
+    unlockCode ? `Clave de desbloqueo: ${unlockCode}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const fullDescription = truncate(
+    [description, evidence].filter(Boolean).join("\n\n"),
+    2000,
+  );
 
   try {
     const item = await prisma.item.findUnique({
@@ -63,7 +91,7 @@ export async function submitClaimAction(
       data: {
         itemId: item.id,
         studentId: student.id,
-        description,
+        description: fullDescription,
         status: "PENDING",
       },
     });
@@ -72,7 +100,7 @@ export async function submitClaimAction(
       await notifyClaimByEmail({
         studentName,
         studentEmail,
-        description,
+        description: fullDescription,
         qrCode: item.qrCode,
         category: item.category,
         foundLocation: item.foundLocation,
@@ -128,4 +156,74 @@ export async function reviewClaimAction(
       return actionError("No se pudo actualizar el reclamo.");
     }
   });
+}
+
+export type ClaimLookupResult = {
+  reference: string;
+  status: ClaimStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  item: {
+    category: string;
+    foundLocation: string;
+    foundDate: Date;
+    custodyStation: string;
+  };
+};
+
+export async function lookupClaimAction(
+  formData: FormData,
+): Promise<ActionResult<{ claim: ClaimLookupResult }>> {
+  const reference = String(formData.get("reference") ?? "").trim();
+  const email = normalizeEmail(String(formData.get("email") ?? ""));
+
+  if (!reference || !email) {
+    return actionError("Escribe el correo con el que reclamaste y el código de radicado.");
+  }
+
+  if (!isValidEmail(email)) {
+    return actionError("Ese correo no parece válido. Revisa el que usaste en el reclamo.");
+  }
+
+  try {
+    const claim = await prisma.claimRequest.findFirst({
+      where: {
+        id: reference,
+        student: { email },
+      },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        item: {
+          select: {
+            category: true,
+            foundLocation: true,
+            foundDate: true,
+            custodyStation: true,
+          },
+        },
+      },
+    });
+
+    if (!claim) {
+      return actionError(
+        "No encontramos un reclamo con esos datos. Verifica el código de radicado y el correo.",
+      );
+    }
+
+    return actionOk({
+      claim: {
+        reference: claim.id,
+        status: claim.status,
+        createdAt: claim.createdAt,
+        updatedAt: claim.updatedAt,
+        item: claim.item,
+      },
+    });
+  } catch (error) {
+    console.error("Error al consultar reclamo:", error);
+    return actionError("No pudimos consultar el reclamo en este momento.");
+  }
 }

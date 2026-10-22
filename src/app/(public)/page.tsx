@@ -45,7 +45,6 @@ export default async function HomePage() {
             className="scroll-mt-[var(--app-header-offset)]"
           >
             <section
-              id="como-reclamar"
               className="mb-16 scroll-mt-[var(--app-header-offset)]"
             >
               <div className="mb-8 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)]">

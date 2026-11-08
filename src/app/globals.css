@@ -18,3 +18,23 @@ body {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
+
+@page {
+  size: A4;
+  margin: 1.5cm;
+}
+
+@media print {
+  body {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
+  .report-table thead {
+    display: table-header-group;
+  }
+
+  .report-table tr {
+    break-inside: avoid;
+  }
+}

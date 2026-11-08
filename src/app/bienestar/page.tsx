@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/auth";
 import { getBienestarMetrics } from "@/lib/metrics";
 
@@ -16,15 +17,23 @@ export default async function BienestarPage() {
   return (
     <main className="min-h-screen bg-slate-950 p-6 text-slate-100 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
-        <header className="border-b border-slate-800 pb-6">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber-400">
-            Bienestar Universitario
-          </p>
-          <h1 className="mt-2 text-3xl font-extrabold">Métricas y donaciones</h1>
-          <p className="mt-1 text-sm text-slate-400">
-            Lectura para SUPERUSER. Retención de custodia: {metrics.retentionDays} días antes de
-            LISTO_PARA_DONACION.
-          </p>
+        <header className="flex flex-col gap-4 border-b border-slate-800 pb-6 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+              Bienestar Universitario
+            </p>
+            <h1 className="mt-2 text-3xl font-extrabold">Métricas y donaciones</h1>
+            <p className="mt-1 text-sm text-slate-400">
+              Lectura para SUPERUSER. Retención de custodia: {metrics.retentionDays} días antes de
+              LISTO_PARA_DONACION.
+            </p>
+          </div>
+          <Link
+            href="/bienestar/reporte"
+            className="inline-flex items-center justify-center rounded-xl bg-amber-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-amber-400"
+          >
+            Reporte PDF
+          </Link>
         </header>
 
         <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

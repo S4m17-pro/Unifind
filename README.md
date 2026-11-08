@@ -131,6 +131,7 @@ En Vercel, `vercel.json` programa esa ruta a las 06:00 UTC. Configura `CRON_SECR
 - `/dashboard` redirige según rol
 - `/admin/dashboard` vigilancia
 - `/bienestar` métricas SUPERUSER
+- `/bienestar/reporte` reporte de donación imprimible (guardar como PDF)
 - `/api/cron/check-expiration` retención
 
 ## Docker (solo base de datos)

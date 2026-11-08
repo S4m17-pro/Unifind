@@ -181,7 +181,7 @@ Marca `[x]` cuando esté implementado y verificado.
 **Ciclo de vida y analítica**
 - [x] RF-DON-01 Cron a `LISTO_PARA_DONACION`
 - [x] RF-DSH-01 KPIs: tasa de devolución, objetos ingresados, tiempo de permanencia
-- [ ] Reporte de donación para Bienestar (PDF)
+- [x] Reporte de donación para Bienestar (PDF)
 
 **No funcionales**
 - RNF-01 Portería optimizada para tablet

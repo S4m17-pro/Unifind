@@ -134,6 +134,12 @@ En Vercel, `vercel.json` programa esa ruta a las 06:00 UTC. Configura `CRON_SECR
 - `/bienestar/reporte` reporte de donación imprimible (guardar como PDF)
 - `/api/cron/check-expiration` retención
 
+## Pruebas manuales pendientes
+
+Las pruebas que requieren Cloudinary, Resend, cámara o despliegue están en
+[`docs/PRUEBAS_MANUALES.md`](docs/PRUEBAS_MANUALES.md), con pasos y criterios de
+aceptación.
+
 ## Docker (solo base de datos)
 
 Ver también `DOCKER_INSTRUCTIONS.md`.

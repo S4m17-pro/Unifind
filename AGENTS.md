@@ -154,16 +154,18 @@ npm run lint                # ESLint (Next.js + TypeScript), debe pasar sin erro
 
 Marca `[x]` cuando esté implementado y verificado.
 
-> Última verificación: 2026-11-08 — `npm run build` y `npm run lint` en verde,
-> más pruebas de humo en local de login, catálogo, reclamo y cron. Los flujos que
-> dependen de cámara, firma o servicios externos siguen pendientes de prueba manual.
+> Última verificación: 2026-11-08 — `npm run build`, `npm run lint` y `npm audit`
+> en verde (0 vulnerabilidades). Además, prueba E2E en navegador real del flujo
+> completo: login, registro, QR, catálogo sin fugas, reclamo, entrega con firma y
+> reporte de donación. Pendiente de prueba manual: fotos reales (Cloudinary),
+> correo real (Resend) y escaneo de QR con cámara física.
 
 **Usuarios y autenticación**
 - [x] RF-USR-01 Login seguro por roles
 - [x] RF-USR-02 Rutas administrativas protegidas (JWT + validación en servidor)
 
 **Recepción y etiquetado**
-- [ ] RF-REC-01 Registro: categoría, fecha, ubicación, descripción
+- [x] RF-REC-01 Registro: categoría, fecha, ubicación, descripción
 - [ ] RF-REC-02 1–2 fotos privadas
 - [x] RF-QRG-01 QR único por objeto
 
@@ -175,8 +177,8 @@ Marca `[x]` cuando esté implementado y verificado.
 
 **Entrega segura**
 - [ ] RF-ENT-01 Escaneo de QR con cámara
-- [ ] RF-ENT-02 Firma digital en canvas
-- [ ] RF-ENT-03 Cambio a `ENTREGADO` tras validar firma
+- [x] RF-ENT-02 Firma digital en canvas
+- [x] RF-ENT-03 Cambio a `ENTREGADO` tras validar firma
 
 **Ciclo de vida y analítica**
 - [x] RF-DON-01 Cron a `LISTO_PARA_DONACION`

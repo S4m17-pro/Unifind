@@ -29,7 +29,9 @@ export default function DeliveryModule() {
       return;
     }
 
-    const signatureData = sigCanvasRef.current.getTrimmedCanvas().toDataURL("image/png");
+    // `getTrimmedCanvas()` falla con trim-canvas 0.1.2 (interop UMD/ESM);
+    // `toDataURL` es la API nativa del canvas y produce el PNG de la firma.
+    const signatureData = sigCanvasRef.current.toDataURL("image/png");
 
     setLoading(true);
     const result = await processDeliveryAction({

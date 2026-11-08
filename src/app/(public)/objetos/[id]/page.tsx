@@ -8,6 +8,7 @@ import StatusBadge from "@/components/public/StatusBadge";
 import { getClaimDefaults } from "@/lib/claim-defaults";
 import { formatFoundDate } from "@/lib/labels";
 import { getPublicItem, isClaimable } from "@/lib/public-catalog";
+import { getSignedInRole } from "@/lib/auth-guards";
 
 export const dynamic = "force-dynamic";
 
@@ -47,8 +48,11 @@ export default async function ItemDetailPage({
 
   if (!item) notFound();
 
+  const role = await getSignedInRole();
+  const isStaff = role === "ADMIN" || role === "SUPERUSER";
   const claimable = isClaimable(item.status);
-  const autoOpen = query.reclamar === "1" && claimable;
+  const canClaim = claimable && !isStaff;
+  const autoOpen = query.reclamar === "1" && canClaim;
   const defaults = await getClaimDefaults(query);
 
   return (
@@ -110,7 +114,7 @@ export default async function ItemDetailPage({
             </p>
           </div>
 
-          {claimable ? (
+          {canClaim ? (
             <div className="space-y-3">
               <ClaimFormModal
                 item={{
@@ -133,6 +137,11 @@ export default async function ItemDetailPage({
                 </Link>
               </p>
             </div>
+          ) : isStaff ? (
+            <p className="rounded-2xl border border-amber-900/60 bg-amber-950/30 p-4 text-sm text-amber-300">
+              Sesión de personal: este objeto se gestiona desde el panel de Vigilancia. La
+              vista pública de estudiantes no permite registrar reclamos.
+            </p>
           ) : (
             <p className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-400">
               Este objeto ya no está disponible para reclamo público.

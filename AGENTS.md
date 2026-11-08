@@ -56,6 +56,8 @@ Reglas:
   Components). El middleware o ocultar botones en la UI **no** es suficiente.
 - Cada Server Action o endpoint protegido debe verificar sesión **y** rol al inicio.
 - Por defecto, una ruta nueva es privada. Solo `/`, `/login` y `/unauthorized` son públicas.
+- El personal (`ADMIN`/`SUPERUSER`) no registra reclamos: el catálogo público oculta el CTA
+  y `submitClaimAction` rechaza la acción en el servidor.
 
 ## 5. Reglas INNEGOCIABLES
 

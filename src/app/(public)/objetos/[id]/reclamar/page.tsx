@@ -6,6 +6,7 @@ import ClaimForm from "@/components/public/ClaimForm";
 import StatusBadge from "@/components/public/StatusBadge";
 import { getClaimDefaults } from "@/lib/claim-defaults";
 import { getPublicItem, isClaimable } from "@/lib/public-catalog";
+import { getSignedInRole } from "@/lib/auth-guards";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,8 @@ export default async function ClaimPage({
   if (!item) notFound();
 
   const claimable = isClaimable(item.status);
+  const role = await getSignedInRole();
+  const isStaff = role === "ADMIN" || role === "SUPERUSER";
   const defaults = await getClaimDefaults(query);
 
   return (
@@ -63,7 +66,12 @@ export default async function ClaimPage({
             portería valida y te lo entrega con tu carnet.
           </p>
 
-          {claimable ? (
+          {isStaff ? (
+            <p className="rounded-2xl border border-amber-900/60 bg-amber-950/30 p-4 text-sm text-amber-300">
+              Sesión de personal: los reclamos solo se registran desde la vista pública de
+              estudiantes. Gestiona la entrega desde el panel de Vigilancia.
+            </p>
+          ) : claimable ? (
             <ClaimForm
               item={{
                 id: item.id,

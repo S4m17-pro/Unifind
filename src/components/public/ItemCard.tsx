@@ -2,10 +2,13 @@ import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
 import { isClaimable, type PublicItem } from "@/lib/public-catalog";
 import { formatFoundDate } from "@/lib/labels";
+import { getSignedInRole } from "@/lib/auth-guards";
 import CategoryGlyph from "@/components/public/CategoryGlyph";
 import StatusBadge from "@/components/public/StatusBadge";
 
-export default function ItemCard({ item }: { item: PublicItem }) {
+export default async function ItemCard({ item }: { item: PublicItem }) {
+  const role = await getSignedInRole();
+  const isStaff = role === "ADMIN" || role === "SUPERUSER";
   const claimable = isClaimable(item.status);
 
   return (
@@ -52,7 +55,11 @@ export default function ItemCard({ item }: { item: PublicItem }) {
         >
           Ver detalle
         </Link>
-        {claimable ? (
+        {isStaff ? (
+          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-900/60 bg-amber-950/30 px-4 py-2.5 text-center text-xs text-amber-300">
+            Personal: gestiona desde el panel
+          </span>
+        ) : claimable ? (
           <Link
             href={`/objetos/${item.id}/reclamar`}
             className="inline-flex flex-1 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-500"

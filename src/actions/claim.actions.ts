@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getResendClient } from "@/lib/resend";
-import { requireStaffSession } from "@/lib/auth-guards";
+import { requireStaffSession, getSignedInRole } from "@/lib/auth-guards";
 import { escapeHtml } from "@/lib/html";
 import { isValidEmail, normalizeEmail, truncate } from "@/lib/validation";
 
@@ -49,6 +49,13 @@ async function notifyClaimByEmail(params: {
 }
 
 export async function submitClaimAction(formData: FormData) {
+  // Regla §4: el personal (ADMIN/SUPERUSER) es custodio y no reclama objetos.
+  // Ocultar el botón no basta: el servidor siempre revalida el rol.
+  const role = await getSignedInRole();
+  if (role === "ADMIN" || role === "SUPERUSER") {
+    return { error: "El personal no registra reclamos desde el catálogo público." };
+  }
+
   const itemId = String(formData.get("itemId") ?? "");
   const studentEmail = normalizeEmail(String(formData.get("studentEmail") ?? ""));
   const studentName = truncate(String(formData.get("studentName") ?? "Estudiante"), 120);

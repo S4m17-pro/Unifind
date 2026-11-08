@@ -87,6 +87,8 @@ export default function PrivatePhotoField({
       />
       {preview ? (
         <div className="mt-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+          {/* Vista previa local (blob), no pasa por el optimizador de next/image. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
             alt={photoName ? `Vista previa de ${photoName}` : "Vista previa de la foto privada"}

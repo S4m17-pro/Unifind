@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   BarChart3,
   Boxes,
@@ -38,17 +39,17 @@ function navFor(role: Role, pendingClaims = 0): NavItem[] {
   }
 
   return [
-    { href: "/admin/dashboard#resumen", label: "Resumen del turno", shortLabel: "Resumen", icon: LayoutDashboard },
-    { href: "/admin/dashboard#registro", label: "Registrar objeto", shortLabel: "Registrar", icon: PackagePlus },
+    { href: "/admin/dashboard?tab=resumen", label: "Resumen del turno", shortLabel: "Resumen", icon: LayoutDashboard },
+    { href: "/admin/dashboard?tab=registro", label: "Registrar objeto", shortLabel: "Registrar", icon: PackagePlus },
     {
-      href: "/admin/dashboard#reclamos",
+      href: "/admin/dashboard?tab=reclamos",
       label: "Revisar reclamos",
       shortLabel: "Reclamos",
       icon: ClipboardCheck,
       badge: pendingClaims || undefined,
     },
-    { href: "/admin/dashboard#entregas", label: "Entrega con firma", shortLabel: "Entregas", icon: ScanLine },
-    { href: "/admin/dashboard#inventario", label: "Inventario privado", shortLabel: "Inventario", icon: Boxes },
+    { href: "/admin/dashboard?tab=entregas", label: "Entrega con firma", shortLabel: "Entregas", icon: ScanLine },
+    { href: "/admin/dashboard?tab=inventario", label: "Inventario privado", shortLabel: "Inventario", icon: Boxes },
     { href: "/objetos", label: "Catálogo público", shortLabel: "Catálogo", icon: Search },
   ];
 }
@@ -68,10 +69,24 @@ export default function StaffWorkspace({
 }) {
   const items = useMemo(() => navFor(role, pendingClaims), [role, pendingClaims]);
   const [activeHref, setActiveHref] = useState(items[0]?.href ?? "");
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get("tab") ?? "resumen";
   const displayName = name?.trim() || email || "Personal Unilibre";
   const initials = accountInitials(name, email);
 
+  const isActive = (href: string) => {
+    if (href.includes("?tab=")) {
+      return pathname === "/admin/dashboard" && href.endsWith(`tab=${activeTab}`);
+    }
+    return href === activeHref;
+  };
+
+  const usesHashNav = items.some((item) => item.href.includes("#"));
+
   useEffect(() => {
+    if (!usesHashNav) return;
+
     const sections = Array.from(
       document.querySelectorAll<HTMLElement>("[data-workspace-section]"),
     );
@@ -92,7 +107,7 @@ export default function StaffWorkspace({
     syncFromScroll();
     window.addEventListener("scroll", syncFromScroll, { passive: true });
     return () => window.removeEventListener("scroll", syncFromScroll);
-  }, [items]);
+  }, [items, usesHashNav]);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -122,7 +137,7 @@ export default function StaffWorkspace({
               className="rounded-lg border border-line bg-paper p-2"
             >
               {items.map((item) => {
-                const active = item.href === activeHref;
+                const active = isActive(item.href);
                 const Icon = item.icon;
                 return (
                   <Link
@@ -170,7 +185,7 @@ export default function StaffWorkspace({
           >
             <nav aria-label="Secciones del panel" className="no-scrollbar flex gap-1 overflow-x-auto">
               {items.map((item) => {
-                const active = item.href === activeHref;
+                const active = isActive(item.href);
                 const Icon = item.icon;
                 return (
                   <Link

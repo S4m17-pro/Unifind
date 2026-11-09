@@ -51,6 +51,10 @@ Levanta Postgres:
 docker compose up -d
 ```
 
+> Si el puerto `5432` ya está ocupado en tu máquina, agrega `POSTGRES_PORT=5433`
+> a tu `.env` y usa ese mismo puerto en `DATABASE_URL`. El valor por defecto sigue
+> siendo `5432` para el resto del equipo.
+
 Instala, migra y siembra usuarios de demo:
 
 ```bash
@@ -59,6 +63,9 @@ npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
+
+> Con **npm 12+** puede aparecer `EALLOWREMOTE` al instalar. Es una restricción de
+> seguridad nueva; usa `npm install --allow-remote=all` para esa instalación.
 
 La app queda en [http://localhost:3000](http://localhost:3000).
 
@@ -81,6 +88,7 @@ Cambia estas claves antes de cualquier despliegue real.
 | `npm run db:migrate` | Migraciones en desarrollo |
 | `npm run db:seed` | Usuarios e ítem de ejemplo |
 | `npm run db:studio` | Prisma Studio |
+| `npm run lint` | ESLint (Next.js + TypeScript) |
 
 `postinstall` ejecuta `prisma generate`.
 
@@ -123,14 +131,21 @@ En Vercel, `vercel.json` programa esa ruta a las 06:00 UTC. Configura `CRON_SECR
 - `/dashboard` redirige según rol
 - `/admin/dashboard` vigilancia
 - `/bienestar` métricas SUPERUSER
+- `/bienestar/reporte` reporte de donación imprimible (guardar como PDF)
 - `/api/cron/check-expiration` retención
+
+## Pruebas manuales pendientes
+
+Las pruebas que requieren Cloudinary, Resend, cámara o despliegue están en
+[`docs/PRUEBAS_MANUALES.md`](docs/PRUEBAS_MANUALES.md), con pasos y criterios de
+aceptación.
 
 ## Docker (solo base de datos)
 
 Ver también `DOCKER_INSTRUCTIONS.md`.
 
 ```bash
-docker compose up -d      # postgres:16 en el puerto 5432
+docker compose up -d      # postgres:16 en el puerto 5432 (o $POSTGRES_PORT)
 docker compose down       # detener
 docker compose down -v    # borrar volumen
 ```

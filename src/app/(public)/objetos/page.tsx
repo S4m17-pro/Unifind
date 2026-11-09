@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Catálogo de objetos",
   description:
-    "Consulta pública genérica de objetos en custodia. Filtra por categoría, portería y estado. Sin fotos.",
+    "Explora los objetos que están en custodia en portería. Filtra por categoría, portería y estado, y reclama el tuyo.",
 };
 
 type SearchParams = Promise<{
@@ -35,15 +35,15 @@ export default async function CatalogPage({
     <main className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <p className="mb-3 inline-block rounded-full border border-blue-800 bg-blue-950/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-400">
+          <p className="mb-3 inline-block rounded-full border border-teal-200 bg-teal-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-teal-700">
             Consulta pública
           </p>
-          <h1 className="mb-3 text-3xl font-extrabold text-slate-100 sm:text-4xl">
+          <h1 className="font-display mb-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
             Catálogo de objetos en custodia
           </h1>
-          <p className="max-w-2xl text-sm text-slate-400 sm:text-base">
-            No publicamos fotos, QR ni el estante interno. Filtra por categoría, portería
-            y estado; si reconoces un objeto, envía el reclamo con tu correo institucional.
+          <p className="max-w-2xl text-sm text-slate-600 sm:text-base">
+            Usa los filtros para encontrar tu objeto más rápido. Si lo reconoces, envía el
+            reclamo con tu correo institucional y portería lo verificará.
           </p>
         </header>
 

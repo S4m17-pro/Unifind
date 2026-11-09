@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
@@ -56,24 +57,25 @@ export default function NewItemForm({
   };
 
   return (
-    <div className="mx-auto max-w-2xl rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
-      <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-100">
-        Registro privado de objeto perdido
+    <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
+      <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900">
+        Registrar objeto encontrado
       </h2>
 
       {error && (
-        <div className="mb-6 rounded-xl border border-red-800 bg-red-950/80 p-4 text-sm text-red-300">
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
 
       {createdItem ? (
         <div className="space-y-6 py-8 text-center">
-          <div className="rounded-xl border border-emerald-800 bg-emerald-950/60 p-4 text-emerald-300">
+          <div className="flex items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-800">
+            <CheckCircle2 className="animate-icon-pop h-5 w-5" aria-hidden />
             ¡Objeto registrado con éxito en bodega!
           </div>
           {warning ? (
-            <div className="rounded-xl border border-amber-800 bg-amber-950/60 p-4 text-sm text-amber-300">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
               {warning}
             </div>
           ) : null}
@@ -82,14 +84,14 @@ export default function NewItemForm({
             <QRCodeSVG value={createdItem.qrCode} size={200} />
           </div>
 
-          <p className="font-mono text-sm text-slate-300">
-            Código QR: <strong className="text-blue-400">{createdItem.qrCode}</strong>
+          <p className="font-mono text-sm text-slate-700">
+            Código QR: <strong className="text-teal-700">{createdItem.qrCode}</strong>
           </p>
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href={`/admin/objetos/${createdItem.id}`}
-              className="rounded-xl bg-slate-800 px-6 py-2.5 font-medium text-slate-100 transition-colors hover:bg-slate-700"
+              className="rounded-xl bg-slate-100 px-6 py-2.5 font-medium text-slate-900 transition-colors hover:bg-slate-200"
             >
               Ver ficha privada
             </Link>
@@ -99,7 +101,7 @@ export default function NewItemForm({
                 setCreatedItem(null);
                 setWarning(null);
               }}
-              className="rounded-xl bg-blue-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-blue-500"
+              className="rounded-xl bg-teal-700 px-6 py-2.5 font-medium text-white transition-colors hover:bg-teal-600"
             >
               Registrar otro objeto
             </button>
@@ -109,14 +111,14 @@ export default function NewItemForm({
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Categoría genérica
               </label>
               <select
                 name="category"
                 required
                 defaultValue=""
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               >
                 <option value="" disabled>
                   Selecciona una categoría
@@ -130,21 +132,21 @@ export default function NewItemForm({
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Fecha y hora del hallazgo
               </label>
               <input
                 type="datetime-local"
                 name="foundDate"
                 required
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Bloque / salón
               </label>
               <input
@@ -152,12 +154,12 @@ export default function NewItemForm({
                 name="foundLocation"
                 required
                 placeholder="Ej. Bloque B - Salón 302"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Portería / bodega de custodia
               </label>
               <input
@@ -165,21 +167,21 @@ export default function NewItemForm({
                 name="custodyStation"
                 required
                 placeholder="Ej. Portería Principal"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Ubicación física en bodega (privada)
+            <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
+              Ubicación en bodega
             </label>
             <input
               type="text"
               name="shelfLocation"
               required
               placeholder="Ej. Estante 2 - Casillero B"
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
@@ -192,9 +194,16 @@ export default function NewItemForm({
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-medium text-white shadow-lg shadow-blue-600/25 transition-colors hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50"
+            className="mt-4 w-full rounded-xl bg-gradient-to-r from-teal-700 to-emerald-600 py-3 font-medium text-white shadow-lg shadow-teal-700/25 transition-colors hover:from-teal-500 hover:to-emerald-500 disabled:opacity-50"
           >
-            {loading ? "Procesando y generando QR..." : "Guardar en bodega y generar QR"}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Guardando y generando QR...
+              </span>
+            ) : (
+              "Guardar objeto y generar su QR"
+            )}
           </button>
         </form>
       )}

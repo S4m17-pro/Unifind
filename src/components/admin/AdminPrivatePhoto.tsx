@@ -19,11 +19,12 @@ export default function AdminPrivatePhoto({
     return (
       <div
         className={cn(
-          "overflow-hidden border border-slate-800 bg-slate-950",
+          "overflow-hidden border border-slate-200 bg-white",
           isDetail ? "rounded-2xl" : "mb-3 rounded-xl",
         )}
       >
         {/* Signed Cloudinary URLs carry expire_at; next/image would strip the firma. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={signedUrl}
           alt={alt}
@@ -36,7 +37,7 @@ export default function AdminPrivatePhoto({
   return (
     <div
       className={cn(
-        "flex items-center justify-center border border-slate-800 bg-slate-900 px-3 text-center text-xs text-slate-500",
+        "flex items-center justify-center border border-slate-200 bg-white px-3 text-center text-xs text-slate-500",
         isDetail ? "min-h-64 rounded-2xl" : "mb-3 h-24 rounded-xl",
       )}
     >

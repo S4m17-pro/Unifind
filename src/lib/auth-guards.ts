@@ -21,6 +21,16 @@ export async function requireStaffSession() {
   return session;
 }
 
+export type SignedInRole = "ADMIN" | "SUPERUSER" | "STUDENT";
+
+/** Rol de la sesión actual, o null si no hay sesión (visitante público). */
+export async function getSignedInRole(): Promise<SignedInRole | null> {
+  const role = (await auth())?.user?.role;
+  return role === "ADMIN" || role === "SUPERUSER" || role === "STUDENT"
+    ? role
+    : null;
+}
+
 export async function requireSuperuserSession() {
   const session = await auth();
 

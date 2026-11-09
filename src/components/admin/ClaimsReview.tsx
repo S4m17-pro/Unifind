@@ -34,15 +34,15 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
   };
 
   return (
-    <section className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
-      <h2 className="mb-2 text-2xl font-bold text-slate-100">Revisión de reclamos</h2>
-      <p className="mb-6 text-sm text-slate-400">
-        Las descripciones de pertenencia solo son visibles para vigilancia. Aprueba o rechaza antes
-        de la entrega presencial con firma.
+    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
+      <h2 className="mb-2 text-2xl font-bold text-slate-900">Revisión de reclamos</h2>
+      <p className="mb-6 text-sm text-slate-600">
+        Solo el personal puede ver estas descripciones. Aprueba o rechaza antes de realizar
+        la entrega.
       </p>
 
       {message ? (
-        <div className="mb-4 rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-300">
+        <div className="mb-4 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700">
           {message}
         </div>
       ) : null}
@@ -52,28 +52,28 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
       ) : (
         <div className="space-y-4">
           {claims.map((claim) => (
-            <article key={claim.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+            <article key={claim.id} className="rounded-2xl border border-slate-200 bg-white p-4">
               <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-slate-100">
+                <p className="text-sm font-semibold text-slate-900">
                   {claim.item.category} · {claim.item.qrCode}
                 </p>
                 <p className="text-xs text-slate-500">
                   {new Date(claim.createdAt).toLocaleString("es-CO")}
                 </p>
               </div>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-600">
                 {claim.student.name} · {claim.student.email}
               </p>
               <p className="mt-1 text-xs text-slate-500">
                 {claim.item.custodyStation} · {claim.item.shelfLocation}
               </p>
-              <blockquote className="mt-3 rounded-xl border-l-4 border-blue-600 bg-slate-900 px-3 py-2 text-sm text-slate-300">
+              <blockquote className="mt-3 rounded-xl border-l-4 border-blue-600 bg-white px-3 py-2 text-sm text-slate-700">
                 {claim.description}
               </blockquote>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link
                   href={`/admin/objetos/${claim.item.id}`}
-                  className="rounded-xl border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 hover:bg-slate-800"
+                  className="rounded-xl border border-slate-300 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-100"
                 >
                   Ver ficha privada
                 </Link>

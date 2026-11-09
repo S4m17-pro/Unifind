@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { submitClaimAction } from "@/actions/claim.actions";
 import type { PublicItem } from "@/lib/public-catalog";
 
@@ -62,8 +63,8 @@ export default function ClaimForm({
           role="status"
           className={`mb-4 rounded-xl p-4 text-sm ${
             message.type === "success"
-              ? "border border-emerald-800 bg-emerald-950/80 text-emerald-300"
-              : "border border-red-800 bg-red-950/80 text-red-300"
+              ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+              : "border border-red-200 bg-red-50 text-red-700"
           }`}
         >
           {message.text}
@@ -73,7 +74,7 @@ export default function ClaimForm({
       {message?.type !== "success" && (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="studentName" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label htmlFor="studentName" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
               Nombre completo
             </label>
             <input
@@ -84,12 +85,12 @@ export default function ClaimForm({
               defaultValue={defaults?.name ?? ""}
               autoComplete="name"
               placeholder="Ej. Juan Pérez"
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
           <div>
-            <label htmlFor="studentEmail" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label htmlFor="studentEmail" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
               Correo institucional
             </label>
             <input
@@ -100,12 +101,12 @@ export default function ClaimForm({
               defaultValue={defaults?.email ?? ""}
               autoComplete="email"
               placeholder="estudiante@unilibre.edu.co"
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
           <div>
-            <label htmlFor="description" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <label htmlFor="description" className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
               ¿Cómo lo reconoces?
             </label>
             <textarea
@@ -114,7 +115,7 @@ export default function ClaimForm({
               required
               rows={4}
               placeholder="Marca, color, stickers, rasguños u otro detalle que solo tú conozcas."
-              className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
             <p className="mt-1.5 text-xs text-slate-500">
               No publiques datos sensibles. Portería usa esto para verificar que te pertenece.
@@ -124,9 +125,16 @@ export default function ClaimForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-500 disabled:opacity-50"
+            className="w-full rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-teal-600 disabled:opacity-50"
           >
-            {loading ? "Enviando..." : submitLabel}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Enviando...
+              </span>
+            ) : (
+              submitLabel
+            )}
           </button>
         </form>
       )}

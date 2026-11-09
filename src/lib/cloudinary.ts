@@ -82,14 +82,14 @@ export function describeCloudinarySetup(): string {
   const status = getCloudinaryStatus();
 
   if (status.status === "ready") {
-    return `Cloudinary listo. Las fotos se suben como authenticated en ${CLOUDINARY_PRIVATE_FOLDER} y solo se firman en el panel de vigilancia.`;
+    return "Las fotos están activas. Solo las verá el personal autorizado.";
   }
 
   if (status.status === "incomplete") {
-    return `Cloudinary está incompleto (faltan ${status.missing.join(", ")}). El registro continúa; la foto no se carga ni se firma.`;
+    return "La carga de fotos está incompleta en este equipo. Puedes registrar el objeto sin foto.";
   }
 
-  return "Cloudinary no está configurado. El registro de objetos funciona y la foto se omite.";
+  return "La carga de fotos está desactivada en este entorno. Puedes registrar el objeto sin foto.";
 }
 
 export function describeCloudinaryUploadError(error: unknown): string {
@@ -99,14 +99,14 @@ export function describeCloudinaryUploadError(error: unknown): string {
       : "";
 
   if (/invalid.*(api|signature|authorization)/i.test(message)) {
-    return "Cloudinary rechazó las credenciales. Revisa CLOUDINARY_API_KEY y CLOUDINARY_API_SECRET.";
+    return "No se pudo subir la foto: credenciales inválidas. El objeto se registra igual.";
   }
 
   if (/unknown cloud|cloud_name|Invalid cloud/i.test(message)) {
-    return "Cloudinary no reconoce CLOUDINARY_CLOUD_NAME.";
+    return "No se pudo subir la foto: la cuenta de fotos no es válida. El objeto se registra igual.";
   }
 
-  return "No se pudo cargar la foto privada en Cloudinary. Revisa las variables CLOUDINARY_*.";
+  return "No se pudo subir la foto. El objeto se registra igual; revisa la configuración del equipo.";
 }
 
 export async function uploadAuthenticatedItemImage(

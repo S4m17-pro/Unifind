@@ -11,16 +11,16 @@ export function resolveAdminPrivatePhoto(
   const publicId = cloudinaryId?.trim() ?? "";
 
   if (!publicId) {
-    return { signedUrl: null, emptyLabel: "Sin foto privada" };
+    return { signedUrl: null, emptyLabel: "Sin foto" };
   }
 
   const signedUrl = getSignedPrivateImageUrl(publicId);
   if (signedUrl) {
-    return { signedUrl, emptyLabel: "Sin foto privada" };
+    return { signedUrl, emptyLabel: "Sin foto" };
   }
 
   return {
     signedUrl: null,
-    emptyLabel: "Foto privada almacenada; no se pudo firmar. Revisa CLOUDINARY_*.",
+    emptyLabel: "Foto guardada; no se pudo mostrar. Revisa la configuración del equipo.",
   };
 }

@@ -3,9 +3,9 @@ import { cn } from "@/lib/cn";
 import { statusLabel } from "@/lib/labels";
 
 const STYLES: Record<ItemStatus, string> = {
-  EN_BODEGA: "bg-blue-950/80 text-blue-300 border-blue-800/80",
-  ENTREGADO: "bg-emerald-950/80 text-emerald-300 border-emerald-800/80",
-  LISTO_PARA_DONACION: "bg-amber-950/80 text-amber-300 border-amber-800/80",
+  EN_BODEGA: "bg-teal-50 text-teal-700 border-teal-200/80",
+  ENTREGADO: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
+  LISTO_PARA_DONACION: "bg-amber-50 text-amber-800 border-amber-200/80",
 };
 
 export default function StatusBadge({ status }: { status: ItemStatus }) {

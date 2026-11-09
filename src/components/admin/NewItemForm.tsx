@@ -7,7 +7,14 @@ import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
 import { isActionFailure } from "@/lib/action-result";
 import { ITEM_CATEGORIES } from "@/lib/constants";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import PrivatePhotoField, { validateSelectedPhoto } from "./PrivatePhotoField";
+
+const fieldLabel = "text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted";
 
 export default function NewItemForm({
   photoNotice,
@@ -59,25 +66,21 @@ export default function NewItemForm({
 
   return (
     <div className="mx-auto max-w-2xl rounded-lg border border-line bg-paper p-6 shadow-sm sm:p-8">
-      <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-semibold text-ink">
-        Registro privado de objeto perdido
-      </h2>
-
-      {error && (
-        <div className="mb-6 rounded-md border border-danger/20 bg-danger-soft p-4 text-sm text-danger">
-          {error}
-        </div>
-      )}
+      {error ? (
+        <Alert variant="destructive" className="mb-6">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : null}
 
       {createdItem ? (
         <div className="space-y-6 py-8 text-center">
-          <div className="rounded-md border border-success/20 bg-success-soft p-4 text-success">
-            ¡Objeto registrado con éxito en bodega!
-          </div>
+          <Alert variant="success">
+            <AlertDescription>¡Objeto registrado con éxito en bodega!</AlertDescription>
+          </Alert>
           {warning ? (
-            <div className="rounded-md border border-gold/40 bg-gold-soft p-4 text-sm text-gold-ink">
-              {warning}
-            </div>
+            <Alert variant="gold">
+              <AlertDescription>{warning}</AlertDescription>
+            </Alert>
           ) : null}
 
           <div className="inline-block rounded-lg bg-white p-4 shadow-sm">
@@ -89,37 +92,29 @@ export default function NewItemForm({
           </p>
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link
-              href={`/admin/objetos/${createdItem.id}`}
-              className="rounded-md border border-line px-6 py-2.5 font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
-            >
-              Ver ficha privada
-            </Link>
-            <button
+            <Button asChild variant="outline" className="px-6">
+              <Link href={`/admin/objetos/${createdItem.id}`}>Ver ficha privada</Link>
+            </Button>
+            <Button
               type="button"
+              className="px-6"
               onClick={() => {
                 setCreatedItem(null);
                 setWarning(null);
               }}
-              className="rounded-md bg-brand px-6 py-2.5 font-semibold text-white transition-colors hover:bg-brand-hover"
             >
               Registrar otro objeto
-            </button>
+            </Button>
           </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="category" className={fieldLabel}>
                 Categoría genérica
-              </label>
-              <select
-                name="category"
-                required
-                defaultValue=""
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
-              >
+              </Label>
+              <Select id="category" name="category" required defaultValue="">
                 <option value="" disabled>
                   Selecciona una categoría
                 </option>
@@ -128,60 +123,55 @@ export default function NewItemForm({
                     {category}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="foundDate" className={fieldLabel}>
                 Fecha y hora del hallazgo
-              </label>
-              <input
-                type="datetime-local"
-                name="foundDate"
-                required
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
-              />
+              </Label>
+              <Input id="foundDate" type="datetime-local" name="foundDate" required />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="foundLocation" className={fieldLabel}>
                 Bloque / salón
-              </label>
-              <input
+              </Label>
+              <Input
+                id="foundLocation"
                 type="text"
                 name="foundLocation"
                 required
                 placeholder="Ej. Bloque B - Salón 302"
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="custodyStation" className={fieldLabel}>
                 Portería / bodega de custodia
-              </label>
-              <input
+              </Label>
+              <Input
+                id="custodyStation"
                 type="text"
                 name="custodyStation"
                 required
                 placeholder="Ej. Portería Principal"
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          <div className="space-y-2">
+            <Label htmlFor="shelfLocation" className={fieldLabel}>
               Ubicación física en bodega (privada)
-            </label>
-            <input
+            </Label>
+            <Input
+              id="shelfLocation"
               type="text"
               name="shelfLocation"
               required
               placeholder="Ej. Estante 2 - Casillero B"
-              className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
             />
           </div>
 
@@ -191,20 +181,16 @@ export default function NewItemForm({
             onError={setError}
           />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-4 w-full rounded-md bg-brand py-3 font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
-          >
+          <Button type="submit" disabled={loading} className="mt-4 h-11 w-full font-semibold">
             {loading ? (
-              <span className="inline-flex items-center justify-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+              <>
+                <Loader2 className="animate-spin" aria-hidden />
                 Guardando y generando QR...
-              </span>
+              </>
             ) : (
               "Guardar objeto y generar su QR"
             )}
-          </button>
+          </Button>
         </form>
       )}
     </div>

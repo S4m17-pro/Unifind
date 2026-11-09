@@ -1,11 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
 import { processDeliveryAction } from "@/actions/delivery.actions";
 import { isActionFailure } from "@/lib/action-result";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import QRScannerComponent from "./QRScannerComponent";
+
+const fieldLabel = "text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted";
 
 export default function DeliveryModule() {
   const sigCanvasRef = useRef<SignatureCanvas | null>(null);
@@ -63,105 +69,108 @@ export default function DeliveryModule() {
 
       <div className="flex flex-col justify-between rounded-lg border border-line bg-paper p-6 shadow-sm sm:p-8">
         <div>
-          <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-semibold text-ink">
-            Bitácora de entrega presencial
-          </h2>
-
-          {message && (
-            <div
-              className={`mb-6 rounded-md p-4 text-sm ${
-                message.type === "success"
-                  ? "border border-success/20 bg-success-soft text-success"
-                  : "border border-danger/20 bg-danger-soft text-danger"
-              }`}
+          {message ? (
+            <Alert
+              variant={message.type === "success" ? "success" : "destructive"}
+              className="mb-6"
             >
               {message.type === "success" ? (
-                <CheckCircle2 className="animate-icon-pop h-5 w-5 shrink-0" aria-hidden />
-              ) : null}
-              {message.text}
-            </div>
-          )}
+                <CheckCircle2 className="animate-icon-pop" aria-hidden />
+              ) : (
+                <AlertCircle aria-hidden />
+              )}
+              <AlertDescription>{message.text}</AlertDescription>
+            </Alert>
+          ) : null}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="qrCode" className={fieldLabel}>
                 Código QR escaneado
-              </label>
-              <input
+              </Label>
+              <Input
+                id="qrCode"
                 type="text"
                 value={qrCode}
                 onChange={(e) => setQrCode(e.target.value)}
                 required
                 placeholder="Escanea con la cámara o ingresa el código"
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 font-mono text-sm text-ink focus:border-brand focus:outline-none"
+                className="font-mono"
               />
             </div>
 
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="studentName" className={fieldLabel}>
                 Nombre del estudiante receptor
-              </label>
-              <input
+              </Label>
+              <Input
+                id="studentName"
                 type="text"
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
                 placeholder="Opcional si ya reclamó por correo"
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
-            <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+            <div className="space-y-2">
+              <Label htmlFor="studentEmail" className={fieldLabel}>
                 Correo institucional del receptor
-              </label>
-              <input
+              </Label>
+              <Input
+                id="studentEmail"
                 type="email"
                 value={studentEmail}
                 onChange={(e) => setStudentEmail(e.target.value)}
                 required
                 placeholder="estudiante@unilibre.edu.co"
-                className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
               />
             </div>
 
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+                <span className={fieldLabel}>
                   Firma digital de conformidad
-                </label>
-                <button
+                </span>
+                <Button
                   type="button"
+                  variant="link"
+                  size="xs"
                   onClick={handleClearSignature}
-                  className="text-xs font-semibold text-brand underline hover:text-brand-hover"
+                  className="h-auto p-0"
                 >
                   Limpiar firma
-                </button>
+                </Button>
               </div>
-              <div className="overflow-hidden rounded-md border border-line bg-canvas">
+              <div
+                id="signature"
+                className="overflow-hidden rounded-md border border-line bg-canvas"
+              >
                 <SignatureCanvas
                   ref={sigCanvasRef}
                   penColor="#C8102E"
                   canvasProps={{
                     className: "w-full h-40 cursor-crosshair",
+                    "aria-label": "Firma digital de conformidad",
                   }}
                 />
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
+              variant="success"
               disabled={loading}
-              className="mt-4 w-full rounded-md bg-success py-3 font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"
+              className="mt-4 h-11 w-full font-semibold"
             >
               {loading ? (
-                <span className="inline-flex items-center justify-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                <>
+                  <Loader2 className="animate-spin" aria-hidden />
                   Registrando entrega...
-                </span>
+                </>
               ) : (
                 "Confirmar y registrar entrega presencial"
               )}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

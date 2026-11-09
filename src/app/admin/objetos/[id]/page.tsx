@@ -74,8 +74,7 @@ export default async function AdminItemDetailPage({ params }: { params: Params }
   const registrar = item.registeredBy.name || item.registeredBy.email;
 
   return (
-    <main className="p-6 sm:p-10">
-      <div className="mx-auto max-w-3xl">
+    <div className="mx-auto max-w-3xl">
         <Link
           href="/admin/dashboard"
           className="mb-6 inline-flex items-center gap-2 text-sm text-ink-muted hover:text-brand"
@@ -149,7 +148,6 @@ export default async function AdminItemDetailPage({ params }: { params: Params }
             </div>
           </dl>
         </article>
-      </div>
-    </main>
+    </div>
   );
 }

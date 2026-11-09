@@ -46,18 +46,26 @@ export const brand = {
   institution: "Universidad Libre",
   seccional: "Seccional Barranquilla",
   kicker: "Universidad Libre · Barranquilla",
-  logoUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_LOGO_URL) || "/brand/logo.svg",
-  heroUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HERO_URL),
-  howItWorksUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL),
+  logoUrl:
+    readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_LOGO_URL) ||
+    "/brand/logos/unifind.png",
+  markUrl: "/brand/logos/unifind.png",
+  markAlt: "Emblema de UniFind",
+  heroUrl:
+    readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HERO_URL) ||
+    "/brand/campus/edificio-universidad-libre.jpeg",
+  howItWorksUrl:
+    readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL) ||
+    "/brand/campus/entrada-principal.png",
   catalogUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_CATALOG_URL),
   emptyUrl: readPublicAssetUrl(process.env.NEXT_PUBLIC_BRAND_EMPTY_URL),
   logoAlt: readAlt(
     process.env.NEXT_PUBLIC_BRAND_LOGO_ALT,
-    "Universidad Libre",
+    "UniFind — búsqueda universitaria de la Universidad Libre",
   ),
   heroAlt: readAlt(
     process.env.NEXT_PUBLIC_BRAND_HERO_ALT,
-    "Campus Universidad Libre Seccional Barranquilla",
+    "Edificio del campus de la Universidad Libre Seccional Barranquilla",
   ),
 } as const;
 
@@ -75,7 +83,7 @@ export const brandSlotCopy: Record<
   howItWorks: {
     title: "Aquí va la ilustración de portería",
     hint: "Cómo reclamar · foto o diagrama institucional",
-    alt: "Portería y custodia en Universidad Libre Barranquilla",
+    alt: "Entrada del campus de la Universidad Libre Seccional Barranquilla",
   },
   catalog: {
     title: "Foto institucional del campus",

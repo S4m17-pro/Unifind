@@ -56,7 +56,7 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
           Ver detalle
         </Link>
         {isStaff ? (
-          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-center text-xs text-amber-800">
+          <span className="inline-flex flex-1 items-center justify-center rounded-md border border-gold/40 bg-gold-soft px-4 py-2.5 text-center text-xs text-gold-ink">
             Personal: gestiona desde el panel
           </span>
         ) : claimable ? (

@@ -128,21 +128,21 @@ Cambia estas claves antes de cualquier despliegue real.
 
 ## Identidad visual (hero, logo, ilustraciones)
 
-El tema Libre (rojo `#C8102E`, oro `#B89600`) ya está en tokens. Encima hay **slots de imagen** para que Samuel suelte fotos institucionales del campus sin rediseñar.
+El tema Libre (rojo `#C8102E`, oro `#B89600`) ya está en tokens. Las fotos institucionales del campus ya se muestran en la portada y en “Cómo funciona”; los slots permiten reemplazarlas sin rediseñar.
 
-1. Coloca el archivo en `public/brand/` (la carpeta ya existe), **o** usa una URL https pública (CDN / Cloudinary **pública** de marca).
-2. Apunta la variable `NEXT_PUBLIC_*` correspondiente. Reinicia `next dev` / redespliega.
+1. Organiza los assets en `public/brand/campus/` o `public/brand/logos/`, **o** usa una URL https pública (CDN / Cloudinary **pública** de marca).
+2. Apunta la variable `NEXT_PUBLIC_*` correspondiente. Reinicia `next dev` / redespliega para aplicar cambios de configuración.
 
 | Variable | Dónde se ve | Ejemplo |
 | --- | --- | --- |
-| `NEXT_PUBLIC_BRAND_HERO_URL` | Hero de inicio y panel de `/login` | `/brand/hero.jpg` |
-| `NEXT_PUBLIC_BRAND_LOGO_URL` | Marca del header y footer (si falta, queda el monograma `UF`) | `/brand/logo.png` |
-| `NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL` | Bloque “Cómo funciona” | `/brand/porteria.jpg` |
-| `NEXT_PUBLIC_BRAND_CATALOG_URL` | Banner del catálogo `/objetos` | `/brand/catalogo.jpg` |
-| `NEXT_PUBLIC_BRAND_EMPTY_URL` | Vacío del listado | `/brand/vacio.svg` |
-| `NEXT_PUBLIC_BRAND_HERO_ALT` / `NEXT_PUBLIC_BRAND_LOGO_ALT` | Texto alternativo | `Campus Unilibre Barranquilla` |
+| `NEXT_PUBLIC_BRAND_HERO_URL` | Hero de inicio y panel de `/login` (por defecto edificio del bloque) | `/brand/campus/edificio-universidad-libre.jpeg` |
+| `NEXT_PUBLIC_BRAND_LOGO_URL` | Logo horizontal del header, sidebar y footer | `/brand/logos/unifind.png` |
+| `NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL` | Bloque “Cómo funciona” (por defecto entrada del campus) | `/brand/campus/entrada-principal.png` |
+| `NEXT_PUBLIC_BRAND_CATALOG_URL` | Banner del catálogo `/objetos` | `/brand/campus/entrada-principal.png` |
+| `NEXT_PUBLIC_BRAND_EMPTY_URL` | Vacío del listado | `/brand/logos/unifind.png` |
+| `NEXT_PUBLIC_BRAND_HERO_ALT` / `NEXT_PUBLIC_BRAND_LOGO_ALT` | Texto alternativo | `Campus Unilibre Barranquilla` / `UniFind — búsqueda universitaria` |
 
-Si la variable está vacía, el slot muestra un degradé papel/rojo/oro, un croquis del campus y el texto **«Aquí va la foto del campus»** (no un ícono de imagen rota).
+Los assets se mantienen organizados en `public/brand/campus/` y `public/brand/logos/`. Los slots opcionales de catálogo y estado vacío conservan un fallback institucional si no se configura una imagen.
 
 **No uses fotos privadas de objetos** ni URLs firmadas de Cloudinary (`unifind_private_items`). Esos archivos son de vigilancia. El catálogo público sigue sin fotos de objetos.
 

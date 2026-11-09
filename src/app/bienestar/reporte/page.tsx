@@ -22,24 +22,24 @@ export default async function DonationReportPage() {
   );
 
   return (
-    <main className="min-h-screen bg-white px-6 py-8 text-slate-900 sm:px-10 print:px-0 print:py-0">
+    <div className="rounded-lg border border-line bg-paper p-6 text-ink sm:p-10 print:rounded-none print:border-0 print:p-0">
       <div className="mx-auto max-w-4xl">
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4 print:hidden">
           <Link
             href="/bienestar"
-            className="text-sm font-semibold text-teal-700 hover:underline"
+            className="text-sm font-semibold text-brand hover:underline"
           >
             ← Volver a métricas
           </Link>
           <PrintReportButton />
         </div>
 
-        <header className="border-b-2 border-slate-900 pb-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+        <header className="border-b-2 border-ink pb-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">
             Universidad Libre Seccional Barranquilla · Bienestar Universitario
           </p>
-          <h1 className="font-display mt-1 text-2xl font-extrabold">Reporte de donación de objetos</h1>
-          <p className="mt-1 text-sm text-slate-600">
+          <h1 className="font-serif mt-1 text-2xl font-semibold">Reporte de donación de objetos</h1>
+          <p className="mt-1 text-sm text-ink-muted">
             Generado el {generatedAt.toLocaleString("es-CO")} · Tiempo de custodia antes de
             donación: {metrics.retentionDays} días
           </p>
@@ -53,42 +53,42 @@ export default async function DonationReportPage() {
         </section>
 
         <section className="mt-8">
-          <h2 className="font-display text-lg font-bold">Objetos listos para donación</h2>
-          <p className="mt-1 text-sm text-slate-600">
+          <h2 className="font-serif text-lg font-semibold">Objetos listos para donación</h2>
+          <p className="mt-1 text-sm text-ink-muted">
             Objetos que superaron el tiempo de custodia y están listos para donación.
           </p>
 
           {metrics.donationItems.length === 0 ? (
-            <p className="mt-4 rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-600">
+            <p className="mt-4 rounded-lg border border-line px-4 py-3 text-sm text-ink-muted">
               No hay objetos listos para donación.
             </p>
           ) : (
             <table className="report-table mt-4 w-full border-collapse text-left text-sm">
               <thead>
-                <tr className="bg-slate-100 text-xs uppercase tracking-wider text-slate-700">
-                  <th className="border border-slate-300 px-3 py-2">#</th>
-                  <th className="border border-slate-300 px-3 py-2">QR</th>
-                  <th className="border border-slate-300 px-3 py-2">Categoría</th>
-                  <th className="border border-slate-300 px-3 py-2">Portería</th>
-                  <th className="border border-slate-300 px-3 py-2">Hallazgo</th>
-                  <th className="border border-slate-300 px-3 py-2">Fecha</th>
-                  <th className="border border-slate-300 px-3 py-2 text-right">Días</th>
+                <tr className="bg-bar text-xs uppercase tracking-wider text-ink-muted">
+                  <th className="border border-line px-3 py-2">#</th>
+                  <th className="border border-line px-3 py-2">QR</th>
+                  <th className="border border-line px-3 py-2">Categoría</th>
+                  <th className="border border-line px-3 py-2">Portería</th>
+                  <th className="border border-line px-3 py-2">Hallazgo</th>
+                  <th className="border border-line px-3 py-2">Fecha</th>
+                  <th className="border border-line px-3 py-2 text-right">Días</th>
                 </tr>
               </thead>
               <tbody>
                 {metrics.donationItems.map((item, index) => (
                   <tr key={item.id} className="align-top">
-                    <td className="border border-slate-300 px-3 py-2">{index + 1}</td>
-                    <td className="border border-slate-300 px-3 py-2 font-mono text-xs">
+                    <td className="border border-line px-3 py-2">{index + 1}</td>
+                    <td className="border border-line px-3 py-2 font-mono text-xs">
                       {item.qrCode}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2">{item.category}</td>
-                    <td className="border border-slate-300 px-3 py-2">{item.custodyStation}</td>
-                    <td className="border border-slate-300 px-3 py-2">{item.foundLocation}</td>
-                    <td className="border border-slate-300 px-3 py-2">
+                    <td className="border border-line px-3 py-2">{item.category}</td>
+                    <td className="border border-line px-3 py-2">{item.custodyStation}</td>
+                    <td className="border border-line px-3 py-2">{item.foundLocation}</td>
+                    <td className="border border-line px-3 py-2">
                       {formatFoundDate(item.foundDate)}
                     </td>
-                    <td className="border border-slate-300 px-3 py-2 text-right">
+                    <td className="border border-line px-3 py-2 text-right">
                       {item.daysInCustody}
                     </td>
                   </tr>
@@ -100,30 +100,30 @@ export default async function DonationReportPage() {
 
         <footer className="mt-12 grid grid-cols-1 gap-10 text-sm sm:grid-cols-2">
           <div>
-            <div className="border-t border-slate-500 pt-2 text-center text-slate-700">
+            <div className="border-t border-line pt-2 text-center text-ink-muted">
               Bienestar Universitario
             </div>
           </div>
           <div>
-            <div className="border-t border-slate-500 pt-2 text-center text-slate-700">
+            <div className="border-t border-line pt-2 text-center text-ink-muted">
               Portería / Vigilancia
             </div>
           </div>
         </footer>
 
-        <p className="mt-8 text-xs text-slate-500">
+        <p className="mt-8 text-xs text-ink-subtle">
           Documento generado automáticamente por UniFind. Contiene datos de uso interno.
         </p>
       </div>
-    </main>
+    </div>
   );
 }
 
 function Summary({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-lg border border-slate-300 px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">{label}</p>
-      <p className="mt-1 text-2xl font-bold">{value}</p>
+    <div className="rounded-lg border border-line px-4 py-3">
+      <p className="text-xs font-semibold uppercase tracking-wider text-ink-muted">{label}</p>
+      <p className="mt-1 text-2xl font-semibold">{value}</p>
     </div>
   );
 }

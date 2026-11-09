@@ -60,15 +60,17 @@ Cron (30 días) → LISTO_PARA_DONACION
 
 ## Slots de Imagen de Marca
 
-Los siguientes env vars controlan assets institucionales. Si están vacías, el sistema muestra fallbacks de degradé papel/rojo/oro:
+Los siguientes env vars permiten reemplazar assets institucionales. Si están vacías, se usan las imágenes locales predeterminadas de `public/brand/`:
 
 | Variable | Dónde se ve |
 |---|---|
-| `NEXT_PUBLIC_BRAND_HERO_URL` | Hero de inicio y panel de login |
-| `NEXT_PUBLIC_BRAND_LOGO_URL` | Header y footer |
-| `NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL` | Bloque "Cómo funciona" |
+| `NEXT_PUBLIC_BRAND_HERO_URL` | Hero de inicio y panel de login (por defecto `campus/edificio-universidad-libre.jpeg`) |
+| `NEXT_PUBLIC_BRAND_LOGO_URL` | Header y footer (por defecto `logos/unifind.png`) |
+| `NEXT_PUBLIC_BRAND_HOW_IT_WORKS_URL` | Bloque "Cómo funciona" (por defecto `campus/entrada-principal.png`) |
 | `NEXT_PUBLIC_BRAND_CATALOG_URL` | Banner del catálogo `/objetos` |
 | `NEXT_PUBLIC_BRAND_EMPTY_URL` | Estado vacío del listado |
+
+Las fotos institucionales se organizan en `public/brand/campus/` y los logos en `public/brand/logos/`.
 
 ## Rutas Clave
 

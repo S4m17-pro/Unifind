@@ -67,7 +67,7 @@ export default async function ClaimPage({
           </p>
 
           {isStaff ? (
-            <p className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+            <p className="rounded-lg border border-gold/40 bg-gold-soft p-4 text-sm text-gold-ink">
               Sesión de personal: los reclamos solo se registran desde la vista pública de
               estudiantes. Gestiona la entrega desde el panel de Vigilancia.
             </p>

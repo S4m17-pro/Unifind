@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 import AppShell from "@/components/layout/AppShell";
 import "./globals.css";
 
-const inter = Inter({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-source-sans",
   display: "swap",
 });
 
@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${sourceSerif.variable}`}>
+    <html lang="es" className={`${sourceSans.variable} ${sourceSerif.variable}`}>
       <body className="min-h-screen bg-canvas font-sans text-ink antialiased">
         <AppShell>{children}</AppShell>
       </body>

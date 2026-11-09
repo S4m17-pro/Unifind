@@ -139,7 +139,7 @@ export default async function ItemDetailPage({
               </p>
             </div>
           ) : isStaff ? (
-            <p className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+            <p className="rounded-lg border border-gold/40 bg-gold-soft p-4 text-sm text-gold-ink">
               Sesión de personal: este objeto se gestiona desde el panel de Vigilancia. La
               vista pública de estudiantes no permite registrar reclamos.
             </p>

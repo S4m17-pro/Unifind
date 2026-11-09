@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { submitClaimAction } from "@/actions/claim.actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { isActionFailure } from "@/lib/action-result";
 import type { PublicItem } from "@/lib/public-catalog";
 
@@ -59,26 +64,25 @@ export default function ClaimForm({
 
   return (
     <div>
-      {message && (
-        <div
-          role="status"
-          className={`mb-4 rounded-md p-4 text-sm ${
-            message.type === "success"
-              ? "border border-success/20 bg-success-soft text-success"
-              : "border border-danger/20 bg-danger-soft text-danger"
-          }`}
+      {message ? (
+        <Alert
+          variant={message.type === "success" ? "success" : "destructive"}
+          className="mb-4"
         >
-          {message.text}
-        </div>
-      )}
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
+      ) : null}
 
       {message?.type !== "success" && (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="studentName" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          <div className="space-y-2">
+            <Label
+              htmlFor="studentName"
+              className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
+            >
               Nombre completo
-            </label>
-            <input
+            </Label>
+            <Input
               id="studentName"
               type="text"
               name="studentName"
@@ -86,15 +90,18 @@ export default function ClaimForm({
               defaultValue={defaults?.name ?? ""}
               autoComplete="name"
               placeholder="Ej. Juan Pérez"
-              className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
+              className="h-11"
             />
           </div>
 
-          <div>
-            <label htmlFor="studentEmail" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          <div className="space-y-2">
+            <Label
+              htmlFor="studentEmail"
+              className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
+            >
               Correo institucional
-            </label>
-            <input
+            </Label>
+            <Input
               id="studentEmail"
               type="email"
               name="studentEmail"
@@ -102,41 +109,39 @@ export default function ClaimForm({
               defaultValue={defaults?.email ?? ""}
               autoComplete="email"
               placeholder="estudiante@unilibre.edu.co"
-              className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
+              className="h-11"
             />
           </div>
 
-          <div>
-            <label htmlFor="description" className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+          <div className="space-y-2">
+            <Label
+              htmlFor="description"
+              className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
+            >
               ¿Cómo lo reconoces?
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               id="description"
               name="description"
               required
               rows={4}
               placeholder="Marca, color, stickers, rasguños u otro detalle que solo tú conozcas."
-              className="w-full rounded-md border border-line bg-paper px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
             />
-            <p className="mt-1.5 text-xs text-ink-subtle">
+            <p className="text-xs text-ink-subtle">
               No publiques datos sensibles. Portería usa esto para verificar que te pertenece.
             </p>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
-          >
+          <Button type="submit" disabled={loading} className="h-11 w-full font-semibold">
             {loading ? (
-              <span className="inline-flex items-center justify-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+              <>
+                <Loader2 className="animate-spin" aria-hidden />
                 Enviando...
-              </span>
+              </>
             ) : (
               submitLabel
             )}
-          </button>
+          </Button>
         </form>
       )}
     </div>

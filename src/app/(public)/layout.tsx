@@ -1,3 +1,4 @@
+import SessionEntry from "@/components/auth/SessionEntry";
 import FloatingBackdrop from "@/components/layout/FloatingBackdrop";
 import { getSignedInRole } from "@/lib/auth-guards";
 
@@ -20,6 +21,11 @@ export default async function PublicLayout({
             : "tu panel está en Vigilancia"}
         </p>
       ) : null}
+      {role ? null : (
+        <div className="relative z-[1] mx-auto flex w-full max-w-7xl px-4 pt-3 sm:px-6 lg:px-8">
+          <SessionEntry />
+        </div>
+      )}
       {children}
     </div>
   );

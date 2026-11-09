@@ -2,7 +2,6 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import AccountMenu from "@/components/auth/AccountMenu";
 import BrandLogo from "@/components/brand/BrandLogo";
-import { Button } from "@/components/ui/button";
 import { brand } from "@/lib/brand";
 
 export default async function AppHeader() {
@@ -22,11 +21,7 @@ export default async function AppHeader() {
               email={session.user.email}
               role={role}
             />
-          ) : (
-            <Button asChild size="sm" className="text-xs font-semibold">
-              <Link href="/login">Iniciar sesión</Link>
-            </Button>
-          )}
+          ) : null}
         </div>
       </div>
 

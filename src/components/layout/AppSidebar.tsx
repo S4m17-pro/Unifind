@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HelpCircle, Home, LayoutDashboard, LogIn, Search, Shield } from "lucide-react";
+import { HelpCircle, Home, LayoutDashboard, Search, Shield } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import BrandMark from "@/components/brand/BrandMark";
 import { brand } from "@/lib/brand";
 import AccountMenu from "@/components/auth/AccountMenu";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 
 type Role = "ADMIN" | "SUPERUSER" | "STUDENT" | string | null | undefined;
@@ -114,22 +113,7 @@ export default function AppSidebar({
               <div className="overflow-hidden rounded-md">
                 <AccountMenu name={name} email={email} role={role} />
               </div>
-            ) : (
-              <Button
-                asChild
-                variant="ghost"
-                className="h-11 w-full justify-start gap-3 px-2.5 text-ink hover:bg-bar hover:text-brand"
-              >
-                <Link href="/login">
-                  <span className="flex size-7 shrink-0 items-center justify-center">
-                    <LogIn className="size-5 text-ink group-hover:text-brand" aria-hidden />
-                  </span>
-                  <span className="truncate text-sm font-medium translate-x-[-0.25rem] opacity-0 transition-all duration-300 group-hover/sidebar:translate-x-0 group-hover/sidebar:opacity-100">
-                    Iniciar sesión
-                  </span>
-                </Link>
-              </Button>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

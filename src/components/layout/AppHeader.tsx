@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import AccountMenu from "@/components/auth/AccountMenu";
+import LoginButton from "@/components/auth/LoginButton";
 import BrandLogo from "@/components/brand/BrandLogo";
 import { brand } from "@/lib/brand";
 
@@ -21,7 +22,9 @@ export default async function AppHeader() {
               email={session.user.email}
               role={role}
             />
-          ) : null}
+          ) : (
+            <LoginButton />
+          )}
         </div>
       </div>
 

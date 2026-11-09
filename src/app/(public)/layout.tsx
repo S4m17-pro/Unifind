@@ -22,7 +22,7 @@ export default async function PublicLayout({
         </p>
       ) : null}
       {role ? null : (
-        <div className="relative z-[1] mx-auto flex w-full max-w-7xl px-4 pt-3 sm:px-6 lg:px-8">
+        <div className="relative z-[1] mx-auto flex w-full max-w-7xl justify-end px-4 pt-3 sm:px-6 lg:px-8">
           <SessionEntry />
         </div>
       )}

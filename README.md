@@ -162,6 +162,11 @@ Bloqueos solo por entorno:
 - Sin `CRON_SECRET`, la ruta `/api/cron/check-expiration` responde 401.
 - Sin Microsoft Entra, el login por correo/contraseña sigue igual y no se muestra «Continuar con Microsoft».
 
+**`AUTH_URL` / `NEXTAUTH_URL`**: déjalas comentadas en desarrollo. Si las fijas en
+`http://localhost:3000`, el login redirige a `localhost` y falla al entrar desde el celular con la
+IP de la red. Sin ellas, Auth.js usa el host desde el que navegas (`trustHost: true` en
+`src/auth.config.ts`). En producción (Vercel) define `AUTH_URL` con el dominio real.
+
 ### Microsoft Entra ID (estudiantes y personal, opt-in)
 
 Opcional. Credentials (cuentas sembradas de vigilancia/Bienestar) no cambia. Si configuras Entra, el primer login Microsoft hace upsert por correo: rol `STUDENT` salvo que el correo ya exista (se conserva ADMIN/SUPERUSER).

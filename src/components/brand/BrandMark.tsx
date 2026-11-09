@@ -3,7 +3,7 @@ import { brand, isLocalBrandAsset } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 
 export default function BrandMark({ className }: { className?: string }) {
-  const logoSrc = brand.logoUrl || "/brand/logo.svg";
+  const logoSrc = brand.markUrl || "/brand/logos/unifind.png";
 
   if (isLocalBrandAsset(logoSrc)) {
     return (
@@ -15,11 +15,11 @@ export default function BrandMark({ className }: { className?: string }) {
       >
         <Image
           src={logoSrc}
-          alt={brand.logoAlt}
+          alt={brand.markAlt}
           width={48}
           height={48}
           priority
-          className="size-full object-contain"
+          className="size-full object-cover object-left"
         />
       </span>
     );
@@ -35,10 +35,10 @@ export default function BrandMark({ className }: { className?: string }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={logoSrc}
-        alt={brand.logoAlt}
+        alt={brand.markAlt}
         width={48}
         height={48}
-        className="size-full object-contain"
+        className="size-full object-cover object-left"
       />
     </span>
   );

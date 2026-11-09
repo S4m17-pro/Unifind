@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { reviewClaimAction } from "@/actions/claim.actions";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { isActionFailure } from "@/lib/action-result";
 
 export type PendingClaim = {
@@ -24,28 +26,31 @@ export type PendingClaim = {
 
 export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
   const [busyId, setBusyId] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
+    null,
+  );
 
   const handleReview = async (claimId: string, status: "APPROVED" | "REJECTED") => {
     setBusyId(claimId);
     setMessage(null);
     const result = await reviewClaimAction(claimId, status);
     setBusyId(null);
-    setMessage(isActionFailure(result) ? result.error : "Reclamo actualizado.");
+    setMessage(
+      isActionFailure(result)
+        ? { type: "error", text: result.error }
+        : { type: "success", text: "Reclamo actualizado." },
+    );
   };
 
   return (
     <section className="rounded-lg border border-line bg-paper p-6 shadow-sm sm:p-8">
-      <h2 className="mb-2 font-serif text-2xl font-semibold text-ink">Revisión de reclamos</h2>
-      <p className="mb-6 text-sm text-ink-muted">
-        Las descripciones de pertenencia solo son visibles para vigilancia. Aprueba o rechaza antes
-        de la entrega presencial con firma.
-      </p>
-
       {message ? (
-        <div className="mb-4 rounded-md border border-line bg-canvas px-4 py-3 text-sm text-ink">
-          {message}
-        </div>
+        <Alert
+          variant={message.type === "success" ? "success" : "destructive"}
+          className="mb-4"
+        >
+          <AlertDescription>{message.text}</AlertDescription>
+        </Alert>
       ) : null}
 
       {claims.length === 0 ? (
@@ -72,28 +77,27 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
                 {claim.description}
               </blockquote>
               <div className="mt-4 flex flex-wrap gap-2">
-                <Link
-                  href={`/admin/objetos/${claim.item.id}`}
-                  className="rounded-md border border-line px-3 py-2 text-xs font-semibold text-ink hover:border-brand hover:text-brand"
-                >
-                  Ver ficha privada
-                </Link>
-                <button
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/admin/objetos/${claim.item.id}`}>Ver ficha privada</Link>
+                </Button>
+                <Button
                   type="button"
+                  variant="success"
+                  size="sm"
                   disabled={busyId === claim.id}
                   onClick={() => handleReview(claim.id, "APPROVED")}
-                  className="rounded-md bg-success px-3 py-2 text-xs font-semibold text-white hover:opacity-90 disabled:opacity-50"
                 >
                   Aprobar
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="destructive"
+                  size="sm"
                   disabled={busyId === claim.id}
                   onClick={() => handleReview(claim.id, "REJECTED")}
-                  className="rounded-md bg-brand px-3 py-2 text-xs font-semibold text-white hover:bg-brand-hover disabled:opacity-50"
                 >
                   Rechazar
-                </button>
+                </Button>
               </div>
             </article>
           ))}

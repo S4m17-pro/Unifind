@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { CatalogFilterOptions, CatalogStatusFilter } from "@/lib/public-catalog";
 import { STATUS_LABELS } from "@/lib/labels";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 
 export type CatalogFilterValues = {
   category?: string;
@@ -15,6 +18,8 @@ const STATUS_OPTIONS: Array<{ value: CatalogStatusFilter; label: string }> = [
   { value: "ENTREGADO", label: STATUS_LABELS.ENTREGADO },
   { value: "TODOS", label: "Todos" },
 ];
+
+const fieldLabel = "text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted";
 
 export default function CatalogFilters({
   options,
@@ -33,14 +38,15 @@ export default function CatalogFilters({
       action={action}
       className="grid gap-3 rounded-lg border border-line bg-paper p-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end"
     >
-      <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+      <div className="space-y-2">
+        <Label htmlFor="categoria" className={fieldLabel}>
           Categoría
-        </span>
-        <select
+        </Label>
+        <Select
+          id="categoria"
           name="categoria"
           defaultValue={current.category ?? ""}
-          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
+          className="h-11"
         >
           <option value="">Todas</option>
           {options.categories.map((category) => (
@@ -48,17 +54,18 @@ export default function CatalogFilters({
               {category}
             </option>
           ))}
-        </select>
-      </label>
+        </Select>
+      </div>
 
-      <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+      <div className="space-y-2">
+        <Label htmlFor="porteria" className={fieldLabel}>
           Portería
-        </span>
-        <select
+        </Label>
+        <Select
+          id="porteria"
           name="porteria"
           defaultValue={current.custodyStation ?? ""}
-          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
+          className="h-11"
         >
           <option value="">Todas</option>
           {options.stations.map((station) => (
@@ -66,39 +73,29 @@ export default function CatalogFilters({
               {station}
             </option>
           ))}
-        </select>
-      </label>
+        </Select>
+      </div>
 
-      <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">
+      <div className="space-y-2">
+        <Label htmlFor="estado" className={fieldLabel}>
           Estado
-        </span>
-        <select
-          name="estado"
-          defaultValue={selectedStatus}
-          className="w-full rounded-md border border-line bg-paper px-3 py-2.5 text-sm text-ink focus:border-brand focus:outline-none"
-        >
+        </Label>
+        <Select id="estado" name="estado" defaultValue={selectedStatus} className="h-11">
           {STATUS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
           ))}
-        </select>
-      </label>
+        </Select>
+      </div>
 
       <div className="flex gap-2">
-        <button
-          type="submit"
-          className="flex-1 rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
-        >
+        <Button type="submit" className="h-11 flex-1 font-semibold">
           Filtrar
-        </button>
-        <Link
-          href={action}
-          className="inline-flex items-center justify-center rounded-md border border-line px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand hover:text-brand"
-        >
-          Limpiar
-        </Link>
+        </Button>
+        <Button asChild variant="outline" className="h-11 flex-1">
+          <Link href={action}>Limpiar</Link>
+        </Button>
       </div>
     </form>
   );

@@ -20,7 +20,7 @@ export default function AdminPrivatePhoto({
       <div
         className={cn(
           "overflow-hidden border border-line bg-canvas",
-          isDetail ? "rounded-2xl" : "mb-3 rounded-xl",
+          isDetail ? "rounded-lg" : "mb-3 rounded-lg",
         )}
       >
         {/* Signed Cloudinary URLs carry expire_at; next/image would strip the firma. */}
@@ -38,7 +38,7 @@ export default function AdminPrivatePhoto({
     <div
       className={cn(
         "flex items-center justify-center border border-line bg-bar px-3 text-center text-xs text-ink-subtle",
-        isDetail ? "min-h-64 rounded-2xl" : "mb-3 h-24 rounded-xl",
+        isDetail ? "min-h-64 rounded-lg" : "mb-3 h-24 rounded-lg",
       )}
     >
       {emptyLabel}

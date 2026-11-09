@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HelpCircle, Home, LayoutDashboard, LogIn, Search, Shield } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 import BrandMark from "@/components/brand/BrandMark";
 import { brand } from "@/lib/brand";
 import AccountMenu from "@/components/auth/AccountMenu";
@@ -57,22 +58,15 @@ export default function AppSidebar({
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-line to-transparent" aria-hidden />
         <div className="relative flex h-full flex-col justify-between">
           <div>
-            <div className="flex h-16 items-center gap-2.5 border-b border-line px-2.5">
+            <div className="flex h-16 items-center border-b border-line px-2.5">
               <Link
                 href="/"
-                aria-label="Ir al inicio"
-                className="flex size-11 shrink-0 items-center justify-center rounded-md p-1 transition-colors hover:bg-bar"
+                aria-label={`Ir al inicio de ${brand.product}`}
+                className="flex h-11 w-full items-center justify-center rounded-md p-1 transition-colors hover:bg-bar group-hover/sidebar:justify-start"
               >
-                <BrandMark className="size-9" />
+                <BrandMark className="size-9 group-hover/sidebar:hidden" />
+                <BrandLogo className="hidden h-8 w-auto group-hover/sidebar:block" />
               </Link>
-              <div className="min-w-0 translate-x-[-0.5rem] opacity-0 transition-all duration-300 group-hover/sidebar:translate-x-0 group-hover/sidebar:opacity-100">
-                <p className="truncate font-serif text-sm font-bold leading-tight text-ink">
-                  {brand.product}
-                </p>
-                <p className="truncate text-[10px] uppercase tracking-[0.18em] text-ink-subtle">
-                  {brand.seccional}
-                </p>
-              </div>
             </div>
 
             <nav className="mt-2 flex flex-col gap-1 px-2">

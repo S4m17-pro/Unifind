@@ -211,8 +211,7 @@ Evita `bounce`, `elastic`, o animaciones que superen 400ms en UI de produccion.
 ## Referencias Utiles
 
 - **Sistema de marca:** `src/lib/brand.ts`
-- **Tokens de diseno:** `src/app/globals.css` (seccion `@theme`)
-- **Tailwind config:** `tailwind.config.js`
+- **Tokens de diseno:** `src/app/globals.css` (seccion `@theme`, configuracion CSS-first de Tailwind 4)
 - **Contexto del producto:** `PRODUCT.md` (raiz del proyecto)
 - **Sistema de diseno:** `DESIGN.md` (raiz del proyecto)
 - **Impeccable (metodologia base):** https://github.com/pbakaus/impeccable

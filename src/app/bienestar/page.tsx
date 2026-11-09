@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { CheckCircle2, FileSignature, Gift, Package } from "lucide-react";
 import { auth } from "@/auth";
 import { IngresoFlash } from "@/components/auth/AuthFlash";
+import { Button } from "@/components/ui/button";
+import StatCard from "@/components/ui/stat-card";
 import { roleDuty, roleLabel } from "@/lib/labels";
 import { getBienestarMetrics } from "@/lib/metrics";
 
@@ -17,9 +20,8 @@ export default async function BienestarPage() {
   const metrics = await getBienestarMetrics();
 
   return (
-    <main className="p-6 sm:p-10">
-      <div className="mx-auto max-w-7xl space-y-10">
-        <header className="space-y-4 border-b border-line pb-6">
+    <div className="space-y-10">
+      <header className="space-y-4 border-b border-line pb-6">
           <IngresoFlash
             name={session.user.name || session.user.email || "Bienestar"}
             roleLabel={roleLabel(session.user.role)}
@@ -37,14 +39,30 @@ export default async function BienestarPage() {
         </header>
 
         <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="En bodega" value={metrics.statusCounts.EN_BODEGA} tone="text-brand" />
-          <MetricCard label="Entregados" value={metrics.statusCounts.ENTREGADO} tone="text-success" />
-          <MetricCard
+          <StatCard
+            label="En bodega"
+            value={metrics.statusCounts.EN_BODEGA}
+            icon={Package}
+            tone="brand"
+          />
+          <StatCard
+            label="Entregados"
+            value={metrics.statusCounts.ENTREGADO}
+            icon={CheckCircle2}
+            tone="success"
+          />
+          <StatCard
             label="Listos para donación"
             value={metrics.statusCounts.LISTO_PARA_DONACION}
-            tone="text-gold-ink"
+            icon={Gift}
+            tone="gold"
           />
-          <MetricCard label="Entregas firmadas" value={metrics.deliveries} tone="text-ink" />
+          <StatCard
+            label="Entregas firmadas"
+            value={metrics.deliveries}
+            icon={FileSignature}
+            tone="ink"
+          />
         </section>
 
         <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -99,12 +117,9 @@ export default async function BienestarPage() {
           <p className="mb-6 text-sm text-ink-muted">
             Objetos que superaron el periodo de retención y quedaron en LISTO_PARA_DONACION.
           </p>
-          <Link
-            href="/bienestar/reporte"
-            className="mb-6 inline-flex rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
-          >
-            Descargar reporte PDF
-          </Link>
+          <Button asChild className="mb-6">
+            <Link href="/bienestar/reporte">Descargar reporte PDF</Link>
+          </Button>
           {metrics.donationItems.length === 0 ? (
             <p className="text-sm text-ink-subtle">No hay objetos listos para donación.</p>
           ) : (
@@ -134,24 +149,6 @@ export default async function BienestarPage() {
             </div>
           )}
         </section>
-      </div>
-    </main>
-  );
-}
-
-function MetricCard({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: number;
-  tone: string;
-}) {
-  return (
-    <div className="rounded-lg border border-line bg-paper p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted">{label}</p>
-      <p className={`mt-2 font-serif text-3xl font-semibold ${tone}`}>{value}</p>
     </div>
   );
 }

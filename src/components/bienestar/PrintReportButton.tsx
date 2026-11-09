@@ -1,16 +1,16 @@
 "use client";
 
+import { Printer } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 export function PrintReportButton() {
   return (
     <div className="text-right">
-      <button
-        type="button"
-        onClick={() => window.print()}
-        className="rounded-xl bg-blue-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
-      >
+      <Button type="button" onClick={() => window.print()} className="font-semibold">
+        <Printer className="size-4" aria-hidden />
         Descargar PDF
-      </button>
-      <p className="mt-1 text-xs text-slate-500">
+      </Button>
+      <p className="mt-1 text-xs text-ink-subtle">
         Elige «Guardar como PDF» en el diálogo de impresión.
       </p>
     </div>

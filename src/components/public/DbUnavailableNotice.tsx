@@ -1,9 +1,12 @@
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
 export default function DbUnavailableNotice() {
   return (
-    <div className="rounded-lg border border-gold/40 bg-gold-soft px-4 py-3 text-sm text-gold-ink">
-      No se pudo leer el catálogo. Comprueba Postgres y{" "}
-      <code className="font-mono text-ink">DATABASE_URL</code> (ver README de la
-      fundación / PR #2).
-    </div>
+    <Alert variant="gold">
+      <AlertDescription>
+        No pudimos cargar el catálogo en este momento. Intenta de nuevo en unos minutos o consulta
+        directamente en portería.
+      </AlertDescription>
+    </Alert>
   );
 }

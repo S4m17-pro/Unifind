@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 const ALLOWED_PHOTO_TYPES = new Set([
@@ -70,23 +72,24 @@ export default function PrivatePhotoField({
   };
 
   return (
-    <div>
-      <label
+    <div className="space-y-2">
+      <Label
         htmlFor="item-image"
-        className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
+        className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
       >
         Foto del objeto (opcional)
-      </label>
-      <input
+      </Label>
+      <Input
         id="item-image"
         type="file"
         name="image"
         accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
         onChange={handlePhotoChange}
-        className="w-full rounded-md border border-line bg-paper px-4 py-2 text-sm text-ink-muted file:mr-4 file:rounded-md file:border-0 file:bg-brand-soft file:px-3 file:py-1 file:text-xs file:font-semibold file:text-brand hover:file:bg-gold-soft focus:border-brand focus:outline-none"
+        className="h-auto py-2 text-ink-muted file:mr-3 file:rounded-md file:bg-brand-soft file:px-3 file:py-1 file:text-xs file:font-semibold file:text-brand hover:file:bg-gold-soft"
       />
       {preview ? (
-        <div className="mt-3 overflow-hidden rounded-md border border-line bg-canvas">
+        <div className="overflow-hidden rounded-md border border-line bg-canvas">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={preview}
             alt={photoName ? `Vista previa de ${photoName}` : "Vista previa de la foto privada"}
@@ -94,7 +97,7 @@ export default function PrivatePhotoField({
           />
         </div>
       ) : null}
-      <p className={`mt-2 text-xs ${cloudinaryReady ? "text-ink-subtle" : "text-gold-ink"}`}>
+      <p className={`text-xs ${cloudinaryReady ? "text-ink-subtle" : "text-gold-ink"}`}>
         {photoNotice ??
           (cloudinaryReady
             ? "Opcional · máximo 5 MB (JPG, PNG, WEBP o GIF). Solo la verá el personal."

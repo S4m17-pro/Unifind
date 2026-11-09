@@ -74,7 +74,7 @@ export default async function AdminItemDetailPage({ params }: { params: Params }
   const registrar = item.registeredBy.name || item.registeredBy.email;
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 text-slate-900 sm:p-10">
+    <main className="min-h-screen p-6 text-slate-900 sm:p-10">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/admin/dashboard"
@@ -84,10 +84,10 @@ export default async function AdminItemDetailPage({ params }: { params: Params }
           Volver al panel
         </Link>
 
-        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+              <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
                 Ficha privada de vigilancia
               </p>
               <h1 className="mt-1 text-2xl font-extrabold text-slate-900 sm:text-3xl">
@@ -116,7 +116,7 @@ export default async function AdminItemDetailPage({ params }: { params: Params }
                 <QrCode className="h-3.5 w-3.5" aria-hidden />
                 Código QR interno
               </dt>
-              <dd className="font-mono text-sm text-blue-700">{item.qrCode}</dd>
+              <dd className="font-mono text-sm text-teal-700">{item.qrCode}</dd>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <dt className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">

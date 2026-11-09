@@ -1,3 +1,4 @@
+import FloatingBackdrop from "@/components/layout/FloatingBackdrop";
 import { getSignedInRole } from "@/lib/auth-guards";
 
 export default async function PublicLayout({
@@ -9,9 +10,10 @@ export default async function PublicLayout({
   const isStaff = role === "ADMIN" || role === "SUPERUSER";
 
   return (
-    <div className="flex min-h-[calc(100vh-8rem)] flex-col">
+    <div className="relative flex min-h-[calc(100vh-8rem)] flex-col">
+      <FloatingBackdrop />
       {isStaff ? (
-        <p className="border-b border-amber-300 bg-amber-50 px-4 py-1.5 text-center text-[11px] font-medium text-amber-800 sm:px-6">
+        <p className="border-b border-amber-200 bg-amber-50 px-4 py-1.5 text-center text-[11px] font-medium text-amber-800 sm:px-6">
           Vista pública de estudiantes ·{" "}
           {role === "SUPERUSER"
             ? "tu panel está en Bienestar"

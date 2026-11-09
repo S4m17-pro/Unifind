@@ -12,14 +12,14 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
   const claimable = isClaimable(item.status);
 
   return (
-    <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-200 hover:border-blue-500/50">
+    <article className="card-lift flex h-full flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 shadow-[0_18px_40px_-32px_rgba(15,23,42,0.4)] hover:border-teal-500/50">
       <div>
         <div className="mb-4 flex items-start justify-between gap-3">
           <CategoryGlyph category={item.category} />
           <StatusBadge status={item.status} />
         </div>
 
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-teal-700">
           {item.category}
         </p>
         <h3 className="mb-3 text-lg font-bold text-slate-900">
@@ -62,7 +62,7 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
         ) : claimable ? (
           <Link
             href={`/objetos/${item.id}/reclamar`}
-            className="inline-flex flex-1 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-500"
+            className="inline-flex flex-1 items-center justify-center rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-teal-700/20 transition-colors hover:bg-teal-600"
           >
             Reclamar
           </Link>

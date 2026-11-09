@@ -34,7 +34,7 @@ export default function QRScannerComponent({ onScanSuccess }: Props) {
   }, [onScanSuccess]);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-2xl">
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)]">
       <h3 className="mb-4 flex items-center justify-center gap-2 text-xl font-bold text-slate-900">
         Escáner de código QR
       </h3>

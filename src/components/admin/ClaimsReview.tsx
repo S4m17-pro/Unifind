@@ -34,7 +34,7 @@ export default function ClaimsReview({ claims }: { claims: PendingClaim[] }) {
   };
 
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+    <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
       <h2 className="mb-2 text-2xl font-bold text-slate-900">Revisión de reclamos</h2>
       <p className="mb-6 text-sm text-slate-600">
         Solo el personal puede ver estas descripciones. Aprueba o rechaza antes de realizar

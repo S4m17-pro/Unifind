@@ -60,7 +60,7 @@ export default function DeliveryModule() {
         <QRScannerComponent onScanSuccess={(code) => setQrCode(code)} />
       </div>
 
-      <div className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+      <div className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
         <div>
           <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900">
             Bitácora de entrega presencial
@@ -92,7 +92,7 @@ export default function DeliveryModule() {
                 onChange={(e) => setQrCode(e.target.value)}
                 required
                 placeholder="Escanea con la cámara o ingresa el código"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-mono text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-mono text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
 
@@ -105,7 +105,7 @@ export default function DeliveryModule() {
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
                 placeholder="Opcional si ya reclamó por correo"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
 
@@ -119,7 +119,7 @@ export default function DeliveryModule() {
                 onChange={(e) => setStudentEmail(e.target.value)}
                 required
                 placeholder="estudiante@unilibre.edu.co"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function DeliveryModule() {
                 <button
                   type="button"
                   onClick={handleClearSignature}
-                  className="text-xs text-blue-700 underline hover:text-blue-800"
+                  className="text-xs text-teal-700 underline hover:text-teal-800"
                 >
                   Limpiar firma
                 </button>

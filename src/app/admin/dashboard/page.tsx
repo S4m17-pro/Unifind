@@ -65,11 +65,11 @@ export default async function AdminDashboardPage() {
   const cloudinarySetupMessage = describeCloudinarySetup();
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 text-slate-900 sm:p-10">
+    <main className="min-h-screen p-6 text-slate-900 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
         <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-center">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-900">
+            <h1 className="font-display text-3xl font-extrabold text-slate-900">
               Panel de control (Vigilancia y bodega)
             </h1>
             <p className="mt-1 text-sm text-slate-600">
@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           <div className="rounded-2xl border border-slate-200 bg-white p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">En bodega</p>
-            <p className="mt-2 text-3xl font-bold text-blue-700">{totalBodega}</p>
+            <p className="mt-2 text-3xl font-bold text-teal-700">{totalBodega}</p>
           </div>
           <div className="rounded-2xl border border-slate-200 bg-white p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">Entregados</p>
@@ -132,13 +132,13 @@ export default async function AdminDashboardPage() {
                       alt={`Foto privada de ${item.category}`}
                     />
                     <p className="font-semibold text-slate-900">{item.category}</p>
-                    <p className="font-mono text-xs text-blue-700">{item.qrCode}</p>
+                    <p className="font-mono text-xs text-teal-700">{item.qrCode}</p>
                     <p className="mt-1 text-sm text-slate-600">
                       {item.custodyStation} · {item.shelfLocation}
                     </p>
                     <Link
                       href={`/admin/objetos/${item.id}`}
-                      className="mt-3 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
+                      className="mt-3 inline-flex text-sm font-medium text-teal-700 hover:text-teal-800"
                     >
                       Ver ficha privada
                     </Link>

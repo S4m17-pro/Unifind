@@ -57,7 +57,7 @@ export default function NewItemForm({
   };
 
   return (
-    <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
+    <div className="mx-auto max-w-2xl rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
       <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900">
         Registrar objeto encontrado
       </h2>
@@ -85,7 +85,7 @@ export default function NewItemForm({
           </div>
 
           <p className="font-mono text-sm text-slate-700">
-            Código QR: <strong className="text-blue-700">{createdItem.qrCode}</strong>
+            Código QR: <strong className="text-teal-700">{createdItem.qrCode}</strong>
           </p>
 
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -101,7 +101,7 @@ export default function NewItemForm({
                 setCreatedItem(null);
                 setWarning(null);
               }}
-              className="rounded-xl bg-blue-600 px-6 py-2.5 font-medium text-white transition-colors hover:bg-blue-500"
+              className="rounded-xl bg-teal-700 px-6 py-2.5 font-medium text-white transition-colors hover:bg-teal-600"
             >
               Registrar otro objeto
             </button>
@@ -118,7 +118,7 @@ export default function NewItemForm({
                 name="category"
                 required
                 defaultValue=""
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               >
                 <option value="" disabled>
                   Selecciona una categoría
@@ -139,7 +139,7 @@ export default function NewItemForm({
                 type="datetime-local"
                 name="foundDate"
                 required
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function NewItemForm({
                 name="foundLocation"
                 required
                 placeholder="Ej. Bloque B - Salón 302"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
 
@@ -167,7 +167,7 @@ export default function NewItemForm({
                 name="custodyStation"
                 required
                 placeholder="Ej. Portería Principal"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
               />
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function NewItemForm({
               name="shelfLocation"
               required
               placeholder="Ej. Estante 2 - Casillero B"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
@@ -194,7 +194,7 @@ export default function NewItemForm({
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 font-medium text-white shadow-lg shadow-blue-600/25 transition-colors hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50"
+            className="mt-4 w-full rounded-xl bg-gradient-to-r from-teal-700 to-emerald-600 py-3 font-medium text-white shadow-lg shadow-teal-700/25 transition-colors hover:from-teal-500 hover:to-emerald-500 disabled:opacity-50"
           >
             {loading ? (
               <span className="inline-flex items-center justify-center gap-2">

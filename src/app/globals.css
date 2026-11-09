@@ -2,7 +2,55 @@
 
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-canvas: #eef3f9;
+  --color-primary: #0f766e;
+  --color-primary-strong: #115e59;
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:root {
+  --background: #eef3f9;
+  --foreground: #0f172a;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid #0f766e;
+  outline-offset: 2px;
+}
+
+@keyframes float-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes icon-pop {
@@ -16,8 +64,54 @@
   }
 }
 
+.float-a {
+  animation: float-y 6s ease-in-out infinite alternate;
+}
+
+.float-b {
+  animation: float-y 7.5s ease-in-out infinite alternate;
+  animation-delay: -2s;
+}
+
+.float-c {
+  animation: float-y 9s ease-in-out infinite alternate;
+  animation-delay: -4s;
+}
+
+.card-float {
+  animation: float-y 7s ease-in-out infinite alternate;
+}
+
+.animate-fade-up {
+  animation: fade-up 520ms var(--ease-out-strong) both;
+}
+
 .animate-icon-pop {
   animation: icon-pop 220ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.stagger-up > * {
+  animation: fade-up 480ms var(--ease-out-strong) both;
+}
+
+.stagger-up > *:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.stagger-up > *:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.stagger-up > *:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.stagger-up > *:nth-child(5) {
+  animation-delay: 240ms;
+}
+
+.stagger-up > *:nth-child(6) {
+  animation-delay: 300ms;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -28,9 +122,32 @@
   .group:hover .icon-hover-motion {
     transform: translateY(-2px) scale(1.06);
   }
+
+  .card-lift {
+    transition:
+      transform 220ms var(--ease-out-strong),
+      box-shadow 220ms var(--ease-out-strong);
+  }
+
+  .card-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 22px 45px -24px rgb(15 23 42 / 0.28);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .float-a,
+  .float-b,
+  .float-c,
+  .card-float {
+    animation: none;
+  }
+
+  .animate-fade-up,
+  .stagger-up > * {
+    animation: fade-in 200ms ease both;
+  }
+
   .animate-icon-pop {
     animation: none;
   }
@@ -38,21 +155,11 @@
   .group:hover .icon-hover-motion {
     transform: none;
   }
-}
 
-:root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-}
-
-:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+  .card-lift,
+  .card-lift:hover {
+    transform: none;
+  }
 }
 
 @page {

@@ -9,7 +9,7 @@ export default function ItemNotFound() {
       </p>
       <Link
         href="/objetos"
-        className="inline-flex rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-blue-500"
+        className="inline-flex rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-600"
       >
         Volver al catálogo
       </Link>

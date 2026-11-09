@@ -85,7 +85,7 @@ export default function ClaimForm({
               defaultValue={defaults?.name ?? ""}
               autoComplete="name"
               placeholder="Ej. Juan Pérez"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
@@ -101,7 +101,7 @@ export default function ClaimForm({
               defaultValue={defaults?.email ?? ""}
               autoComplete="email"
               placeholder="estudiante@unilibre.edu.co"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function ClaimForm({
               required
               rows={4}
               placeholder="Marca, color, stickers, rasguños u otro detalle que solo tú conozcas."
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
             />
             <p className="mt-1.5 text-xs text-slate-500">
               No publiques datos sensibles. Portería usa esto para verificar que te pertenece.
@@ -125,7 +125,7 @@ export default function ClaimForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-blue-500 disabled:opacity-50"
+            className="w-full rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-medium text-white transition-all hover:bg-teal-600 disabled:opacity-50"
           >
             {loading ? (
               <span className="inline-flex items-center justify-center gap-2">

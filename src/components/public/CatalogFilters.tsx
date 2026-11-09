@@ -40,7 +40,7 @@ export default function CatalogFilters({
         <select
           name="categoria"
           defaultValue={current.category ?? ""}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
         >
           <option value="">Todas</option>
           {options.categories.map((category) => (
@@ -58,7 +58,7 @@ export default function CatalogFilters({
         <select
           name="porteria"
           defaultValue={current.custodyStation ?? ""}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
         >
           <option value="">Todas</option>
           {options.stations.map((station) => (
@@ -76,7 +76,7 @@ export default function CatalogFilters({
         <select
           name="estado"
           defaultValue={selectedStatus}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-teal-600 focus:outline-none"
         >
           {STATUS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -89,7 +89,7 @@ export default function CatalogFilters({
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-blue-600/20 transition-colors hover:bg-blue-500"
+          className="flex-1 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-medium text-white shadow-md shadow-teal-700/20 transition-colors hover:bg-teal-600"
         >
           Filtrar
         </button>

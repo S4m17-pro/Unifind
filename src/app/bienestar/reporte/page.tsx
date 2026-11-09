@@ -27,7 +27,7 @@ export default async function DonationReportPage() {
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4 print:hidden">
           <Link
             href="/bienestar"
-            className="text-sm font-semibold text-blue-700 hover:underline"
+            className="text-sm font-semibold text-teal-700 hover:underline"
           >
             ← Volver a métricas
           </Link>
@@ -38,7 +38,7 @@ export default async function DonationReportPage() {
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
             Universidad Libre Seccional Barranquilla · Bienestar Universitario
           </p>
-          <h1 className="mt-1 text-2xl font-extrabold">Reporte de donación de objetos</h1>
+          <h1 className="font-display mt-1 text-2xl font-extrabold">Reporte de donación de objetos</h1>
           <p className="mt-1 text-sm text-slate-600">
             Generado el {generatedAt.toLocaleString("es-CO")} · Tiempo de custodia antes de
             donación: {metrics.retentionDays} días
@@ -53,7 +53,7 @@ export default async function DonationReportPage() {
         </section>
 
         <section className="mt-8">
-          <h2 className="text-lg font-bold">Objetos listos para donación</h2>
+          <h2 className="font-display text-lg font-bold">Objetos listos para donación</h2>
           <p className="mt-1 text-sm text-slate-600">
             Objetos que superaron el tiempo de custodia y están listos para donación.
           </p>

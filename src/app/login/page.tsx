@@ -21,11 +21,11 @@ export default async function LoginPage({
 
   return (
     <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-blue-700">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_26px_60px_-40px_rgba(15,23,42,0.45)]">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-teal-700">
           Personal autorizado
         </p>
-        <h1 className="mb-2 text-2xl font-bold text-slate-900">Iniciar sesión</h1>
+        <h1 className="font-display mb-2 text-2xl font-bold text-slate-900">Iniciar sesión</h1>
         <p className="mb-6 text-sm text-slate-600">
           Acceso para vigilancia (registro y entregas) y Bienestar Universitario (métricas y donaciones).
         </p>

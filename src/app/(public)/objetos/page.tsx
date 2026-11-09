@@ -35,10 +35,10 @@ export default async function CatalogPage({
     <main className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <p className="mb-3 inline-block rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-700">
+          <p className="mb-3 inline-block rounded-full border border-teal-200 bg-teal-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-teal-700">
             Consulta pública
           </p>
-          <h1 className="mb-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+          <h1 className="font-display mb-3 text-3xl font-extrabold text-slate-900 sm:text-4xl">
             Catálogo de objetos en custodia
           </h1>
           <p className="max-w-2xl text-sm text-slate-600 sm:text-base">

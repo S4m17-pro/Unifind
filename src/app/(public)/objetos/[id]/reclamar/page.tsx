@@ -53,12 +53,12 @@ export default async function ClaimPage({
 
         <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+            <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
               Reclamo
             </p>
             <StatusBadge status={item.status} />
           </div>
-          <h1 className="mb-2 text-2xl font-extrabold text-slate-900">
+          <h1 className="font-display mb-2 text-2xl font-extrabold text-slate-900">
             {item.category} · {item.custodyStation}
           </h1>
           <p className="mb-6 text-sm text-slate-600">

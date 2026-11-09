@@ -10,14 +10,14 @@ export default function ItemGrid({
 }) {
   if (items.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-200/80 bg-white/50 px-6 py-16 text-center">
+      <div className="rounded-3xl border border-slate-200/80 bg-white/80 px-6 py-16 text-center">
         <p className="text-lg text-slate-600">{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="stagger-up grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
         <ItemCard key={item.id} item={item} />
       ))}

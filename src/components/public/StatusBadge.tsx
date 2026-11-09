@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 import { statusLabel } from "@/lib/labels";
 
 const STYLES: Record<ItemStatus, string> = {
-  EN_BODEGA: "bg-blue-50 text-blue-700 border-blue-200/80",
+  EN_BODEGA: "bg-teal-50 text-teal-700 border-teal-200/80",
   ENTREGADO: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
   LISTO_PARA_DONACION: "bg-amber-50 text-amber-800 border-amber-200/80",
 };

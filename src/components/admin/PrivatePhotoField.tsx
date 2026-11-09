@@ -83,7 +83,7 @@ export default function PrivatePhotoField({
         name="image"
         accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
         onChange={handlePhotoChange}
-        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100 focus:border-blue-500 focus:outline-none"
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-teal-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-teal-700 hover:file:bg-teal-100 focus:border-teal-600 focus:outline-none"
       />
       {preview ? (
         <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">

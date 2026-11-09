@@ -15,14 +15,14 @@ export default async function BienestarPage() {
   const metrics = await getBienestarMetrics();
 
   return (
-    <main className="min-h-screen bg-slate-50 p-6 text-slate-900 sm:p-10">
+    <main className="min-h-screen p-6 text-slate-900 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">
               Bienestar Universitario
             </p>
-            <h1 className="mt-2 text-3xl font-extrabold">Métricas y donaciones</h1>
+            <h1 className="font-display mt-2 text-3xl font-extrabold">Métricas y donaciones</h1>
             <p className="mt-1 text-sm text-slate-600">
               Panel de Bienestar Universitario. Los objetos sin reclamo pasan a donación tras{" "}
               {metrics.retentionDays} días en custodia.
@@ -37,7 +37,7 @@ export default async function BienestarPage() {
         </header>
 
         <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="En bodega" value={metrics.statusCounts.EN_BODEGA} tone="text-blue-700" />
+          <MetricCard label="En bodega" value={metrics.statusCounts.EN_BODEGA} tone="text-teal-700" />
           <MetricCard label="Entregados" value={metrics.statusCounts.ENTREGADO} tone="text-emerald-700" />
           <MetricCard
             label="Listos para donación"
@@ -116,7 +116,7 @@ export default async function BienestarPage() {
                 <tbody>
                   {metrics.donationItems.map((item) => (
                     <tr key={item.id} className="border-t border-slate-200 text-slate-700">
-                      <td className="px-3 py-2 font-mono text-xs text-blue-700">{item.qrCode}</td>
+                      <td className="px-3 py-2 font-mono text-xs text-teal-700">{item.qrCode}</td>
                       <td className="px-3 py-2">{item.category}</td>
                       <td className="px-3 py-2">{item.custodyStation}</td>
                       <td className="px-3 py-2">{item.foundLocation}</td>

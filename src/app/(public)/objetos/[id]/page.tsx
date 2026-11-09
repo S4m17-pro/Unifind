@@ -71,10 +71,10 @@ export default async function ItemDetailPage({
             <div className="flex items-center gap-3">
               <CategoryGlyph category={item.category} className="h-14 w-14" />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
+                <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
                   {item.category}
                 </p>
-                <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
+                <h1 className="font-display text-2xl font-extrabold text-slate-900 sm:text-3xl">
                   Objeto en {item.custodyStation}
                 </h1>
               </div>
@@ -132,7 +132,7 @@ export default async function ItemDetailPage({
                 ¿Prefieres la página completa?{" "}
                 <Link
                   href={claimHref(item.id, query.email, query.nombre)}
-                  className="text-blue-700 hover:text-blue-800"
+                  className="text-teal-700 hover:text-teal-800"
                 >
                   Abrir formulario de reclamo
                 </Link>

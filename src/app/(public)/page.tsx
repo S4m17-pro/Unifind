@@ -10,7 +10,7 @@ const STEPS = [
   {
     icon: Search,
     title: "Busca en el catálogo",
-    body: "Filtra por categoría, portería y estado. Sin fotos, QR ni estante interno.",
+    body: "Filtra por categoría, portería y estado y reclama el objeto que te corresponda.",
   },
   {
     icon: ClipboardCheck,
@@ -34,16 +34,16 @@ export default async function HomePage() {
     <main className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <section className="mb-16 text-center">
-          <p className="mb-4 inline-block rounded-full border border-blue-800 bg-blue-950/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-400">
+          <p className="mb-4 inline-block rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-blue-700">
             Universidad Libre · Barranquilla
           </p>
-          <h1 className="mb-4 bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-4xl font-extrabold text-transparent sm:text-5xl">
+          <h1 className="mb-4 bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-4xl font-extrabold text-transparent sm:text-5xl">
             ¿Perdiste algo en el campus?
           </h1>
-          <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-400 sm:text-base">
-            UniFind es la consulta pública de objetos en custodia. Por privacidad no
-            publicamos fotos, QR ni el estante interno: revisa categoría, fecha/hora,
-            bloque/salón y portería, y reclama el que te corresponda.
+          <p className="mx-auto mb-8 max-w-2xl text-sm text-slate-600 sm:text-base">
+            Encuentra en UniFind los objetos que están guardados en portería. Revisa
+            categoría, fecha de hallazgo, bloque y lugar de custodia, y reclama el tuyo en
+            línea.
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
@@ -54,7 +54,7 @@ export default async function HomePage() {
             </Link>
             <Link
               href="#como-funciona"
-              className="inline-flex items-center justify-center rounded-xl border border-slate-700 px-5 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-800"
+              className="inline-flex items-center justify-center rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-800 hover:bg-slate-100"
             >
               Cómo reclamar
             </Link>
@@ -62,25 +62,25 @@ export default async function HomePage() {
         </section>
 
         <section id="como-funciona" className="mb-16 scroll-mt-24">
-          <h2 className="mb-6 text-center text-2xl font-bold text-slate-100">
+          <h2 className="mb-6 text-center text-2xl font-bold text-slate-900">
             Cómo funciona
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {STEPS.map((step, index) => (
               <div
                 key={step.title}
-                className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6"
+                className="group rounded-2xl border border-slate-200 bg-white p-6"
               >
                 <div className="mb-4 flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-950 text-blue-300">
-                    <step.icon className="h-5 w-5" aria-hidden />
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700">
+                    <step.icon className="icon-hover-motion h-5 w-5" aria-hidden />
                   </span>
                   <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                     Paso {index + 1}
                   </span>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-slate-100">{step.title}</h3>
-                <p className="text-sm text-slate-400">{step.body}</p>
+                <h3 className="mb-2 text-lg font-semibold text-slate-900">{step.title}</h3>
+                <p className="text-sm text-slate-600">{step.body}</p>
               </div>
             ))}
           </div>
@@ -89,12 +89,12 @@ export default async function HomePage() {
         <section>
           <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-slate-100">Disponibles para reclamo</h2>
-              <p className="mt-1 text-sm text-slate-400">
-                Últimos objetos en custodia. Sin fotos ni datos internos.
+              <h2 className="text-2xl font-bold text-slate-900">Disponibles para reclamo</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Estos son los últimos objetos que ingresaron a portería.
               </p>
             </div>
-            <Link href="/objetos" className="text-sm font-medium text-blue-400 hover:text-blue-300">
+            <Link href="/objetos" className="text-sm font-medium text-blue-700 hover:text-blue-800">
               Ver todos
             </Link>
           </div>

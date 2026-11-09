@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function AdminItemNotFound() {
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-20 text-center text-slate-100 sm:px-6">
+    <main className="min-h-screen bg-slate-50 px-4 py-20 text-center text-slate-900 sm:px-6">
       <h1 className="mb-3 text-2xl font-bold">Objeto no encontrado</h1>
-      <p className="mb-6 text-sm text-slate-400">
+      <p className="mb-6 text-sm text-slate-600">
         No hay una ficha privada con ese identificador, o ya no está en inventario.
       </p>
       <Link

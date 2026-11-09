@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
 import { processDeliveryAction } from "@/actions/delivery.actions";
 import QRScannerComponent from "./QRScannerComponent";
@@ -24,7 +25,7 @@ export default function DeliveryModule() {
     if (!sigCanvasRef.current || sigCanvasRef.current.isEmpty()) {
       setMessage({
         type: "error",
-        text: "Por favor captura la firma digital del estudiante antes de completar la entrega.",
+        text: "Pide al estudiante que firme en el espacio marcado antes de completar la entrega.",
       });
       return;
     }
@@ -59,27 +60,30 @@ export default function DeliveryModule() {
         <QRScannerComponent onScanSuccess={(code) => setQrCode(code)} />
       </div>
 
-      <div className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
+      <div className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl sm:p-8">
         <div>
-          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-100">
+          <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-900">
             Bitácora de entrega presencial
           </h2>
 
           {message && (
             <div
-              className={`mb-6 rounded-xl p-4 text-sm ${
+              className={`mb-6 flex items-center gap-2 rounded-xl p-4 text-sm ${
                 message.type === "success"
-                  ? "border border-emerald-800 bg-emerald-950/80 text-emerald-300"
-                  : "border border-red-800 bg-red-950/80 text-red-300"
+                  ? "border border-emerald-200 bg-emerald-50 text-emerald-800"
+                  : "border border-red-200 bg-red-50 text-red-700"
               }`}
             >
+              {message.type === "success" ? (
+                <CheckCircle2 className="animate-icon-pop h-5 w-5 shrink-0" aria-hidden />
+              ) : null}
               {message.text}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Código QR escaneado
               </label>
               <input
@@ -88,12 +92,12 @@ export default function DeliveryModule() {
                 onChange={(e) => setQrCode(e.target.value)}
                 required
                 placeholder="Escanea con la cámara o ingresa el código"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 font-mono text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-mono text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Nombre del estudiante receptor
               </label>
               <input
@@ -101,12 +105,12 @@ export default function DeliveryModule() {
                 value={studentName}
                 onChange={(e) => setStudentName(e.target.value)}
                 placeholder="Opcional si ya reclamó por correo"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
                 Correo institucional del receptor
               </label>
               <input
@@ -115,24 +119,24 @@ export default function DeliveryModule() {
                 onChange={(e) => setStudentEmail(e.target.value)}
                 required
                 placeholder="estudiante@unilibre.edu.co"
-                className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
               />
             </div>
 
             <div>
               <div className="mb-1 flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-600">
                   Firma digital de conformidad
                 </label>
                 <button
                   type="button"
                   onClick={handleClearSignature}
-                  className="text-xs text-blue-400 underline hover:text-blue-300"
+                  className="text-xs text-blue-700 underline hover:text-blue-800"
                 >
                   Limpiar firma
                 </button>
               </div>
-              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <SignatureCanvas
                   ref={sigCanvasRef}
                   penColor="#38bdf8"
@@ -148,7 +152,14 @@ export default function DeliveryModule() {
               disabled={loading}
               className="mt-4 w-full rounded-xl bg-emerald-600 py-3 font-medium text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-500 disabled:opacity-50"
             >
-              {loading ? "Registrando entrega..." : "Confirmar y registrar entrega presencial"}
+              {loading ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Registrando entrega...
+                </span>
+              ) : (
+                "Confirmar y registrar entrega presencial"
+              )}
             </button>
           </form>
         </div>

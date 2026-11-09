@@ -31,16 +31,16 @@ export default function CatalogFilters({
     <form
       method="get"
       action={action}
-      className="grid gap-3 rounded-2xl border border-slate-800 bg-slate-900/70 p-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end"
+      className="grid gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4 lg:items-end"
     >
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
           Categoría
         </span>
         <select
           name="categoria"
           defaultValue={current.category ?? ""}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
         >
           <option value="">Todas</option>
           {options.categories.map((category) => (
@@ -52,13 +52,13 @@ export default function CatalogFilters({
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
           Portería
         </span>
         <select
           name="porteria"
           defaultValue={current.custodyStation ?? ""}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
         >
           <option value="">Todas</option>
           {options.stations.map((station) => (
@@ -70,13 +70,13 @@ export default function CatalogFilters({
       </label>
 
       <label className="block">
-        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400">
+        <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600">
           Estado
         </span>
         <select
           name="estado"
           defaultValue={selectedStatus}
-          className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-2.5 text-sm text-slate-200 focus:border-blue-500 focus:outline-none"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 focus:border-blue-500 focus:outline-none"
         >
           {STATUS_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -95,7 +95,7 @@ export default function CatalogFilters({
         </button>
         <Link
           href={action}
-          className="inline-flex items-center justify-center rounded-xl border border-slate-800 px-4 py-2.5 text-sm font-medium text-slate-300 hover:bg-slate-800"
+          className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
         >
           Limpiar
         </Link>

@@ -65,39 +65,39 @@ export default async function AdminDashboardPage() {
   const cloudinarySetupMessage = describeCloudinarySetup();
 
   return (
-    <main className="min-h-screen bg-slate-950 p-6 text-slate-100 sm:p-10">
+    <main className="min-h-screen bg-slate-50 p-6 text-slate-900 sm:p-10">
       <div className="mx-auto max-w-7xl space-y-10">
-        <div className="flex flex-col justify-between gap-4 border-b border-slate-800 pb-6 md:flex-row md:items-center">
+        <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-center">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-100">
+            <h1 className="text-3xl font-extrabold text-slate-900">
               Panel de control (Vigilancia y bodega)
             </h1>
-            <p className="mt-1 text-sm text-slate-400">
-              Sesión: {session.user.name || session.user.email}. Registro privado, QR, revisión de
-              reclamos y entrega con firma.
+            <p className="mt-1 text-sm text-slate-600">
+              Sesión: {session.user.name || session.user.email}. Registra objetos hallados,
+              revisa solicitudes y completa las entregas.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">En bodega</p>
-            <p className="mt-2 text-3xl font-bold text-blue-400">{totalBodega}</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">En bodega</p>
+            <p className="mt-2 text-3xl font-bold text-blue-700">{totalBodega}</p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Entregados</p>
-            <p className="mt-2 text-3xl font-bold text-emerald-400">{totalEntregados}</p>
+          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">Entregados</p>
+            <p className="mt-2 text-3xl font-bold text-emerald-700">{totalEntregados}</p>
           </div>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-600">
               Listos para donación (&gt;30 días)
             </p>
-            <p className="mt-2 text-3xl font-bold text-amber-400">{totalDonacion}</p>
+            <p className="mt-2 text-3xl font-bold text-amber-700">{totalDonacion}</p>
           </div>
         </div>
 
         {cloudinaryStatus.status !== "ready" ? (
-          <div className="rounded-2xl border border-amber-800 bg-amber-950/50 px-4 py-3 text-sm text-amber-200">
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
             {cloudinarySetupMessage}
           </div>
         ) : null}
@@ -111,10 +111,11 @@ export default async function AdminDashboardPage() {
 
         <ClaimsReview claims={pendingClaims} />
 
-        <section className="rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
-          <h2 className="mb-4 text-2xl font-bold text-slate-100">Inventario reciente (privado)</h2>
-          <p className="mb-6 text-sm text-slate-400">
-            Las fotos autenticadas de Cloudinary solo se firman aquí. El catálogo público no las recibe.
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900">Inventario reciente</h2>
+          <p className="mb-6 text-sm text-slate-600">
+            Las fotos de los objetos solo las ve el personal autorizado. Nunca aparecen en la
+            vista de los estudiantes.
           </p>
           {recentItems.length === 0 ? (
             <p className="text-sm text-slate-500">Aún no hay objetos en custodia.</p>
@@ -124,20 +125,20 @@ export default async function AdminDashboardPage() {
                 const photo = resolveAdminPrivatePhoto(item.images[0]?.cloudinaryId);
 
                 return (
-                  <article key={item.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                  <article key={item.id} className="rounded-2xl border border-slate-200 bg-white p-4">
                     <AdminPrivatePhoto
                       signedUrl={photo.signedUrl}
                       emptyLabel={photo.emptyLabel}
                       alt={`Foto privada de ${item.category}`}
                     />
-                    <p className="font-semibold text-slate-100">{item.category}</p>
-                    <p className="font-mono text-xs text-blue-400">{item.qrCode}</p>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="font-semibold text-slate-900">{item.category}</p>
+                    <p className="font-mono text-xs text-blue-700">{item.qrCode}</p>
+                    <p className="mt-1 text-sm text-slate-600">
                       {item.custodyStation} · {item.shelfLocation}
                     </p>
                     <Link
                       href={`/admin/objetos/${item.id}`}
-                      className="mt-3 inline-flex text-sm font-medium text-blue-400 hover:text-blue-300"
+                      className="mt-3 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
                     >
                       Ver ficha privada
                     </Link>

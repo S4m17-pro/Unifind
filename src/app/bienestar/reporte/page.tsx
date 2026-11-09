@@ -40,8 +40,8 @@ export default async function DonationReportPage() {
           </p>
           <h1 className="mt-1 text-2xl font-extrabold">Reporte de donación de objetos</h1>
           <p className="mt-1 text-sm text-slate-600">
-            Generado el {generatedAt.toLocaleString("es-CO")} · Retención de custodia:{" "}
-            {metrics.retentionDays} días
+            Generado el {generatedAt.toLocaleString("es-CO")} · Tiempo de custodia antes de
+            donación: {metrics.retentionDays} días
           </p>
         </header>
 
@@ -55,7 +55,7 @@ export default async function DonationReportPage() {
         <section className="mt-8">
           <h2 className="text-lg font-bold">Objetos listos para donación</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Objetos que superaron el periodo de retención y quedaron en LISTO_PARA_DONACION.
+            Objetos que superaron el tiempo de custodia y están listos para donación.
           </p>
 
           {metrics.donationItems.length === 0 ? (

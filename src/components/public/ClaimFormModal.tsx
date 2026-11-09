@@ -59,23 +59,23 @@ export default function ClaimFormModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className="relative w-full max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl"
+            className="relative w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl"
           >
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 text-lg text-slate-400 hover:text-white"
+              className="absolute right-4 top-4 text-lg text-slate-600 hover:text-slate-900"
               aria-label="Cerrar formulario"
             >
               ✕
             </button>
 
-            <h3 id={titleId} className="mb-1 text-xl font-bold text-slate-100">
+            <h3 id={titleId} className="mb-1 text-xl font-bold text-slate-900">
               Formulario de reclamo
             </h3>
-            <p className="mb-4 text-sm text-slate-400">
+            <p className="mb-4 text-sm text-slate-600">
               Pertenencia:{" "}
-              <span className="font-semibold text-blue-400">{item.category}</span> hallada en{" "}
+              <span className="font-semibold text-blue-700">{item.category}</span> hallada en{" "}
               {item.foundLocation}. Custodia: {item.custodyStation}.
             </p>
 
@@ -84,7 +84,7 @@ export default function ClaimFormModal({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="mt-4 w-full rounded-xl bg-slate-800 px-4 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-slate-700"
+              className="mt-4 w-full rounded-xl bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-200"
             >
               Cerrar
             </button>

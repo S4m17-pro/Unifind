@@ -73,9 +73,9 @@ export default function PrivatePhotoField({
     <div>
       <label
         htmlFor="item-image"
-        className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-400"
+        className="mb-1 block text-xs font-semibold uppercase tracking-wider text-slate-600"
       >
-        Foto privada (Cloudinary autenticado)
+        Foto del objeto (opcional)
       </label>
       <input
         id="item-image"
@@ -83,10 +83,10 @@ export default function PrivatePhotoField({
         name="image"
         accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif"
         onChange={handlePhotoChange}
-        className="w-full rounded-xl border border-slate-800 bg-slate-950 px-4 py-2 text-sm text-slate-400 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-950 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-400 hover:file:bg-blue-900 focus:border-blue-500 focus:outline-none"
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-blue-700 hover:file:bg-blue-100 focus:border-blue-500 focus:outline-none"
       />
       {preview ? (
-        <div className="mt-3 overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
+        <div className="mt-3 overflow-hidden rounded-xl border border-slate-200 bg-white">
           {/* Vista previa local (blob), no pasa por el optimizador de next/image. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -96,11 +96,11 @@ export default function PrivatePhotoField({
           />
         </div>
       ) : null}
-      <p className={`mt-2 text-xs ${cloudinaryReady ? "text-slate-500" : "text-amber-400"}`}>
+      <p className={`mt-2 text-xs ${cloudinaryReady ? "text-slate-500" : "text-amber-700"}`}>
         {photoNotice ??
           (cloudinaryReady
-            ? "Opcional. Campo image, máx. 5 MB (JPG, PNG, WEBP o GIF). Se sube authenticated y solo se firma en la ficha privada."
-            : "Opcional. Sin Cloudinary la foto se omite y el objeto igual se registra.")}
+            ? "Opcional · máximo 5 MB (JPG, PNG, WEBP o GIF). Solo la verá el personal."
+            : "Opcional. Si no se puede subir la foto, el objeto se registra igual.")}
       </p>
     </div>
   );

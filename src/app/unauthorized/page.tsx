@@ -3,11 +3,11 @@ import Link from "next/link";
 export default function UnauthorizedPage() {
   return (
     <main className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4 py-12">
-      <div className="w-full max-w-lg rounded-3xl border border-slate-800 bg-slate-900 p-8 text-center shadow-2xl">
-        <h1 className="mb-3 text-2xl font-bold text-slate-100">Acceso no autorizado</h1>
-        <p className="mb-6 text-sm text-slate-400">
-          Esta ruta está reservada al personal de portería/vigilancia o a Bienestar Universitario.
-          Los estudiantes consultan el catálogo público y reclaman por correo, sin ver fotos.
+      <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-2xl">
+        <h1 className="mb-3 text-2xl font-bold text-slate-900">Acceso no autorizado</h1>
+        <p className="mb-6 text-sm text-slate-600">
+          Esta sección es solo para el personal de portería o de Bienestar Universitario. Los
+          estudiantes pueden consultar el catálogo y reclamar en línea.
         </p>
         <Link
           href="/objetos"

@@ -12,27 +12,27 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
   const claimable = isClaimable(item.status);
 
   return (
-    <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl transition-all duration-200 hover:border-blue-500/50">
+    <article className="flex h-full flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-200 hover:border-blue-500/50">
       <div>
         <div className="mb-4 flex items-start justify-between gap-3">
           <CategoryGlyph category={item.category} />
           <StatusBadge status={item.status} />
         </div>
 
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-400">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-700">
           {item.category}
         </p>
-        <h3 className="mb-3 text-lg font-bold text-slate-100">
+        <h3 className="mb-3 text-lg font-bold text-slate-900">
           Objeto en {item.custodyStation}
         </h3>
 
-        <dl className="space-y-2 text-sm text-slate-400">
+        <dl className="space-y-2 text-sm text-slate-600">
           <div className="flex items-start gap-2">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" aria-hidden />
             <div>
               <dt className="sr-only">Bloque / salón</dt>
               <dd>
-                <span className="text-slate-300">Bloque / salón:</span> {item.foundLocation}
+                <span className="text-slate-700">Bloque / salón:</span> {item.foundLocation}
               </dd>
             </div>
           </div>
@@ -41,7 +41,7 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
             <div>
               <dt className="sr-only">Fecha</dt>
               <dd>
-                <span className="text-slate-300">Fecha:</span> {formatFoundDate(item.foundDate)}
+                <span className="text-slate-700">Fecha:</span> {formatFoundDate(item.foundDate)}
               </dd>
             </div>
           </div>
@@ -51,12 +51,12 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
       <div className="mt-6 flex flex-col gap-2 sm:flex-row">
         <Link
           href={`/objetos/${item.id}`}
-          className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-700 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-800"
+          className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-800 transition-colors hover:bg-slate-100"
         >
           Ver detalle
         </Link>
         {isStaff ? (
-          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-900/60 bg-amber-950/30 px-4 py-2.5 text-center text-xs text-amber-300">
+          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-center text-xs text-amber-800">
             Personal: gestiona desde el panel
           </span>
         ) : claimable ? (
@@ -67,7 +67,7 @@ export default async function ItemCard({ item }: { item: PublicItem }) {
             Reclamar
           </Link>
         ) : (
-          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-800 px-4 py-2.5 text-center text-sm text-slate-500">
+          <span className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 px-4 py-2.5 text-center text-sm text-slate-500">
             No disponible
           </span>
         )}

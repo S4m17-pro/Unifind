@@ -10,8 +10,8 @@ export default function ItemGrid({
 }) {
   if (items.length === 0) {
     return (
-      <div className="rounded-3xl border border-slate-800/80 bg-slate-900/50 px-6 py-16 text-center">
-        <p className="text-lg text-slate-400">{emptyMessage}</p>
+      <div className="rounded-3xl border border-slate-200/80 bg-white/50 px-6 py-16 text-center">
+        <p className="text-lg text-slate-600">{emptyMessage}</p>
       </div>
     );
   }

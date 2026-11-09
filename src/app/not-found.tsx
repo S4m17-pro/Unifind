@@ -3,11 +3,11 @@ import Link from "next/link";
 export default function RootNotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-400">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-blue-700">
         404
       </p>
-      <h1 className="mb-3 text-2xl font-bold text-slate-100">Página no encontrada</h1>
-      <p className="mb-6 max-w-md text-sm text-slate-400">
+      <h1 className="mb-3 text-2xl font-bold text-slate-900">Página no encontrada</h1>
+      <p className="mb-6 max-w-md text-sm text-slate-600">
         Revisa el enlace o vuelve al catálogo público de UniFind.
       </p>
       <Link

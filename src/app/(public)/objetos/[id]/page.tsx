@@ -60,21 +60,21 @@ export default async function ItemDetailPage({
       <div className="mx-auto max-w-3xl">
         <Link
           href="/objetos"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Volver al catálogo
         </Link>
 
-        <article className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl sm:p-8">
+        <article className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <CategoryGlyph category={item.category} className="h-14 w-14" />
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-blue-400">
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
                   {item.category}
                 </p>
-                <h1 className="text-2xl font-extrabold text-slate-100 sm:text-3xl">
+                <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
                   Objeto en {item.custodyStation}
                 </h1>
               </div>
@@ -83,34 +83,35 @@ export default async function ItemDetailPage({
           </div>
 
           <dl className="mb-8 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <dt className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
                 Bloque / salón
               </dt>
-              <dd className="text-sm text-slate-200">{item.foundLocation}</dd>
+              <dd className="text-sm text-slate-800">{item.foundLocation}</dd>
             </div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
               <dt className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <MapPin className="h-3.5 w-3.5" aria-hidden />
                 Portería de custodia
               </dt>
-              <dd className="text-sm text-slate-200">{item.custodyStation}</dd>
+              <dd className="text-sm text-slate-800">{item.custodyStation}</dd>
             </div>
-            <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 sm:col-span-2">
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:col-span-2">
               <dt className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
                 <CalendarDays className="h-3.5 w-3.5" aria-hidden />
                 Fecha de hallazgo
               </dt>
-              <dd className="text-sm text-slate-200">{formatFoundDate(item.foundDate)}</dd>
+              <dd className="text-sm text-slate-800">{formatFoundDate(item.foundDate)}</dd>
             </div>
           </dl>
 
-          <div className="mb-8 flex items-start gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-400">
-            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-400" aria-hidden />
+          <div className="mb-8 flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-700" aria-hidden />
             <p>
-              Por privacidad no mostramos fotos, QR, estante interno ni la descripción
-              del registro. Si es tuyo, descríbelo tú en el reclamo.
+              Si este objeto es tuyo, presiona «Reclamar» y describe detalles que solo tú
+              conozcas: color, marca, seriales o rasguños. Portería los comparará antes de
+              entregártelo.
             </p>
           </div>
 
@@ -131,19 +132,19 @@ export default async function ItemDetailPage({
                 ¿Prefieres la página completa?{" "}
                 <Link
                   href={claimHref(item.id, query.email, query.nombre)}
-                  className="text-blue-400 hover:text-blue-300"
+                  className="text-blue-700 hover:text-blue-800"
                 >
                   Abrir formulario de reclamo
                 </Link>
               </p>
             </div>
           ) : isStaff ? (
-            <p className="rounded-2xl border border-amber-900/60 bg-amber-950/30 p-4 text-sm text-amber-300">
+            <p className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
               Sesión de personal: este objeto se gestiona desde el panel de Vigilancia. La
               vista pública de estudiantes no permite registrar reclamos.
             </p>
           ) : (
-            <p className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-400">
+            <p className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
               Este objeto ya no está disponible para reclamo público.
             </p>
           )}

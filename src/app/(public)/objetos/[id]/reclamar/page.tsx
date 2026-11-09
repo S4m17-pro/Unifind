@@ -45,29 +45,29 @@ export default async function ClaimPage({
       <div className="mx-auto max-w-xl">
         <Link
           href={`/objetos/${item.id}`}
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-200"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Volver al detalle
         </Link>
 
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-xl sm:p-8">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl sm:p-8">
           <div className="mb-2 flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-400">
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue-700">
               Reclamo
             </p>
             <StatusBadge status={item.status} />
           </div>
-          <h1 className="mb-2 text-2xl font-extrabold text-slate-100">
+          <h1 className="mb-2 text-2xl font-extrabold text-slate-900">
             {item.category} · {item.custodyStation}
           </h1>
-          <p className="mb-6 text-sm text-slate-400">
+          <p className="mb-6 text-sm text-slate-600">
             Hallado en {item.foundLocation} (bloque/salón). Describe cómo lo reconoces;
             portería valida y te lo entrega con tu carnet.
           </p>
 
           {isStaff ? (
-            <p className="rounded-2xl border border-amber-900/60 bg-amber-950/30 p-4 text-sm text-amber-300">
+            <p className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
               Sesión de personal: los reclamos solo se registran desde la vista pública de
               estudiantes. Gestiona la entrega desde el panel de Vigilancia.
             </p>
@@ -83,7 +83,7 @@ export default async function ClaimPage({
               submitLabel="Enviar reclamo"
             />
           ) : (
-            <p className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4 text-sm text-slate-400">
+            <p className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
               Este objeto ya no admite reclamos públicos.
             </p>
           )}

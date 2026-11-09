@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import { submitClaimAction } from "@/actions/claim.actions";
 import { isActionFailure } from "@/lib/action-result";
 import type { PublicItem } from "@/lib/public-catalog";
@@ -127,7 +128,14 @@ export default function ClaimForm({
             disabled={loading}
             className="w-full rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
           >
-            {loading ? "Enviando..." : submitLabel}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Enviando...
+              </span>
+            ) : (
+              submitLabel
+            )}
           </button>
         </form>
       )}

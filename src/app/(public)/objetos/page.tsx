@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Catálogo de objetos",
   description:
-    "Consulta pública genérica de objetos en custodia. Filtra por categoría, portería y estado. Sin fotos.",
+    "Explora los objetos que están en custodia en portería. Filtra por categoría, portería y estado, y reclama el tuyo.",
 };
 
 type SearchParams = Promise<{

@@ -4,8 +4,13 @@ import { revalidatePath } from "next/cache";
 import type { ClaimStatus } from "@prisma/client";
 import { actionError, actionOk, type ActionResult } from "@/lib/action-result";
 import { withStaffSession } from "@/lib/auth/guards";
+import { getSignedInRole } from "@/lib/auth-guards";
 import { upsertCommunityUser } from "@/lib/domain/users";
-import { notifyClaimByEmail } from "@/lib/notifications/claim-email";
+import {
+  notifyClaimByEmail,
+  notifyStudentClaimReceived,
+  notifyStudentClaimReview,
+} from "@/lib/notifications/claim-email";
 import { prisma } from "@/lib/prisma";
 import {
   isInstitutionalEmail,
@@ -17,6 +22,11 @@ import {
 export async function submitClaimAction(
   formData: FormData,
 ): Promise<ActionResult<{ claimId: string }>> {
+  const role = await getSignedInRole();
+  if (role === "ADMIN" || role === "SUPERUSER") {
+    return actionError("El personal no registra reclamos desde el catálogo público.");
+  }
+
   const itemId = String(formData.get("itemId") ?? "");
   const studentEmail = normalizeEmail(String(formData.get("studentEmail") ?? ""));
   const studentName = truncate(String(formData.get("studentName") ?? "Estudiante"), 120);
@@ -111,6 +121,22 @@ export async function submitClaimAction(
       console.error("El reclamo se guardó, pero falló el correo:", emailError);
     }
 
+    try {
+      await notifyStudentClaimReceived({
+        studentName,
+        studentEmail,
+        category: item.category,
+        custodyStation: item.custodyStation,
+        foundLocation: item.foundLocation,
+        itemId: item.id,
+      });
+    } catch (emailError) {
+      console.error(
+        "El reclamo se guardó, pero falló la confirmación al estudiante:",
+        emailError,
+      );
+    }
+
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
     return actionOk({ claimId: claim.id });
@@ -132,7 +158,19 @@ export async function reviewClaimAction(
     try {
       const claim = await prisma.claimRequest.findUnique({
         where: { id: claimId },
-        select: { id: true, status: true },
+        select: {
+          id: true,
+          status: true,
+          item: {
+            select: {
+              id: true,
+              category: true,
+              custodyStation: true,
+              foundLocation: true,
+            },
+          },
+          student: { select: { name: true, email: true } },
+        },
       });
 
       if (!claim) {
@@ -147,6 +185,23 @@ export async function reviewClaimAction(
         where: { id: claimId },
         data: { status },
       });
+
+      try {
+        await notifyStudentClaimReview({
+          studentName: claim.student.name || "Estudiante",
+          studentEmail: claim.student.email,
+          status,
+          category: claim.item.category,
+          custodyStation: claim.item.custodyStation,
+          foundLocation: claim.item.foundLocation,
+          itemId: claim.item.id,
+        });
+      } catch (emailError) {
+        console.error(
+          "El reclamo se actualizó, pero falló el correo de resultado al estudiante:",
+          emailError,
+        );
+      }
 
       revalidatePath("/admin/dashboard");
       revalidatePath("/bienestar");

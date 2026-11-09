@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
 import SignatureCanvas from "react-signature-canvas";
 import { processDeliveryAction } from "@/actions/delivery.actions";
 import { isActionFailure } from "@/lib/action-result";
@@ -25,12 +26,14 @@ export default function DeliveryModule() {
     if (!sigCanvasRef.current || sigCanvasRef.current.isEmpty()) {
       setMessage({
         type: "error",
-        text: "Por favor captura la firma digital del estudiante antes de completar la entrega.",
+        text: "Pide al estudiante que firme en el espacio marcado antes de completar la entrega.",
       });
       return;
     }
 
-    const signatureData = sigCanvasRef.current.getTrimmedCanvas().toDataURL("image/png");
+    // `getTrimmedCanvas()` falla con trim-canvas 0.1.2 (interop UMD/ESM);
+    // `toDataURL` es la API nativa del canvas y produce el PNG de la firma.
+    const signatureData = sigCanvasRef.current.toDataURL("image/png");
 
     setLoading(true);
     const result = await processDeliveryAction({
@@ -72,6 +75,9 @@ export default function DeliveryModule() {
                   : "border border-danger/20 bg-danger-soft text-danger"
               }`}
             >
+              {message.type === "success" ? (
+                <CheckCircle2 className="animate-icon-pop h-5 w-5 shrink-0" aria-hidden />
+              ) : null}
               {message.text}
             </div>
           )}
@@ -147,7 +153,14 @@ export default function DeliveryModule() {
               disabled={loading}
               className="mt-4 w-full rounded-md bg-success py-3 font-semibold text-white transition-colors hover:opacity-90 disabled:opacity-50"
             >
-              {loading ? "Registrando entrega..." : "Confirmar y registrar entrega presencial"}
+              {loading ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  Registrando entrega...
+                </span>
+              ) : (
+                "Confirmar y registrar entrega presencial"
+              )}
             </button>
           </form>
         </div>

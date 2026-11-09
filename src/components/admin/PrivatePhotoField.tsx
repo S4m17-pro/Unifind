@@ -75,7 +75,7 @@ export default function PrivatePhotoField({
         htmlFor="item-image"
         className="mb-1 block text-xs font-semibold uppercase tracking-[0.14em] text-ink-muted"
       >
-        Foto privada (Cloudinary autenticado)
+        Foto del objeto (opcional)
       </label>
       <input
         id="item-image"
@@ -97,8 +97,8 @@ export default function PrivatePhotoField({
       <p className={`mt-2 text-xs ${cloudinaryReady ? "text-ink-subtle" : "text-gold-ink"}`}>
         {photoNotice ??
           (cloudinaryReady
-            ? "Opcional. Campo image, máx. 5 MB (JPG, PNG, WEBP o GIF). Se sube authenticated y solo se firma en la ficha privada."
-            : "Opcional. Sin Cloudinary la foto se omite y el objeto igual se registra.")}
+            ? "Opcional · máximo 5 MB (JPG, PNG, WEBP o GIF). Solo la verá el personal."
+            : "Opcional. Si no se puede subir la foto, el objeto se registra igual.")}
       </p>
     </div>
   );

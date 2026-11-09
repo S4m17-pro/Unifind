@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 import { createItemAction } from "@/actions/item.actions";
@@ -195,7 +196,14 @@ export default function NewItemForm({
             disabled={loading}
             className="mt-4 w-full rounded-md bg-brand py-3 font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-50"
           >
-            {loading ? "Procesando y generando QR..." : "Guardar en bodega y generar QR"}
+            {loading ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Guardando y generando QR...
+              </span>
+            ) : (
+              "Guardar objeto y generar su QR"
+            )}
           </button>
         </form>
       )}

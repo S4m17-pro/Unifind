@@ -8,6 +8,7 @@ import StatusBadge from "@/components/public/StatusBadge";
 import { getClaimDefaults } from "@/lib/claim-defaults";
 import { formatFoundDate } from "@/lib/labels";
 import { getPublicItem, isClaimable } from "@/lib/public-catalog";
+import { getSignedInRole } from "@/lib/auth-guards";
 
 export const dynamic = "force-dynamic";
 
@@ -47,8 +48,11 @@ export default async function ItemDetailPage({
 
   if (!item) notFound();
 
+  const role = await getSignedInRole();
+  const isStaff = role === "ADMIN" || role === "SUPERUSER";
   const claimable = isClaimable(item.status);
-  const autoOpen = query.reclamar === "1" && claimable;
+  const canClaim = claimable && !isStaff;
+  const autoOpen = query.reclamar === "1" && canClaim;
   const defaults = await getClaimDefaults(query);
 
   return (
@@ -105,12 +109,13 @@ export default async function ItemDetailPage({
           <div className="mb-8 flex items-start gap-3 rounded-lg border border-gold/40 bg-gold-soft p-4 text-sm text-gold-ink">
             <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
             <p>
-              Por privacidad no mostramos fotos, QR, estante interno ni la descripción
-              del registro. Si es tuyo, descríbelo tú en el reclamo.
+              Si este objeto es tuyo, presiona «Reclamar» y describe detalles que solo tú
+              conozcas: color, marca, seriales o rasguños. Portería los comparará antes de
+              entregártelo.
             </p>
           </div>
 
-          {claimable ? (
+          {canClaim ? (
             <div className="space-y-3">
               <ClaimFormModal
                 item={{
@@ -133,6 +138,11 @@ export default async function ItemDetailPage({
                 </Link>
               </p>
             </div>
+          ) : isStaff ? (
+            <p className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800">
+              Sesión de personal: este objeto se gestiona desde el panel de Vigilancia. La
+              vista pública de estudiantes no permite registrar reclamos.
+            </p>
           ) : (
             <p className="rounded-lg border border-line bg-canvas p-4 text-sm text-ink-muted">
               Este objeto ya no está disponible para reclamo público.

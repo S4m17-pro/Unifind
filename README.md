@@ -122,6 +122,7 @@ Cambia estas claves antes de cualquier despliegue real.
 | `npm run db:migrate` | Migraciones en desarrollo |
 | `npm run db:seed` | Usuarios e ítem de ejemplo |
 | `npm run db:studio` | Prisma Studio |
+| `npm run lint` | ESLint (Next.js + TypeScript) |
 
 `postinstall` ejecuta `prisma generate`.
 
@@ -216,14 +217,21 @@ En Vercel, `vercel.json` programa esa ruta a las 06:00 UTC. Configura `CRON_SECR
 - `/dashboard` redirige según rol
 - `/admin/dashboard` vigilancia
 - `/bienestar` métricas SUPERUSER
+- `/bienestar/reporte` reporte de donación imprimible (guardar como PDF)
 - `/api/cron/check-expiration` retención
+
+## Pruebas manuales pendientes
+
+Las pruebas que requieren Cloudinary, Resend, cámara o despliegue están en
+[`docs/PRUEBAS_MANUALES.md`](docs/PRUEBAS_MANUALES.md), con pasos y criterios de
+aceptación.
 
 ## Docker (solo base de datos)
 
 Ver también `DOCKER_INSTRUCTIONS.md`.
 
 ```bash
-docker compose up -d      # postgres:16 en el puerto 5432
+docker compose up -d      # postgres:16 en el puerto 5432 (o $POSTGRES_PORT)
 docker compose down       # detener
 docker compose down -v    # borrar volumen
 ```

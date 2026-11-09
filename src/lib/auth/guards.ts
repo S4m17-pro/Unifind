@@ -41,6 +41,11 @@ export async function requireSession(
   return session;
 }
 
+export async function getSignedInRole(): Promise<Role | null> {
+  const session = asAuthedSession(await auth());
+  return session?.user.role ?? null;
+}
+
 export async function requireRole(
   roles: readonly Role[],
   message = "No tienes permiso para esta acción.",

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { auth } from "@/auth";
 import { IngresoFlash } from "@/components/auth/AuthFlash";
 import { roleDuty, roleLabel } from "@/lib/labels";
@@ -98,6 +99,12 @@ export default async function BienestarPage() {
           <p className="mb-6 text-sm text-ink-muted">
             Objetos que superaron el periodo de retención y quedaron en LISTO_PARA_DONACION.
           </p>
+          <Link
+            href="/bienestar/reporte"
+            className="mb-6 inline-flex rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+          >
+            Descargar reporte PDF
+          </Link>
           {metrics.donationItems.length === 0 ? (
             <p className="text-sm text-ink-subtle">No hay objetos listos para donación.</p>
           ) : (

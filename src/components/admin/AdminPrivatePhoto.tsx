@@ -24,6 +24,7 @@ export default function AdminPrivatePhoto({
         )}
       >
         {/* Signed Cloudinary URLs carry expire_at; next/image would strip the firma. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={signedUrl}
           alt={alt}

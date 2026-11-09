@@ -43,6 +43,9 @@ Criterios:
 
 - [ ] El reclamo se guarda en la base de datos.
 - [ ] Llega el correo a `ADMIN_NOTIFICATION_EMAIL` con el detalle del reclamo.
+- [ ] El estudiante recibe confirmación de "reclamo recibido".
+- [ ] Al aprobar o rechazar en el panel, el estudiante recibe el correo de resultado.
+- [ ] El correo de rechazo invita a volver a reclamar con más detalle.
 - [ ] En los logs **no** aparecen correos completos ni datos sensibles.
 
 ## 3. Escaneo de QR con cámara (RF-ENT-01)

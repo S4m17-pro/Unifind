@@ -176,6 +176,7 @@ Marca `[x]` cuando esté implementado y verificado.
 - [x] RF-CAT-02 Filtros por fecha, categoría y estado
 - [x] RF-RCL-01 Formulario de reclamo (correo institucional + descripción)
 - [ ] RF-RCL-02 Correo automático al admin
+- [ ] Notificación al estudiante: recibido / aprobado / rechazado
 
 **Entrega segura**
 - [ ] RF-ENT-01 Escaneo de QR con cámara

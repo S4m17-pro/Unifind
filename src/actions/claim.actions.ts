@@ -48,6 +48,99 @@ async function notifyClaimByEmail(params: {
   });
 }
 
+function appBaseUrl(): string {
+  const raw =
+    process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
+  return raw.replace(/\/+$/, "");
+}
+
+async function notifyStudentClaimReceived(params: {
+  studentName: string;
+  studentEmail: string;
+  category: string;
+  custodyStation: string;
+  foundLocation: string;
+  itemId: string;
+}) {
+  const resend = getResendClient();
+  if (!resend) {
+    console.warn(
+      "RESEND_API_KEY no configurada: se omite la confirmación de reclamo al estudiante.",
+    );
+    return;
+  }
+
+  const itemUrl = `${appBaseUrl()}/objetos/${params.itemId}`;
+  await resend.emails.send({
+    from: process.env.EMAIL_FROM || "UniFind <onboarding@resend.dev>",
+    to: [params.studentEmail],
+    subject: `Recibimos tu reclamo - ${params.category}`,
+    html: `
+      <h2>Recibimos tu reclamo</h2>
+      <p>Hola ${escapeHtml(params.studentName)},</p>
+      <p>Registramos tu reclamo. Portería comparará tu descripción con el objeto en
+      custodia y te avisará por este mismo correo cuando lo revise.</p>
+      <ul>
+        <li><strong>Categoría:</strong> ${escapeHtml(params.category)}</li>
+        <li><strong>Portería:</strong> ${escapeHtml(params.custodyStation)}</li>
+        <li><strong>Hallazgo:</strong> ${escapeHtml(params.foundLocation)}</li>
+      </ul>
+      <p><a href="${itemUrl}">Ver el objeto en el catálogo</a></p>
+      <p>Si el reclamo se aprueba, acércate con tu carnet institucional para la entrega.</p>
+    `,
+  });
+}
+
+async function notifyStudentClaimReview(params: {
+  studentName: string;
+  studentEmail: string;
+  status: "APPROVED" | "REJECTED";
+  category: string;
+  custodyStation: string;
+  foundLocation: string;
+  itemId: string;
+}) {
+  const resend = getResendClient();
+  if (!resend) {
+    console.warn(
+      "RESEND_API_KEY no configurada: se omite el correo de resultado al estudiante.",
+    );
+    return;
+  }
+
+  const itemUrl = `${appBaseUrl()}/objetos/${params.itemId}`;
+  const approved = params.status === "APPROVED";
+
+  await resend.emails.send({
+    from: process.env.EMAIL_FROM || "UniFind <onboarding@resend.dev>",
+    to: [params.studentEmail],
+    subject: approved
+      ? `Tu reclamo fue aprobado - ${params.category}`
+      : `Tu reclamo no fue aprobado - ${params.category}`,
+    html: approved
+      ? `
+        <h2>Tu reclamo fue aprobado</h2>
+        <p>Hola ${escapeHtml(params.studentName)},</p>
+        <p>Revisamos tu reclamo y la descripción coincide con el objeto en custodia.</p>
+        <ul>
+          <li><strong>Categoría:</strong> ${escapeHtml(params.category)}</li>
+          <li><strong>Portería:</strong> ${escapeHtml(params.custodyStation)}</li>
+          <li><strong>Hallazgo:</strong> ${escapeHtml(params.foundLocation)}</li>
+        </ul>
+        <p><strong>Acércate con tu carnet institucional a ${escapeHtml(params.custodyStation)}.</strong>
+        El vigilante verificará tu identidad, escaneará el código QR del objeto y firmarás la entrega.</p>
+      `
+      : `
+        <h2>Tu reclamo no fue aprobado</h2>
+        <p>Hola ${escapeHtml(params.studentName)},</p>
+        <p>Tras comparar la descripción con el objeto en custodia, los detalles no coincidieron.</p>
+        <p>Si crees que el objeto sí es tuyo, puedes volver a reclamarlo con más detalle
+        (marcas, seriales, stickers o rasguños que solo tú conozcas).</p>
+        <p><a href="${itemUrl}">Volver a ver el objeto</a></p>
+      `,
+  });
+}
+
 export async function submitClaimAction(formData: FormData) {
   // Regla §4: el personal (ADMIN/SUPERUSER) es custodio y no reclama objetos.
   // Ocultar el botón no basta: el servidor siempre revalida el rol.
@@ -133,6 +226,22 @@ export async function submitClaimAction(formData: FormData) {
       console.error("El reclamo se guardó, pero falló el correo:", emailError);
     }
 
+    try {
+      await notifyStudentClaimReceived({
+        studentName,
+        studentEmail,
+        category: item.category,
+        custodyStation: item.custodyStation,
+        foundLocation: item.foundLocation,
+        itemId: item.id,
+      });
+    } catch (emailError) {
+      console.error(
+        "El reclamo se guardó, pero falló la confirmación al estudiante:",
+        emailError,
+      );
+    }
+
     revalidatePath("/");
     revalidatePath("/admin/dashboard");
     return { success: true, claimId: claim.id };
@@ -156,7 +265,19 @@ export async function reviewClaimAction(claimId: string, status: "APPROVED" | "R
   try {
     const claim = await prisma.claimRequest.findUnique({
       where: { id: claimId },
-      select: { id: true, status: true },
+      select: {
+        id: true,
+        status: true,
+        item: {
+          select: {
+            id: true,
+            category: true,
+            custodyStation: true,
+            foundLocation: true,
+          },
+        },
+        student: { select: { name: true, email: true } },
+      },
     });
 
     if (!claim) {
@@ -171,6 +292,23 @@ export async function reviewClaimAction(claimId: string, status: "APPROVED" | "R
       where: { id: claimId },
       data: { status },
     });
+
+    try {
+      await notifyStudentClaimReview({
+        studentName: claim.student.name || "Estudiante",
+        studentEmail: claim.student.email,
+        status,
+        category: claim.item.category,
+        custodyStation: claim.item.custodyStation,
+        foundLocation: claim.item.foundLocation,
+        itemId: claim.item.id,
+      });
+    } catch (emailError) {
+      console.error(
+        "El reclamo se actualizó, pero falló el correo de resultado al estudiante:",
+        emailError,
+      );
+    }
 
     revalidatePath("/admin/dashboard");
     revalidatePath("/bienestar");

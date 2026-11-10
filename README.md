@@ -221,8 +221,7 @@ En Vercel, `vercel.json` programa esa ruta a las 06:00 UTC. Configura `CRON_SECR
 - `/api/auth/[...nextauth]` Auth.js
 - `/dashboard` redirige según rol
 - `/admin/dashboard` vigilancia
-- `/bienestar` métricas SUPERUSER
-- `/bienestar/reporte` reporte de donación imprimible (guardar como PDF)
+- `/bienestar` panel de Bienestar (solo lectura) con reporte de donación imprimible
 - `/api/cron/check-expiration` retención
 
 ## Pruebas manuales pendientes

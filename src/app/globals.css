@@ -239,6 +239,7 @@ body {
 @media print {
   [data-app-header],
   [data-app-footer],
+  [data-app-sidebar],
   [data-workspace-nav],
   [data-print-hide] {
     display: none !important;

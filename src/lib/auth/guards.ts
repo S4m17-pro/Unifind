@@ -61,8 +61,8 @@ export async function requireRole(
 
 export async function requireStaffSession() {
   return requireRole(
-    ["ADMIN", "SUPERUSER"],
-    "Debes iniciar sesión como vigilante o Bienestar.",
+    ["ADMIN"],
+    "Debes iniciar sesión como vigilante de portería.",
   );
 }
 

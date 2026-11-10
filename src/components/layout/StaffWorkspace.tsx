@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
-  BarChart3,
   Boxes,
   ClipboardCheck,
   LayoutDashboard,
@@ -32,9 +31,7 @@ function navFor(role: Role, pendingClaims = 0): NavItem[] {
   if (role === "SUPERUSER") {
     return [
       { href: "/bienestar#resumen", label: "Resumen", shortLabel: "Resumen", icon: LayoutDashboard },
-      { href: "/bienestar#indicadores", label: "Indicadores", shortLabel: "KPIs", icon: BarChart3 },
-      { href: "/bienestar#reporte", label: "Reporte de donación", shortLabel: "Reporte", icon: Boxes },
-      { href: "/admin/dashboard", label: "Panel de portería", shortLabel: "Portería", icon: ScanLine },
+      { href: "/bienestar#donacion", label: "Donación", shortLabel: "Donación", icon: Boxes },
       { href: "/objetos", label: "Catálogo público", shortLabel: "Catálogo", icon: Search },
     ];
   }

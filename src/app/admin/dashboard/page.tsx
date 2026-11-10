@@ -61,8 +61,8 @@ export default async function AdminDashboardPage({
 }) {
   const session = await auth();
 
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "SUPERUSER")) {
-    redirect("/login?callbackUrl=/admin/dashboard");
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect(session?.user?.role === "SUPERUSER" ? "/bienestar" : "/login?callbackUrl=/admin/dashboard");
   }
 
   const params = await searchParams;

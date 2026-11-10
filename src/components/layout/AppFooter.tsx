@@ -4,7 +4,7 @@ import { brand } from "@/lib/brand";
 
 export default function AppFooter() {
   return (
-    <footer className="border-t-[3px] border-brand bg-ink text-white">
+    <footer data-app-footer className="border-t-[3px] border-brand bg-ink text-white">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
         <div className="flex items-start gap-3">
           <span className="inline-flex shrink-0 items-center rounded-md bg-white px-2 py-1.5">
@@ -12,10 +12,7 @@ export default function AppFooter() {
           </span>
           <div>
             <p className="font-serif text-base font-semibold">{brand.institution}</p>
-            <p className="mt-1 text-xs text-white/70">
-              {brand.seccional} · Consulta pública de objetos en custodia, sin
-              fotos de objetos
-            </p>
+            <p className="mt-1 text-xs text-white/70">{brand.seccional}</p>
           </div>
         </div>
         <div className="flex flex-wrap gap-4 text-xs font-medium">

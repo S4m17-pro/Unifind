@@ -43,7 +43,7 @@ export default function AppSidebar({
     { href: "/como-funciona", label: "Cómo funciona", icon: HelpCircle },
   ];
 
-  if (role === "ADMIN" || role === "SUPERUSER") {
+  if (role === "ADMIN") {
     items.push({ href: "/admin/dashboard", label: "Vigilancia", icon: Shield });
   }
   if (role === "SUPERUSER") {

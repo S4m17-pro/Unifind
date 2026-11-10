@@ -58,6 +58,8 @@ Reglas:
 - Por defecto, una ruta nueva es privada. Solo `/`, `/login` y `/unauthorized` son públicas.
 - El personal (`ADMIN`/`SUPERUSER`) no registra reclamos: el catálogo público oculta el CTA
   y `submitClaimAction` rechaza la acción en el servidor.
+- `SUPERUSER` (Bienestar) es **solo lectura**: no accede a `/admin` ni ejecuta acciones de
+  portería; su panel es `/bienestar` y las acciones de custodia exigen rol `ADMIN`.
 
 ## 5. Reglas INNEGOCIABLES
 

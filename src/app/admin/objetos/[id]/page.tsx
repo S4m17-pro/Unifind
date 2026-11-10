@@ -55,8 +55,8 @@ export async function generateMetadata({
 export default async function AdminItemDetailPage({ params }: { params: Params }) {
   const session = await auth();
 
-  if (!session?.user || (session.user.role !== "ADMIN" && session.user.role !== "SUPERUSER")) {
-    redirect("/login?callbackUrl=/admin/dashboard");
+  if (!session?.user || session.user.role !== "ADMIN") {
+    redirect(session?.user?.role === "SUPERUSER" ? "/bienestar" : "/login?callbackUrl=/admin/dashboard");
   }
 
   const { id } = await params;

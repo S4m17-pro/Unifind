@@ -124,14 +124,6 @@ export default function AccountMenu({
             </Button>
           ) : null}
 
-          {role === "SUPERUSER" ? (
-            <Button asChild variant="ghost" className="mt-2 w-full text-ink-muted">
-              <Link href="/admin/dashboard" onClick={() => setMenuOpen(false)}>
-                Panel de portería
-              </Link>
-            </Button>
-          ) : null}
-
           <Button
             type="button"
             variant="gold"

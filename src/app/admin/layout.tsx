@@ -8,10 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await auth();
 
-  if (
-    !session?.user ||
-    (session.user.role !== "ADMIN" && session.user.role !== "SUPERUSER")
-  ) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     return <>{children}</>;
   }
 

@@ -85,7 +85,7 @@ Criterios:
 - [ ] Login y catálogo funcionan en el dominio de producción.
 - [ ] Las migraciones están aplicadas.
 - [ ] El cron responde 401 sin token y 200 con `Authorization: Bearer $CRON_SECRET`.
-- [ ] `/bienestar/reporte` se imprime/guarda como PDF correctamente.
+- [ ] El reporte de donación se imprime/guarda como PDF desde `/bienestar`.
 
 ## 5. Rendimiento (RNF)
 

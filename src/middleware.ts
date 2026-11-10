@@ -30,8 +30,10 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
   }
 
-  if (isAdminRoute && role !== "ADMIN" && role !== "SUPERUSER") {
-    return NextResponse.redirect(new URL("/unauthorized", req.nextUrl.origin));
+  if (isAdminRoute && role !== "ADMIN") {
+    // Bienestar es de solo lectura: su panel es /bienestar.
+    const destination = role === "SUPERUSER" ? "/bienestar" : "/unauthorized";
+    return NextResponse.redirect(new URL(destination, req.nextUrl.origin));
   }
 
   return NextResponse.next();

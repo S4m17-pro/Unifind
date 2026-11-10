@@ -52,7 +52,7 @@ export default async function AppHeader() {
               Cómo funciona
             </Link>
 
-            {role === "ADMIN" || role === "SUPERUSER" ? (
+            {role === "ADMIN" ? (
               <Link
                 href="/admin/dashboard"
                 className="rounded-md px-3 py-1.5 font-medium text-ink hover:bg-bar hover:text-brand"

@@ -13,6 +13,7 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 import SignOutControl from "@/components/auth/SignOutControl";
 import { accountInitials, roleDuty, roleLabel } from "@/lib/labels";
 import { cn } from "@/lib/cn";
@@ -114,6 +115,14 @@ export default function StaffWorkspace({
       <div className="flex items-start gap-8">
         <aside data-workspace-nav className="hidden w-60 shrink-0 lg:block">
           <div className="sticky top-[calc(var(--app-header-offset)+0.5rem)] space-y-4">
+            <Link
+              href="/"
+              aria-label="Volver al inicio de UniFind"
+              className="flex items-center gap-2 rounded-md px-1 py-1 transition-colors hover:text-brand"
+            >
+              <BrandLogo className="h-8 w-auto" />
+            </Link>
+
             <div className="rounded-lg border border-line bg-paper p-4">
               <div className="flex items-center gap-3">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-brand-soft font-serif text-sm font-semibold text-brand">

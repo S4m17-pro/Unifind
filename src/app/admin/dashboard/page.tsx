@@ -14,7 +14,6 @@ import { auth } from "@/auth";
 import { IngresoFlash } from "@/components/auth/AuthFlash";
 import AdminPrivatePhoto from "@/components/admin/AdminPrivatePhoto";
 import ClaimsReview from "@/components/admin/ClaimsReview";
-import DashboardTabs from "@/components/admin/DashboardTabs";
 import DeliveryModule from "@/components/admin/DeliveryModule";
 import NewItemForm from "@/components/admin/NewItemForm";
 import SectionHeading from "@/components/ui/section-heading";
@@ -130,13 +129,13 @@ export default async function AdminDashboardPage({
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="lg:hidden">
               <Link href={dashboardTabHref("registro")}>
                 <PackagePlus className="size-4" />
                 Registrar objeto
               </Link>
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className="lg:hidden">
               <Link href={dashboardTabHref("reclamos")}>
                 <ClipboardCheck className="size-4" />
                 Ver reclamos
@@ -156,12 +155,6 @@ export default async function AdminDashboardPage({
           </div>
         </div>
       </header>
-
-      <DashboardTabs
-        active={tab}
-        pendingClaims={pendingClaims.length}
-        className="hidden lg:block"
-      />
 
       {cloudinaryStatus.status !== "ready" && (tab === "resumen" || tab === "registro") ? (
         <div className="rounded-lg border border-gold/40 bg-gold-soft px-4 py-3 text-sm text-gold-ink">

@@ -13,9 +13,20 @@ type AccountMenuProps = {
   name?: string | null;
   email?: string | null;
   role?: Role | string | null;
+  /**
+   * "header": chip del header móvil (el panel abre hacia abajo).
+   * "nav": pie del rail lateral de escritorio (el panel abre hacia arriba,
+   * porque el trigger está pegado al borde inferior de la pantalla).
+   */
+  placement?: "header" | "nav";
 };
 
-export default function AccountMenu({ name, email, role }: AccountMenuProps) {
+export default function AccountMenu({
+  name,
+  email,
+  role,
+  placement = "header",
+}: AccountMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [signOutOpen, setSignOutOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -60,7 +71,8 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
         size="sm"
         aria-expanded={menuOpen}
         aria-haspopup="true"
-        aria-controls={panelId}
+        aria-controls={menuOpen ? panelId : undefined}
+        aria-label={menuOpen ? "Cerrar menú de cuenta" : "Abrir menú de cuenta"}
         onClick={() => setMenuOpen((open) => !open)}
         className="h-auto w-full max-w-full justify-start gap-2 px-2 py-1.5 text-ink-muted hover:bg-bar hover:text-ink group-hover/sidebar:max-w-[16rem] group-hover/sidebar:justify-between"
       >
@@ -78,7 +90,10 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
         </span>
         <ChevronDown
           className={cn(
-            "h-3.5 w-3.5 shrink-0 opacity-0 transition-all group-hover/sidebar:opacity-100",
+            "h-3.5 w-3.5 shrink-0 transition-all",
+            placement === "nav"
+              ? "opacity-0 group-hover/sidebar:opacity-100"
+              : "opacity-100",
             menuOpen && "rotate-180",
           )}
           aria-hidden
@@ -88,7 +103,12 @@ export default function AccountMenu({ name, email, role }: AccountMenuProps) {
       {menuOpen ? (
         <div
           id={panelId}
-          className="absolute right-0 z-50 mt-2 w-72 rounded-lg border border-line bg-paper p-3 text-ink shadow-lg"
+          className={cn(
+            "absolute z-50 w-72 rounded-lg border border-line bg-paper p-3 text-ink shadow-lg",
+            placement === "nav"
+              ? "bottom-full left-0 mb-2 max-h-[calc(100dvh-6rem)] overflow-y-auto"
+              : "right-0 mt-2",
+          )}
         >
           <p className="text-sm font-semibold text-ink">{displayName}</p>
           {email ? <p className="mt-0.5 truncate text-xs text-ink-muted">{email}</p> : null}

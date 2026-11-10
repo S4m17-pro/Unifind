@@ -9,12 +9,14 @@ type SignOutControlProps = {
   className?: string;
   children?: ReactNode;
   variant?: VariantProps<typeof buttonVariants>["variant"];
+  ariaLabel?: string;
 };
 
 export default function SignOutControl({
   className,
   children,
   variant = "outline",
+  ariaLabel,
 }: SignOutControlProps) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -26,6 +28,7 @@ export default function SignOutControl({
         type="button"
         variant={variant}
         className={className}
+        aria-label={ariaLabel}
         onClick={() => setOpen(true)}
       >
         {children ?? "Cerrar sesión"}

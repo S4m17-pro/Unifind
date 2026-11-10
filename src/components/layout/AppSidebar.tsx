@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HelpCircle, Home, LayoutDashboard, Search, Shield } from "lucide-react";
+import { HelpCircle, Home, LayoutDashboard, LogOut, Search, Shield } from "lucide-react";
 import BrandLogo from "@/components/brand/BrandLogo";
 import BrandMark from "@/components/brand/BrandMark";
 import { brand } from "@/lib/brand";
 import AccountMenu from "@/components/auth/AccountMenu";
+import SignOutControl from "@/components/auth/SignOutControl";
 import { cn } from "@/lib/cn";
 
 type Role = "ADMIN" | "SUPERUSER" | "STUDENT" | string | null | undefined;
@@ -29,6 +30,12 @@ export default function AppSidebar({
   email?: string | null;
 }) {
   const pathname = usePathname();
+
+  // En /admin y /bienestar la navegación la aporta StaffWorkspace. Mostrar
+  // además el rail global duplicaba secciones, "Catálogo" y "Cerrar sesión".
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/bienestar")) {
+    return null;
+  }
 
   const items: NavItem[] = [
     { href: "/", label: "Inicio", icon: Home },
@@ -108,11 +115,28 @@ export default function AppSidebar({
             </nav>
           </div>
 
-          <div className="space-y-1.5 px-2 pb-3">
+          <div className="space-y-1 px-2 pb-3">
             {isAuthed ? (
-              <div className="overflow-hidden rounded-md">
-                <AccountMenu name={name} email={email} role={role} />
-              </div>
+              <>
+                <div className="rounded-md">
+                  <AccountMenu
+                    name={name}
+                    email={email}
+                    role={role}
+                    placement="nav"
+                  />
+                </div>
+                <SignOutControl
+                  variant="ghost"
+                  ariaLabel="Cerrar sesión"
+                  className="h-11 w-full justify-start gap-3 px-2.5 text-ink-muted hover:bg-bar hover:text-ink"
+                >
+                  <LogOut className="size-5 shrink-0" aria-hidden />
+                  <span className="hidden truncate text-sm font-medium group-hover/sidebar:inline">
+                    Cerrar sesión
+                  </span>
+                </SignOutControl>
+              </>
             ) : null}
           </div>
         </div>

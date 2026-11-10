@@ -92,6 +92,9 @@ export default function InPageNav() {
       const anchor = (event.target as Element | null)?.closest("a[href]");
       if (!anchor) return;
 
+      // El menú del panel gestiona sus propias anclas y su estado activo.
+      if (anchor.closest("[data-workspace-nav]")) return;
+
       const href = anchor.getAttribute("href");
       if (!href || !href.includes("#")) return;
 

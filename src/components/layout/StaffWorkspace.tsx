@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useMemo, useSyncExternalStore, type MouseEvent, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
@@ -18,6 +18,19 @@ import { accountInitials, roleDuty, roleLabel } from "@/lib/labels";
 import { cn } from "@/lib/cn";
 
 type Role = "ADMIN" | "SUPERUSER" | string;
+
+function subscribeToHash(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  window.addEventListener("popstate", onChange);
+  return () => {
+    window.removeEventListener("hashchange", onChange);
+    window.removeEventListener("popstate", onChange);
+  };
+}
+
+function getHashSnapshot() {
+  return window.location.hash;
+}
 
 type NavItem = {
   href: string;
@@ -66,10 +79,10 @@ export default function StaffWorkspace({
   children: ReactNode;
 }) {
   const items = useMemo(() => navFor(role, pendingClaims), [role, pendingClaims]);
-  const [activeHref, setActiveHref] = useState(items[0]?.href ?? "");
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") ?? "resumen";
+  const hash = useSyncExternalStore(subscribeToHash, getHashSnapshot, () => "");
   const displayName = name?.trim() || email || "Personal Unilibre";
   const initials = accountInitials(name, email);
 
@@ -77,35 +90,33 @@ export default function StaffWorkspace({
     if (href.includes("?tab=")) {
       return pathname === "/admin/dashboard" && href.endsWith(`tab=${activeTab}`);
     }
-    return href === activeHref;
+    if (href.includes("#")) {
+      if (!hash) {
+        // Sin hash navegado, la primera sección es la activa por defecto.
+        return href === items.find((item) => item.href.includes("#"))?.href;
+      }
+      return hash === href.slice(href.indexOf("#"));
+    }
+    return pathname === href;
   };
 
-  const usesHashNav = items.some((item) => item.href.includes("#"));
+  const handleNavClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (!href.includes("#")) return;
 
-  useEffect(() => {
-    if (!usesHashNav) return;
+    // Anclas internas sin remount: actualiza el hash, el resaltado y el scroll.
+    event.preventDefault();
+    const id = href.split("#")[1];
+    const target = `#${id}`;
 
-    const sections = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-workspace-section]"),
-    );
-    if (sections.length === 0) return;
-
-    const syncFromScroll = () => {
-      const offset = 180;
-      let current = sections[0];
-      for (const section of sections) {
-        if (section.getBoundingClientRect().top - offset <= 0) {
-          current = section;
-        }
-      }
-      const match = items.find((item) => item.href.endsWith(`#${current.id}`));
-      if (match) setActiveHref(match.href);
-    };
-
-    syncFromScroll();
-    window.addEventListener("scroll", syncFromScroll, { passive: true });
-    return () => window.removeEventListener("scroll", syncFromScroll);
-  }, [items, usesHashNav]);
+    if (window.location.hash !== target) {
+      window.history.replaceState(null, "", target);
+    }
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
@@ -150,6 +161,7 @@ export default function StaffWorkspace({
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
+                    onClick={(event) => handleNavClick(event, item.href)}
                     className={cn(
                       "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       active
@@ -198,6 +210,7 @@ export default function StaffWorkspace({
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
+                    onClick={(event) => handleNavClick(event, item.href)}
                     className={cn(
                       "inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-2 text-xs font-semibold transition-colors",
                       active
